@@ -35,12 +35,15 @@ let target = {};
 				throw new TypeError("sorry 亲！ 你找的 "+key+" 属性不存在。！")
 			}
 			// 添加属性
-			return Reflect.get(trapTarget,key,receiver);
+			return Reflect.get(...arguments);
         },
-        set(trapTarget, key, value, receiver) {
-            trigger(arguments)
-            return Reflect.set(...arguments)
-          }
+        set(trapTarget,key,value,receiver){
+            //忽略不希望受到影响的已有属性
+            console.log(arguments)
+			
+			// 添加属性
+			return Reflect.set(...arguments);
+        }
     });
 
 	proxy.name= "proxy";
@@ -48,10 +51,5 @@ let target = {};
 
 	// 读取一个不存在的属性  直接会抛出异常
     // console.log(proxy.nme);
-
-
-
-
-
-
+ 
   
