@@ -9,52 +9,64 @@ import axios from "axios";
 
 const config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
-  // timeout: 60 * 1000, // Timeout
+  timeout: 10 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
 };
-
 const _axios = axios.create(config);
 
+
+// 请求拦截器 
 _axios.interceptors.request.use(
-  function(config) {
+  function (config) {
     // Do something before request is sent
     return config;
   },
-  function(error) {
+  function (error) {
     // Do something with request error
     return Promise.reject(error);
   }
 );
 
-// Add a response interceptor
+// 响应拦截器即异常处理
 _axios.interceptors.response.use(
-  function(response) {
+  function (response) {
     // Do something with response data
     return response;
   },
-  function(error) {
+  function (error) {
     // Do something with response error
     return Promise.reject(error);
   }
 );
+// 封装axios
+export default {
+    get(api:string,params:any){
+        new Promise((resolve, reject) => {
+            _axios({
+                method:'get',
+                url:api,
+                params:params
+            }).then(res=>{
+                resolve(res)
+            }).catch(err=>{
+                reject(err)
+            })
+        })
+    },
+    post(api:string,params:any){
+        new Promise((resolve, reject) => {
+            _axios({
+                method:'post',
+                url:api,
+                params:params,
+            }).then(res=>{
+                resolve(res)
+            }).catch(err=>{
+                reject(err)
+            })
+        })
+    }
 
-// Plugin.install = function(Vue, options) {
-//   Vue.axios = _axios;
-//   window.axios = _axios;
-//   Object.defineProperties(Vue.prototype, {
-//     axios: {
-//       get() {
-//         return _axios;
-//       }
-//     },
-//     $axios: {
-//       get() {
-//         return _axios;
-//       }
-//     },
-//   });
-// };
+}
 
-// Vue.use(Plugin)
 
-export default Plugin;

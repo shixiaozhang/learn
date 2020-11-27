@@ -6,8 +6,10 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, } from "vue";
 import {useGetData} from './GetData'
+import {useRoute} from 'vue-router'
+import router from '../router';
 export default {
   name: "About",
   props: {
@@ -17,6 +19,8 @@ export default {
     const aa=ref('1111111111')
     console.log(props, context);
     const data = useGetData();
+    const route=useRoute()
+      console.log(route.query)
     return {data,aa};
   },
 };
