@@ -7,8 +7,9 @@
         <h1 class="red">slot2测试 {{ slotprops }}</h1>
       </template>
     </HelloWorld>
-
     <h1>{{ store.state.userName }}</h1>
+    <my-component-name ></my-component-name>
+
   </div>
 </template>
   <!--<script lang='ts'>  -->
