@@ -19,7 +19,7 @@ const _axios = axios.create(config);
 _axios.interceptors.request.use(
   function (config) {
     // Do something before request is sent
-    return config;
+    return config
   },
   function (error) {
     // Do something with request error
@@ -31,7 +31,7 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
   function (response) {
     // Do something with response data
-    return response;
+    return response
   },
   function (error) {
     // Do something with response error
@@ -40,25 +40,27 @@ _axios.interceptors.response.use(
 );
 // 封装axios
 export default {
-    get(api:string,params:any){
-        new Promise((resolve, reject) => {
+    get:(api: string,params: any,header?: {})=>{
+    return   new Promise((resolve, reject) => {
             _axios({
                 method:'get',
                 url:api,
-                params:params
+                params:params,
+                headers:header
             }).then(res=>{
-                resolve(res)
+              resolve(res)
             }).catch(err=>{
-                reject(err)
+              reject(err)
             })
         })
     },
-    post(api:string,params:any){
-        new Promise((resolve, reject) => {
+    post:(api: string,params: any, header?: {})=>{
+     return   new Promise((resolve, reject) => {
             _axios({
                 method:'post',
                 url:api,
-                params:params,
+                data:params,
+                headers:header
             }).then(res=>{
                 resolve(res)
             }).catch(err=>{

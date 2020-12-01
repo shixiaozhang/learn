@@ -15,7 +15,9 @@ import { Options, Vue } from "vue-class-component";
   props: {
     msg: String,
   },
-  watch: {},
+  watch: {
+    
+  },
 
   computed: {
     //主要用来接收store
