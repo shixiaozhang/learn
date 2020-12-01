@@ -9,7 +9,7 @@
     </HelloWorld>
     <h1>{{ store.state.userName }}</h1>
     <my-component-name></my-component-name>
-    <ChildComp />
+    <ChildComp :name='nameChild'  @change-name='changeName'/>
   </div>
 </template>
   <!--<script lang='ts'>  -->
@@ -75,6 +75,7 @@ export default {
 //     return { data };
 //   }
 // }
+
 export default {
   name: "Home",
   props: {},
@@ -84,7 +85,7 @@ export default {
   },
   setup(props, context) {
     console.log(props, context);
-
+    const nameChild=ref("我是要传给子组件的数据")
     const data = useGetData();
     // -----------
     // getCurrentInstance 方法获取当前组件的实例，然后通过 ctx 属性获得当前上下文，
@@ -105,7 +106,7 @@ export default {
     const router = useRouter();
     setTimeout(() => {
       router.push({ path: "/about", query: { user: "小张在跳转" } });
-    }, 5000);
+    }, 15000);
     //  vue3中store调用新方式
     const store = useStore();
     store.commit("edit", "jack");
@@ -158,13 +159,18 @@ export default {
   provide("testMsg", toRef(state, 'testMsg'))
     provide("testMsg2", state.testMsg2)
     provide("msg", msg)
-
+// 子组件触发父组件事件
+const changeName=()=>{
+  nameChild.value="我是修改过的父组件的传参"
+}
     return { 
+      nameChild,
       data, 
       store,
       ...toRefs(state),
       changeTest,
-      msg };
+      msg,
+      changeName };
   },
 };
 </script>

@@ -21,7 +21,6 @@ import { Options, Vue } from "vue-class-component";
 
   computed: {
     //主要用来接收store
-
     fullName() {
       return this.msg;
     },

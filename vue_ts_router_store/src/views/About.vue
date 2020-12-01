@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { inject } from "vue";
-import { computed } from "vue";
-import { watch, watchEffect } from "vue";
+import { ref } from "vue/dist/vue.esm-bundler.js";
+import { inject } from "vue/dist/vue.esm-bundler.js";
+import { computed } from "vue/dist/vue.esm-bundler.js";
+import { watch, watchEffect } from "vue/dist/vue.esm-bundler.js";
 import { useRoute } from "vue-router";
 import { useGetData } from "./GetData";
 // import {component} from "./component"
@@ -27,7 +27,6 @@ const componenta = {
   template:
     '<button v-on:click="count++">You clicked me {{ count }} times.</button>',
 };
-
 export default {
   name: "About",
   props: {
@@ -43,7 +42,7 @@ export default {
     const route = useRoute();
     console.log(route.query);
     //  获取provide定义的值,无法获取，只能子孙组件获取
-    console.log(inject("msg"), "获取provide定义的值");
+    // console.log(inject("msg"), "获取provide定义的值");
     const count = ref(0);
     const count2 = ref(10);
     const change = () => {
@@ -67,23 +66,28 @@ export default {
       console.log(oldVal2, "旧值2");
     });
     // watchEffect使用
-    watchEffect(() => {
+    const stop = watchEffect(() => {
       console.log(count.value, "直接获取相关值");
     });
+    // watchEffect 停止侦听
+    setTimeout(() => {
+      stop();
+    }, 10000);
+
     // computed使用
 
     const double = computed(() => count2.value * 2);
     const three = computed({
       get: () => {
-       return  count2.value * 3;
+        return count2.value * 3;
       },
       set: (number) => {
-       return  count2.value=100 * number;
+        return (count2.value = 100 * number);
       },
     });
-        three.value = 5
-        console.log(count2.value)
-    return { data, aa, count, change, double,three };
+    three.value = 5;
+    console.log(count2.value);
+    return { data, aa, count, change, double, three };
   },
 };
 </script>

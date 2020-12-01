@@ -30,7 +30,7 @@ export default createStore({
 
   },
   modules: {//模块化状态管理
-    // 调用 store.state.a
+    // 调用 store.state.a.xxx
     a: {
       state: {},
       getters:{//第三个参数是根节点状态
