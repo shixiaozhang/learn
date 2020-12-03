@@ -9,19 +9,20 @@
 // })
 // 搭建http服务器
 const http=require('http');
-const port =3000
+const port =5000
 
 const server=http.createServer((req,res)=>{
-    res.statusCode=200
-    res.setHeader('Content-Type', 'text/plain')
-    res.end('aaa')
-      // 可以访问 HTTP 请求头
+   // 可以访问 HTTP 请求头
    req.on('data', chunk => {
     console.log(`可用的数据块: ${chunk}`)
   })
   req.on('end', () => {
     //数据结束
   })
+    res.statusCode=200
+    res.setHeader('Content-Type', 'text/plain')
+    res.end('aaa')
+   
 })
 server.listen(port,()=>{
     console.log(`服务器运行在 http://:${port}/`);
