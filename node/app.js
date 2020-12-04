@@ -27,62 +27,6 @@
 // server.listen(port,()=>{
 //     console.log(`服务器运行在 http://:${port}/`);
 // })
-// // 发送get请求https
-// const https = require('https')
-// const { on } = require('process')
-// const options = {
-//     hostname: 'nodejs.cn',
-//     port: 443,
-//     path: '/todos',
-//     method: 'GET'
-// }
-
-// const req = https.request(options, res => {
-//     console.log(`状态码:${res.statusCode}`)
-//     res.on('data', d => {
-//         process.stdout.write(d)
-//     })
-// })
-// req.on("error", error => {
-//     console.error(error);
-
-// })
-// req.end()
-// // 发送post请求https
-// const data =JSON.stringify({
-//     todo:"do something"
-// })
-// const p_options={
-//     hostname:'nodejs.cn',
-//     port:443,
-//     path:'/todos',
-//     method:'POST',
-//     headers:{
-//         "Content-type":'application/json',
-//         "Content-Length":data.length
-//     }
-// }
-// const P_req=https.request(p_options,res=>{
-//     console.log(res.statusCode);
-//     res.on('data', d => {
-//         process.stdout.write(d)
-//       })
-// })
-// P_req.on('error', error => {
-//     console.error(error)
-//   })
-//   P_req.write(data)
-//   P_req.end()
-// //   http请求
-// const axios=require('axios')
-
-// axios.post('http://nodejs.cn/todos',{
-//     todo:'做点事情'
-// }).then(res=>{
-//     console.log(res);
-// }).catch((err)=>{
-//     console.log(err);
-// })
 
 
 // express搭建项目
@@ -112,6 +56,7 @@ app.use(express.static('public'));
 // 通过带有 /static 前缀地址来访问 public 目录中的文件了。
 app.use('/static', express.static('public'))
 app.use('/static', express.static(path.join(__dirname, 'public')))
+// 定制 404 页面
 app.use(function(req, res) {
   res.type("text/plain");
   res.status(404);
@@ -131,9 +76,3 @@ app.listen(app.get("port"),()=>{
 
 
 
-// fs
-const fs=require('fs')
-//  读取文件
-fs.readFile('/node/path.js','utf-8',(err,data)=>{
-  console.log(data);
-})

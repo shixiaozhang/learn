@@ -51,8 +51,6 @@ console.log(j);//true
 
 // path.parse() 解析对象的路径为组成其的片段：
 
-
-
 let l=path.parse('/users/test.txt')
 console.log(l);//{
                 //   root: '/',
