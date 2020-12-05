@@ -3,7 +3,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -41,16 +41,15 @@ console.log(arr2);
 var are = [123, {}, []];
 function sun(a, b, c) {
     return a + b + c;
+    // IArguments 是arguments的专用接口
+    // 常见的类数组都有自己的接口定义，如 IArguments, NodeList, HTMLCollection 等
     var arg = arguments;
 }
 var um = sun(1, 2, 3);
 console.log(um);
 //枚举------------------------------------------------------------------------------------------------------------------------
 /*
---------------------------------
---------------------------------
---------------------------------
---------------------------------
+
 
 */
 var paytype;
@@ -134,6 +133,18 @@ function css1(confg) {
     return confg;
 }
 css1(1);
+// 实现
+function add(arg1, arg2) {
+    // 在实现上我们要注意严格判断两个参数的类型是否相等，而不能简单的写一个 arg1 + arg2
+    if (typeof arg1 === 'string' && typeof arg2 === 'string') {
+        return arg1 + arg2;
+    }
+    else if (typeof arg1 === 'number' && typeof arg2 === 'number') {
+        return arg1 + arg2;
+    }
+}
+add(1, 2); // 3
+add('1', '2'); //'12'
 //  类
 /*
 --------------------------------

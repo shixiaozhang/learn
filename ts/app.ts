@@ -26,6 +26,8 @@ let are: [number, object, []] = [123, {}, []]
 
 function sun(a: number, b: number, c: number): number {
     return a + b + c
+    // IArguments 是arguments的专用接口
+    // 常见的类数组都有自己的接口定义，如 IArguments, NodeList, HTMLCollection 等
     let arg: IArguments = arguments
 }
 
@@ -34,10 +36,7 @@ console.log(um)
 
 //枚举------------------------------------------------------------------------------------------------------------------------
 /*
---------------------------------
---------------------------------
---------------------------------
---------------------------------
+
 
 */
 enum paytype {
@@ -50,7 +49,7 @@ let f: paytype = paytype.err
 
 console.log(f)//0
 
-enum Color {
+enum Color {//默认0  1  2 ...
     r,
     f,
     d
@@ -154,6 +153,23 @@ function css1(confg: any): any {//接受参数，运行函数
     return confg
 }
 css1(1)
+
+function add (arg1: string, arg2: string): string
+function add (arg1: number, arg2: number): number
+
+// 实现
+function add <T,U>(arg1: T, arg2: U) {
+  // 在实现上我们要注意严格判断两个参数的类型是否相等，而不能简单的写一个 arg1 + arg2
+  if (typeof arg1 === 'string' && typeof arg2 === 'string') {
+    return arg1 + arg2
+  } else if (typeof arg1 === 'number' && typeof arg2 === 'number') {
+    return arg1 + arg2
+  }
+}
+
+add(1, 2) // 3
+add('1','2') //'12'
+
 
 //  类
 /*
