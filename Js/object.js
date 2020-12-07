@@ -22,6 +22,24 @@ console.log({});
 
 
 
+// instanceof 运算符用于检测构造函数的 prototype 
+// 属性是否出现在某个实例对象的原型链
+
+function Car(make, model, year) {
+  this.make = make;
+  this.model = model;
+  this.year = year;
+}
+const auto = new Car('Honda', 'Accord', 1998);
+
+console.log(auto instanceof Car);
+// expected output: true
+
+console.log(auto instanceof Object);
+// expected output: true
+
+
+
 // sendRequest是一个同步方法，每次调用随机返回true或者false
 /*
 1.执行了poll函数之后，每隔一段时间都必须执行一次sendRequest函数。
@@ -139,3 +157,44 @@ Object.freeze(object)
 
 // 如果对象被冻结，则返回 true
 Object.isFrozen(object)
+
+
+
+// Object.assign()第一个参数是目标对象，后面的都是源对象
+// Object.assign (target, source1,source2, source3);
+/**
+ 如果源对像与目标对象有相同的属性名，或源对象中有相同的属性名，后面的会覆盖前边的值 。
+如果参数传入的不是Object，会转成Object
+null和undefined 不能作为参数传入，因为null和undefined 不能转成Object
+如果发生的值是一个对象，Object.assign的处理方法是直接替换，而不是添加。 如下面的 a 和 b
+可以为类添加方法
+ */
+
+
+const obj1  = {name:'小明', age:'18',education:'undergraduate'}
+const obj2 = {height:'180cm',hobby:'painting'}
+let  obj = Object.assign({},obj1, obj2)
+console.log('合并后的类：');
+console.log(JSON.stringify(obj));
+//{"name":"小明","age":"18","education":"undergraduate","height":"180cm","hobby":"painting"}
+Object.assign( obj, {height:'170cm'});
+console.log('修改过height后的类：');
+console.log(JSON.stringify(obj));
+//{"name":"小明","age":"18","education":"undergraduate","height":"170cm","hobby":"painting"}
+Object.assign(obj, {arr:{index:1, name:'类'}}, {name:'加了一个类进去'})
+console.log(JSON.stringify(obj));
+//{"name":"加了一个类进去","age":"18","education":"undergraduate","height":"170cm","hobby":"painting","arr":{"index":1,"name":"类"}}
+console.log("加一个类进去后："+obj.arr.index);//1
+
+
+ // f. Object.assign() 为类添加方法
+ Object.assign(UserInfo.prototype, {
+  getUserName (){
+    return this.name;
+  },
+  getUserGender (){
+    return this.gender ;
+  }
+})
+let user  = new UserInfo("笑笑", '女');
+console.log("userinfo中的信息为： "+ user.getUserName() +", "+user.getUserGender()); // 输出的结果为：笑笑，女

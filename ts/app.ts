@@ -1006,3 +1006,203 @@ class 类{
     6、类装饰器1
 */ 
 
+
+
+// typescript中的as 类型断言
+
+/**
+ * 类型断言：告诉ts这个变量的类型是什么
+ *      1、(<type>result)
+ *      2、(result as type)
+ */
+
+
+
+/**
+ * 高级类型:
+ * 
+ *          交叉类型: Person & Serializable & Loggable 
+ *                    同时是 Person 和 Serializable 和 Loggable
+ *                    就是说这个类型的对象同时拥有了这三种类型的成员
+ * 
+ */
+
+ function extend<T,U>(first:T,second:U):T & U{
+        let result=<T&U>{};
+        for(let  id in first){
+            (<any>result)[id]=(<any>first[id])
+        }
+        for(let  id in second){
+            (<any>result)[id]=(<any>second[id])
+        }
+
+        return result
+ }
+ class PersonA {
+    constructor(public name: string) { }
+}
+interface Loggable {
+    log(): void;
+}
+class ConsoleLogger implements Loggable {
+    log() {
+       console.log('log');
+       
+    }
+}
+var jim = extend(new PersonA("Jim"), new ConsoleLogger());
+var jimName = jim.name;
+jim.log();
+
+
+// 联合类型
+// number| string    number或 string类型的参数
+
+
+
+// 类型保护与区分类型
+
+/**
+ * 关键词： in typeof instanceof is
+ * 
+ *  
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
+
+//1、 in 关键词
+
+interface Admin {
+    name:string;
+    privileges:string[];
+}
+interface Employee {
+    name:string;
+    start:Date;
+}
+// type 关键字用来定义一种类型
+/**
+ * type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE'
+    let method: Methods
+    method = 'PUT' // OK
+    method = 'aaa' // error
+ * 
+ */
+
+type Unknown=Employee | Admin;
+
+function printEmployee(emp:Unknown){
+    console.log("name" + emp.name);
+    if('privileges' in emp){
+        console.log('privileges');
+        
+    }
+    if('start' in emp){
+        console.log('start');
+        
+    }
+}
+
+//2、 typeof 关键词
+
+/**
+ * 
+ * typeof类型保护*只有两种形式能被识别： 
+ * typeof v === "typename"和 typeof v !== "typename"，
+ *  "typename"必须是 "number"， "string"， "boolean"或 "symbol"。 
+ * 但是TypeScript并不会阻止你与其它字符串比较，
+ * 语言不会把那些表达式识别为类型保护。
+ *  
+ */
+function padLeft(value:string,padding:string | number){
+    if(typeof padding ==='number'){
+        return Array(padding+1).join('')+value
+    }
+    if(typeof padding==='string'){
+        return padding + value
+    }
+    throw new Error('Expected string or number ,got xxxx')
+}
+
+
+
+// 3、 instanceof 关键词
+/**
+ * instanceof的右侧要求是一个构造函数，TypeScript将细化为：
+ * 
+        此构造函数的 prototype属性的类型，如果它的类型不为 any的话
+        构造签名所返回的类型的联合
+
+在js中的instanceof：
+            instanceof 运算符用于检测构造函数的 
+            prototype 属性是否出现在某个实例对象的原型链
+ */
+
+
+interface Padder {
+    getPaddingString(): string
+}
+
+class SpaceRepeatingPadder implements Padder {
+    constructor(private numSpaces: number) { }
+    getPaddingString() {
+        return Array(this.numSpaces + 1).join(" ");
+    }
+}
+
+class StringPadder implements Padder {
+    constructor(private value: string) { }
+    getPaddingString() {
+        return this.value;
+    }
+}
+
+function getRandomPadder() {
+    return Math.random() < 0.5 ?
+        new SpaceRepeatingPadder(4) :
+        new StringPadder("  ");
+}
+
+// 类型为SpaceRepeatingPadder | StringPadder
+let padder: Padder = getRandomPadder();
+
+if (padder instanceof SpaceRepeatingPadder) {
+    padder; // 类型细化为'SpaceRepeatingPadder'
+}
+if (padder instanceof StringPadder) {
+    padder; // 类型细化为'StringPadder'
+}
+
+
+
+
+interface Bird {
+    fly():void;
+    layEggs():void;
+}
+
+interface Fish {
+    swim():void;
+    layEggs():void;
+}
+//4、 用户自定义的类型保护
+/**
+    pet is Fish就是类型谓词。 谓词为 parameterName is Type这种形式，
+    parameterName必须是来自于当前函数签名里的一个参数名。
+    每当使用一些变量调用 isFish时，TypeScript会将变量缩减为那个具体的类型，
+    只要这个类型与变量的原始类型是兼容的。
+ */
+function isFish(pet:Fish|Bird):pet is Fish{
+    return (<Fish> pet).swim !==undefined
+}
+
+
+
