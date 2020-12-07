@@ -34,6 +34,7 @@ function sun(a: number, b: number, c: number): number {
 const um: number = sun(1, 2, 3)
 console.log(um)
 
+
 //枚举------------------------------------------------------------------------------------------------------------------------
 /*
 
@@ -236,8 +237,7 @@ class Child extends Person {
         this.name = `${name} zi`
     }
     run(): void { //与父类相同方法、属性，优先使用子类本身的方法、属性
-        console.log(this.name, this.age)
-        // console.log(this.sex,'111')// private属性 无法访问
+        console.log(this.name, this.age)// console.log(this.sex,'111')// private属性 无法访问
     }
     duotai(): void {
         console.log('Child的多态')
@@ -1088,14 +1088,63 @@ interface Employee {
     name:string;
     start:Date;
 }
+
+
+// 类型别名: 类型别名有时和接口很像，
+//           但是可以作用于原始值，联合类型，元组以及其它任何你需要手写的类型
 // type 关键字用来定义一种类型
 /**
- * type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE'
-    let method: Methods
-    method = 'PUT' // OK
-    method = 'aaa' // error
+ * 
  * 
  */
+// 用法：
+
+// 字符串字面量类型
+type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE'
+    let method: Methods
+    method = 'PUT' // OK
+    // method = 'aaa' // error
+
+// 拓展
+// 数字字面量类型
+declare function rollDie(): 1 | 2 | 3 | 4 | 5 | 6 ;
+
+// 字符串字面量 还可用于函数的重载
+function createElement(tagName: "img"): HTMLImageElement;
+function createElement(tagName: "input"): HTMLInputElement;
+function createElement(tagName: string): Element | any {//添加any去除报错，不然例子函数报错
+}
+
+
+type Name = string;
+type NameResolver = () => string;
+type NameOrResolver = Name | NameResolver;
+function getName(n: NameOrResolver): Name {
+    if (typeof n === 'string') {
+        return n;
+    }
+    else {
+        return n();
+    }
+}
+// 同接口一样,类型别名也可以是泛型
+type Container<T> = { value: T };
+// 可以使用类型别名来在属性里引用自己
+type Tree<T> = {
+    value: T;
+    left: Tree<T>;
+    right: Tree<T>;
+}
+
+// 与交叉类型一起使用
+type LinkedList<T> = T & { next: LinkedList<T> };
+interface Man {
+    name: string;
+}
+
+var people: LinkedList<Man>;
+
+
 
 type Unknown=Employee | Admin;
 
@@ -1111,6 +1160,25 @@ function printEmployee(emp:Unknown){
     }
 }
 
+// 类型别名不能出现在声明右侧的任何地方
+// type Yikes = Array<Yikes>; // error
+/**
+ * 接口 vs. 类型别名:
+ * 区别:
+        在编译器中将鼠标悬停在 interfaced上，显示它返回的是 Interface，
+        但悬停在 aliased上时，显示的却是对象字面量类型。
+        另一个重要区别是类型别名不能被 extends和 implements
+        （自己也不能 extends和 implements其它类型）
+ * 
+ * 
+ */
+ type Alinas={ num:number}
+ interface Interface{
+     num:number
+ }
+
+ declare function  aliased(arg:Alinas):Alinas ;
+declare function interfaced(arg:Interface):Interface;
 //2、 typeof 关键词
 
 /**
@@ -1204,5 +1272,90 @@ function isFish(pet:Fish|Bird):pet is Fish{
     return (<Fish> pet).swim !==undefined
 }
 
+function fixed(name: string | null): string {
+    function postfix(epithet: string) {
+        //identifier!从 identifier的类型里去除了 null和 undefined
+      return name!.charAt(0) + '.  the ' + epithet; // ok
+    }
+    name = name || "Bob";
+    return postfix("great");
+  }
+
+// 可辨识联合 :
+/**
+ * 你可以合并单例类型，联合类型，类型保护和类型别名来创建一个叫做
+ *  可辨识联合的高级模式，它也称做 标签联合或 代数数据类型。
+ *  可辨识联合在函数式编程很有用处。
+ *  一些语言会自动地为你辨识联合；而TypeScript则基于已有的JavaScript模式。 
+ * 它具有3个要素：
+            具有普通的单例类型属性— 可辨识的特征。
+            一个类型别名包含了那些类型的联合— 联合。
+            此属性上的类型保护。
+ */
+interface Square {
+    kind: "square";
+    size: number;
+}
+interface Rectangle {
+    kind: "rectangle";
+    width: number;
+    height: number;
+}
+interface Circle {
+    kind: "circle";
+    radius: number;
+}
+// 联合到一起
+type Shape = Square | Rectangle | Circle;
+// 辨识联合
+function area(s:Shape) {
+    switch(s.kind){
+        case "square": return s.size * s.size;
+        case "rectangle": return s.height * s.width;
+        case "circle": return Math.PI * s.radius ** 2;
+        // 进行完整性检查
+        default: return assertNever(s); // error here if there are missing cases
+    }
+}
+// 进行完整性检查
+function assertNever(x: never): never {
+    throw new Error("Unexpected object: " + x);
+}
+// assertNever检查 s是否为 never类型—即为除去所有可能情况后剩下的类型。
+//  如果你忘记了某个case，那么 s将具有一个真实的类型并且你会得到一个错误。 
+// 这种方式需要你定义一个额外的函数，
+// 但是在你忘记某个case的时候也更加明显
 
 
+// keyof 操作符
+// 遍历某种类型的属性，并通过 keyof 操作符提取其属性的名称
+interface PersonPerson {
+    name: string;
+    age: number;
+    location: string;
+  }
+  
+  type K1 = keyof PersonPerson; // "name" | "age" | "location"
+  type K2 = keyof PersonPerson[];  // number | "length" | "push" | "concat" | ...
+  type K3 = keyof { [x: string]: PersonPerson };  // string | number
+
+  let personProps: keyof PersonPerson; // 'name' | 'age' | 'location'
+
+//   索引类型
+// js
+/**
+        function prop(obj, key) {
+        return obj[key];
+        }
+ */
+// ts
+function prop<T extends object, K extends keyof T>(obj: T, key: K) {
+    return obj[key];
+  }
+
+
+  /**
+   * 首先定义了 T 类型并使用 extends 关键字约束该类型必须是 object 类型的子类型，
+   * 然后使用 keyof 操作符获取 T 类型的所有键，其返回类型是联合类型，
+   * 最后利用 extends 关键字约束 K 类型必须为 keyof T 联合类型的子类型。
+   */
