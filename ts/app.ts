@@ -155,21 +155,21 @@ function css1(confg: any): any {//接受参数，运行函数
 }
 css1(1)
 
-function add (arg1: string, arg2: string): string
-function add (arg1: number, arg2: number): number
+function add(arg1: string, arg2: string): string
+function add(arg1: number, arg2: number): number
 
 // 实现
-function add <T,U>(arg1: T, arg2: U) {
-  // 在实现上我们要注意严格判断两个参数的类型是否相等，而不能简单的写一个 arg1 + arg2
-  if (typeof arg1 === 'string' && typeof arg2 === 'string') {
-    return arg1 + arg2
-  } else if (typeof arg1 === 'number' && typeof arg2 === 'number') {
-    return arg1 + arg2
-  }
+function add<T, U>(arg1: T, arg2: U) {
+    // 在实现上我们要注意严格判断两个参数的类型是否相等，而不能简单的写一个 arg1 + arg2
+    if (typeof arg1 === 'string' && typeof arg2 === 'string') {
+        return arg1 + arg2
+    } else if (typeof arg1 === 'number' && typeof arg2 === 'number') {
+        return arg1 + arg2
+    }
 }
 
 add(1, 2) // 3
-add('1','2') //'12'
+add('1', '2') //'12'
 
 
 //  类
@@ -866,7 +866,7 @@ function logClass1(params: any) {
             console.log("run方法");
             console.log(target.toString(), '--------', this);
         }
-         // 重载构造函数(相当于把类当基类，返回一个集成该类属性方法的子类)
+        // 重载构造函数(相当于把类当基类，返回一个集成该类属性方法的子类)
         //  return class extends target{
         //     name:any='重载'
         //     static date:string='jiqweqwengyaio'
@@ -884,38 +884,38 @@ function logClass1(params: any) {
 // 属性装饰器 只能修改一个值
 // 当构造函数里面为该属性重新赋值后该属性装饰器无法修改该属性值
 // 重构时会覆盖属性装饰器修改的值
-function shuxing(params:any){
-    return function(target:any,attr:any){
+function shuxing(params: any) {
+    return function (target: any, attr: any) {
         console.log("属性装饰器");
         console.log(target);//==target.prototype
         console.log(attr);//name
-        target[attr]=params
+        target[attr] = params
         console.log("属性装饰器");
     }
 }
 // 方法装饰器
-function fangfazhuangshiqi(params:any){
-    return function(target:any,method:any,desc:any){
+function fangfazhuangshiqi(params: any) {
+    return function (target: any, method: any, desc: any) {
         console.log(params);
         console.log(target);//方法为静态方法，target为构造函数; 实例方法target就是原型对象 类.prototype
         console.log(method);// 方法名
         console.log(desc);//    方法描述 {} value是方法本身 修改方法的地方
         //修改装饰的方法（重构过的类无法修改）
-        var om=desc.value
-        desc.value=function(){//替换原方法
+        var om = desc.value
+        desc.value = function () {//替换原方法
             console.log('方法装饰器修改过后的方法')
             om.apply(this)//继承原方法
         }
 
         // 可以扩展当前类的属性和方法; 通过 类的原型对象
-        target.apiTT='xxxx';
-        target.runnnnnn=function(){
+        target.apiTT = 'xxxx';
+        target.runnnnnn = function () {
             console.log("方法装饰器，增加的方法和属性")
             console.log(this.apiTT);
-            
+
         }
-        
-        
+
+
     }
 }
 
@@ -927,20 +927,20 @@ class Zhuangshi1 {
     @shuxing('属性装饰器1')
     name: string
     @shuxing('属性装饰器2')
-    name2?: string|undefined
-    age?:number
-    static date:string='jingyaio'
-    constructor(name: string,age?:number) {
+    name2?: string | undefined
+    age?: number
+    static date: string = 'jingyaio'
+    constructor(name: string, age?: number) {
         this.name = name
         this.age = age
     }
     @fangfazhuangshiqi('方法装饰器')
     getdata() {
         console.log(this.name)
-        console.log(this.name2,"name20--")
+        console.log(this.name2, "name20--")
     }
     @fangfazhuangshiqi('方法装饰器2')
-    static get(){
+    static get() {
         console.log(this.date)
     }
 }
@@ -956,20 +956,20 @@ Zhuangshi1.get()
 
 
 // 方法参数装饰器
-function fangfacanshuzhuangshi(params:any){
-    return function(target:any,method:any,index:any){
+function fangfacanshuzhuangshi(params: any) {
+    return function (target: any, method: any, index: any) {
         console.log(params);
         console.log(target);//方法为静态方法，target为构造函数; 实例方法target就是原型对象 类.prototype
         console.log(method);// 方法名
         console.log(index);//   参数的索引
     }
 }
-class Fanfashuxin{
-    constructor(){
+class Fanfashuxin {
+    constructor() {
 
     }
-    get(@fangfacanshuzhuangshi('方法参数装饰器') uu:string){
-console.log(uu)
+    get(@fangfacanshuzhuangshi('方法参数装饰器') uu: string) {
+        console.log(uu)
     }
 }
 new Fanfashuxin().get("aa")
@@ -1004,7 +1004,7 @@ class 类{
     4、方法参数装饰器1
     5、类装饰器2
     6、类装饰器1
-*/ 
+*/
 
 
 
@@ -1027,18 +1027,18 @@ class 类{
  * 
  */
 
- function extend<T,U>(first:T,second:U):T & U{
-        let result=<T&U>{};
-        for(let  id in first){
-            (<any>result)[id]=(<any>first[id])
-        }
-        for(let  id in second){
-            (<any>result)[id]=(<any>second[id])
-        }
+function extend<T, U>(first: T, second: U): T & U {
+    let result = <T & U>{};
+    for (let id in first) {
+        (<any>result)[id] = (<any>first[id])
+    }
+    for (let id in second) {
+        (<any>result)[id] = (<any>second[id])
+    }
 
-        return result
- }
- class PersonA {
+    return result
+}
+class PersonA {
     constructor(public name: string) { }
 }
 interface Loggable {
@@ -1046,8 +1046,8 @@ interface Loggable {
 }
 class ConsoleLogger implements Loggable {
     log() {
-       console.log('log');
-       
+        console.log('log');
+
     }
 }
 var jim = extend(new PersonA("Jim"), new ConsoleLogger());
@@ -1065,28 +1065,29 @@ jim.log();
 /**
  * 关键词： in typeof instanceof is
  * 
- *  
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
+
  */
 
 
-//1、 in 关键词
+//1、 in 关键词:可以遍历枚举类型
+
+type Keys = 'a' | 'b' | 'c';
+type Objooo = {
+    [T in Keys]: string;
+}
+// in 遍历 Keys，并为每个值赋予 string 类型
+
+
+
+
 
 interface Admin {
-    name:string;
-    privileges:string[];
+    name: string;
+    privileges: string[];
 }
 interface Employee {
-    name:string;
-    start:Date;
+    name: string;
+    start: Date;
 }
 
 
@@ -1101,13 +1102,13 @@ interface Employee {
 
 // 字符串字面量类型
 type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE'
-    let method: Methods
-    method = 'PUT' // OK
-    // method = 'aaa' // error
+let method: Methods
+method = 'PUT' // OK
+// method = 'aaa' // error
 
 // 拓展
 // 数字字面量类型
-declare function rollDie(): 1 | 2 | 3 | 4 | 5 | 6 ;
+declare function rollDie(): 1 | 2 | 3 | 4 | 5 | 6;
 
 // 字符串字面量 还可用于函数的重载
 function createElement(tagName: "img"): HTMLImageElement;
@@ -1146,17 +1147,17 @@ var people: LinkedList<Man>;
 
 
 
-type Unknown=Employee | Admin;
+type Unknown = Employee | Admin;
 
-function printEmployee(emp:Unknown){
+function printEmployee(emp: Unknown) {
     console.log("name" + emp.name);
-    if('privileges' in emp){
+    if ('privileges' in emp) {
         console.log('privileges');
-        
+
     }
-    if('start' in emp){
+    if ('start' in emp) {
         console.log('start');
-        
+
     }
 }
 
@@ -1172,13 +1173,13 @@ function printEmployee(emp:Unknown){
  * 
  * 
  */
- type Alinas={ num:number}
- interface Interface{
-     num:number
- }
+type Alinas = { num: number }
+interface Interface {
+    num: number
+}
 
- declare function  aliased(arg:Alinas):Alinas ;
-declare function interfaced(arg:Interface):Interface;
+declare function aliased(arg: Alinas): Alinas;
+declare function interfaced(arg: Interface): Interface;
 //2、 typeof 关键词
 
 /**
@@ -1190,11 +1191,11 @@ declare function interfaced(arg:Interface):Interface;
  * 语言不会把那些表达式识别为类型保护。
  *  
  */
-function padLeft(value:string,padding:string | number){
-    if(typeof padding ==='number'){
-        return Array(padding+1).join('')+value
+function padLeft(value: string, padding: string | number) {
+    if (typeof padding === 'number') {
+        return Array(padding + 1).join('') + value
     }
-    if(typeof padding==='string'){
+    if (typeof padding === 'string') {
         return padding + value
     }
     throw new Error('Expected string or number ,got xxxx')
@@ -1253,13 +1254,13 @@ if (padder instanceof StringPadder) {
 
 
 interface Bird {
-    fly():void;
-    layEggs():void;
+    fly(): void;
+    layEggs(): void;
 }
 
 interface Fish {
-    swim():void;
-    layEggs():void;
+    swim(): void;
+    layEggs(): void;
 }
 //4、 用户自定义的类型保护
 /**
@@ -1268,18 +1269,18 @@ interface Fish {
     每当使用一些变量调用 isFish时，TypeScript会将变量缩减为那个具体的类型，
     只要这个类型与变量的原始类型是兼容的。
  */
-function isFish(pet:Fish|Bird):pet is Fish{
-    return (<Fish> pet).swim !==undefined
+function isFish(pet: Fish | Bird): pet is Fish {
+    return (<Fish>pet).swim !== undefined
 }
 
 function fixed(name: string | null): string {
     function postfix(epithet: string) {
         //identifier!从 identifier的类型里去除了 null和 undefined
-      return name!.charAt(0) + '.  the ' + epithet; // ok
+        return name!.charAt(0) + '.  the ' + epithet; // ok
     }
     name = name || "Bob";
     return postfix("great");
-  }
+}
 
 // 可辨识联合 :
 /**
@@ -1308,8 +1309,8 @@ interface Circle {
 // 联合到一起
 type Shape = Square | Rectangle | Circle;
 // 辨识联合
-function area(s:Shape) {
-    switch(s.kind){
+function area(s: Shape) {
+    switch (s.kind) {
         case "square": return s.size * s.size;
         case "rectangle": return s.height * s.width;
         case "circle": return Math.PI * s.radius ** 2;
@@ -1333,13 +1334,13 @@ interface PersonPerson {
     name: string;
     age: number;
     location: string;
-  }
-  
-  type K1 = keyof PersonPerson; // "name" | "age" | "location"
-  type K2 = keyof PersonPerson[];  // number | "length" | "push" | "concat" | ...
-  type K3 = keyof { [x: string]: PersonPerson };  // string | number
+}
 
-  let personProps: keyof PersonPerson; // 'name' | 'age' | 'location'
+type K1 = keyof PersonPerson; // "name" | "age" | "location"
+type K2 = keyof PersonPerson[];  // number | "length" | "push" | "concat" | ...
+type K3 = keyof { [x: string]: PersonPerson };  // string | number
+
+let personProps: keyof PersonPerson; // 'name' | 'age' | 'location'
 
 //   索引类型
 // js
@@ -1351,11 +1352,107 @@ interface PersonPerson {
 // ts
 function prop<T extends object, K extends keyof T>(obj: T, key: K) {
     return obj[key];
-  }
+}
 
 
-  /**
-   * 首先定义了 T 类型并使用 extends 关键字约束该类型必须是 object 类型的子类型，
-   * 然后使用 keyof 操作符获取 T 类型的所有键，其返回类型是联合类型，
-   * 最后利用 extends 关键字约束 K 类型必须为 keyof T 联合类型的子类型。
-   */
+/**
+ * 首先定义了 T 类型并使用 extends 关键字约束该类型必须是 object 类型的子类型，
+ * 然后使用 keyof 操作符获取 T 类型的所有键，其返回类型是联合类型，
+ * 最后利用 extends 关键字约束 K 类型必须为 keyof T 联合类型的子类型。
+ */
+
+//    映射类型
+// TypeScript提供了从旧类型中创建新类型的一种方式 — 映射类型
+
+interface PersonPartial {
+    name?: string;
+    age?: number;
+}
+interface PersonReadonly {
+    readonly name: string;
+    readonly age: number;
+}
+
+
+type Readonly<T> = {
+    readonly [p in keyof T]: T[p];
+}
+
+type Partial<T> = {
+    [P in keyof T]?: T[P];
+}
+
+
+type PersonPartials = Partial<Person>
+type ReadonlyPerson = Readonly<Person>;
+
+
+// 最简单的映射类型和它的组成部分：
+type Keyss = 'option1' | 'option2'
+type Flagess = { [K in Keyss]: boolean }
+// 等同于下面
+type Flags = {
+    option1: boolean;
+    option2: boolean;
+}
+
+// 预定义的有条件类型
+/**
+    Exclude<T, U> -- 从T中剔除可以赋值给U的类型。----提取不同
+    Extract<T, U> -- 提取T中可以赋值给U的类型。----- 提取相同
+    NonNullable<T> -- 从T中剔除null和undefined。
+    ReturnType<T> -- 获取函数返回值类型。
+    InstanceType<T> -- 获取构造函数类型的实例类型。
+
+ */
+type T00=Exclude<'a' |'b','a'>//'b' 提取不同
+
+type T01=Extract<'a'|'b'| 'c','a'|'c' |'f'>//'a' 提取相同
+
+type T02=Exclude<string|number|(()=>void),Function>//string|number
+
+type T03=Extract<string |number |(()=>void),Function>//()=void
+
+type T04=NonNullable<string | number |undefined>//string |number
+
+type T05 =NonNullable<(()=>string) | string[] |null |undefined>//((=>string)) | string[]
+
+function F1(s:string){
+    return {a:1,b:s};
+}
+class C{
+    x=0;
+    y=0
+}
+
+type T10=ReturnType<()=>string>; //string
+
+type T11=ReturnType<(s:string)=>void>;//void
+
+type T12=ReturnType<(<T extends U, U extends number[]>()=>T)>;//number[]
+
+type T14=ReturnType<typeof F1>;// {a:number, b:string}
+
+type T15 = ReturnType<any>;  // any
+type T16 = ReturnType<never>;  // any
+// type T17 = ReturnType<string>;  // Error
+// type T18 = ReturnType<Function>;  // Error
+
+// 获取构造函数类型的实例类型。
+type T20 = InstanceType<typeof C>;  // C
+type T21 = InstanceType<any>;  // any
+type T22 = InstanceType<never>;  // any
+// type T23 = InstanceType<string>;  // Error
+// type T24 = InstanceType<Function>;  // Error
+
+
+// 解构数组
+let inputs=[1,2]
+let [firsts,seconds]=inputs
+console.log(firsts,seconds);
+//做为函数参数
+function fa([first, second]: [number, number]) {
+    console.log(first);
+    console.log(second);
+}
+fa([firsts, seconds]);
