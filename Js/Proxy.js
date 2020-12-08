@@ -143,3 +143,16 @@ console.log(kitty);
 // 使用特殊的方法去避免，实际上const变量的内部状态是可修改的
 
 
+// 对象解构重命名
+let o = {
+    a: "foo",
+    b: 12,
+    c: "bar",
+    d:undefined
+};
+let {a:newName,b:newName2} =o
+console.log(newName);//foo
+// 解构属性缺失-设置默值
+let {c,d=1001}=o
+
+console.log(d);//1001

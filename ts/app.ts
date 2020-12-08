@@ -1456,3 +1456,133 @@ function fa([first, second]: [number, number]) {
     console.log(second);
 }
 fa([firsts, seconds]);
+
+
+// 对象解构重命名
+let o = {
+    as: "foo",
+    b: 12,
+    c: "bar",
+    d:undefined
+};
+let {as:newName,b:newName2} =o
+console.log(newName);//foo
+
+// 指定它的类型
+let {as,b}:{as:string,b:number} =o
+
+// 解构属性缺失-设置默值
+let {c,d=1001}=o
+
+console.log(d);//1001
+
+// 解构用于函数声明
+
+type CC={a:string,b?:number}
+function CCFn({a,b}:CC):void{
+
+}
+
+
+interface ClockConstructor {//定义类的构造函数
+    new (hour: number, minute: number): ClockInterface;
+}
+interface ClockInterface {
+    tick():void;
+}
+
+function createClock(ctor: ClockConstructor, hour: number, minute: number): ClockInterface {
+    return new ctor(hour, minute);
+}
+
+class DigitalClock implements ClockInterface {
+    constructor(h: number, m: number) { }
+    tick() {
+        console.log("beep beep");
+    }
+}
+class AnalogClock implements ClockInterface {
+    constructor(h: number, m: number) { }
+    tick() {
+        console.log("tick tock");
+    }
+}
+
+let digital = createClock(DigitalClock, 12, 17);
+let analog = createClock(AnalogClock, 7, 32);
+
+interface Shapes {
+    color: string;
+}
+
+interface Squares extends Shapes {
+    sideLength: number;
+}
+
+let square:Squares = {
+    color:'blue',
+    sideLength:10
+};
+// 写法2
+let squares = <Squares>{};
+squares.color = "blue";
+squares.sideLength = 10;
+
+
+// 继承多个接口
+interface PenStroke {
+    penWidth: number;
+}
+
+interface SallPen extends Shapes,PenStroke{
+    sideLength: number;
+}
+let squaress = <SallPen>{};
+squaress.color = "blue";
+squaress.sideLength = 10;
+squaress.penWidth = 5.0;
+// 混合类型
+interface Couneter{
+    (start:number):string;
+    interval:number;
+    reset():void;
+}
+function getCounter():Couneter{
+    let counter=<Couneter>function(start:number){}
+    counter.interval=123;
+    counter.reset=function(){};
+    return counter
+}
+let csss = getCounter();
+csss(10);
+csss.reset();
+csss.interval = 5.0;
+
+// 接口继承类
+/**
+ *  当接口继承了一个类类型时，它会继承类的成员但不包括其实现。
+ *  就好像接口声明了所有类中存在的成员，但并没有提供具体实现一样。
+ *  接口同样会继承到类的private和protected成员。
+ *  这意味着当你创建了一个接口继承了一个拥有私有或受保护的成员的类时，
+ *  这个接口类型只能被这个类或其子类所实现（implement）
+ */
+class Control {
+    private state: any;
+}
+
+interface SelectableControl extends Control {
+    select(): void;
+}
+
+class Button extends Control implements SelectableControl {
+    select() { }
+}
+
+class TextBox extends Control {
+    select() { }
+}
+
+// // 错误：“Image”类型缺少“state”属性。
+// class Image implements SelectableControl {
+//     select() { }
+// }
