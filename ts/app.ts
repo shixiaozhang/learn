@@ -1405,33 +1405,33 @@ type Flags = {
     InstanceType<T> -- 获取构造函数类型的实例类型。
 
  */
-type T00=Exclude<'a' |'b','a'>//'b' 提取不同
+type T00 = Exclude<'a' | 'b', 'a'>//'b' 提取不同
 
-type T01=Extract<'a'|'b'| 'c','a'|'c' |'f'>//'a' 提取相同
+type T01 = Extract<'a' | 'b' | 'c', 'a' | 'c' | 'f'>//'a' 提取相同
 
-type T02=Exclude<string|number|(()=>void),Function>//string|number
+type T02 = Exclude<string | number | (() => void), Function>//string|number
 
-type T03=Extract<string |number |(()=>void),Function>//()=void
+type T03 = Extract<string | number | (() => void), Function>//()=void
 
-type T04=NonNullable<string | number |undefined>//string |number
+type T04 = NonNullable<string | number | undefined>//string |number
 
-type T05 =NonNullable<(()=>string) | string[] |null |undefined>//((=>string)) | string[]
+type T05 = NonNullable<(() => string) | string[] | null | undefined>//((=>string)) | string[]
 
-function F1(s:string){
-    return {a:1,b:s};
+function F1(s: string) {
+    return { a: 1, b: s };
 }
-class C{
-    x=0;
-    y=0
+class C {
+    x = 0;
+    y = 0
 }
 
-type T10=ReturnType<()=>string>; //string
+type T10 = ReturnType<() => string>; //string
 
-type T11=ReturnType<(s:string)=>void>;//void
+type T11 = ReturnType<(s: string) => void>;//void
 
-type T12=ReturnType<(<T extends U, U extends number[]>()=>T)>;//number[]
+type T12 = ReturnType<(<T extends U, U extends number[]>() => T)>;//number[]
 
-type T14=ReturnType<typeof F1>;// {a:number, b:string}
+type T14 = ReturnType<typeof F1>;// {a:number, b:string}
 
 type T15 = ReturnType<any>;  // any
 type T16 = ReturnType<never>;  // any
@@ -1447,9 +1447,9 @@ type T22 = InstanceType<never>;  // any
 
 
 // 解构数组
-let inputs=[1,2]
-let [firsts,seconds]=inputs
-console.log(firsts,seconds);
+let inputs = [1, 2]
+let [firsts, seconds] = inputs
+console.log(firsts, seconds);
 //做为函数参数
 function fa([first, second]: [number, number]) {
     console.log(first);
@@ -1463,32 +1463,32 @@ let o = {
     as: "foo",
     b: 12,
     c: "bar",
-    d:undefined
+    d: undefined
 };
-let {as:newName,b:newName2} =o
+let { as: newName, b: newName2 } = o
 console.log(newName);//foo
 
 // 指定它的类型
-let {as,b}:{as:string,b:number} =o
+let { as, b }: { as: string, b: number } = o
 
 // 解构属性缺失-设置默值
-let {c,d=1001}=o
+let { c, d = 1001 } = o
 
 console.log(d);//1001
 
 // 解构用于函数声明
 
-type CC={a:string,b?:number}
-function CCFn({a,b}:CC):void{
+type CC = { a: string, b?: number }
+function CCFn({ a, b }: CC): void {
 
 }
 
 
 interface ClockConstructor {//定义类的构造函数
-    new (hour: number, minute: number): ClockInterface;
+    new(hour: number, minute: number): ClockInterface;
 }
 interface ClockInterface {
-    tick():void;
+    tick(): void;
 }
 
 function createClock(ctor: ClockConstructor, hour: number, minute: number): ClockInterface {
@@ -1519,9 +1519,9 @@ interface Squares extends Shapes {
     sideLength: number;
 }
 
-let square:Squares = {
-    color:'blue',
-    sideLength:10
+let square: Squares = {
+    color: 'blue',
+    sideLength: 10
 };
 // 写法2
 let squares = <Squares>{};
@@ -1534,7 +1534,7 @@ interface PenStroke {
     penWidth: number;
 }
 
-interface SallPen extends Shapes,PenStroke{
+interface SallPen extends Shapes, PenStroke {
     sideLength: number;
 }
 let squaress = <SallPen>{};
@@ -1542,15 +1542,15 @@ squaress.color = "blue";
 squaress.sideLength = 10;
 squaress.penWidth = 5.0;
 // 混合类型
-interface Couneter{
-    (start:number):string;
-    interval:number;
-    reset():void;
+interface Couneter {
+    (start: number): string;
+    interval: number;
+    reset(): void;
 }
-function getCounter():Couneter{
-    let counter=<Couneter>function(start:number){}
-    counter.interval=123;
-    counter.reset=function(){};
+function getCounter(): Couneter {
+    let counter = <Couneter>function (start: number) { }
+    counter.interval = 123;
+    counter.reset = function () { };
     return counter
 }
 let csss = getCounter();
@@ -1586,3 +1586,74 @@ class TextBox extends Control {
 // class Image implements SelectableControl {
 //     select() { }
 // }
+function identity<T>(arg: T): T {
+    return arg;
+}
+
+let myIdentity: <U>(arg: U) => U = identity;
+// 这个相当于
+let XX: number = 10;
+
+// <U>(arg: U)=>U 这部分相当于number 只是一个函数类型定义
+
+let myAddIdentity: (aaaaaaa: number, bbbb: number) => number =
+    function (x: number, y: number): number { return x + y; };
+// 也是可以的。
+myIdentity(123)
+
+// 访问arg的length属性。但是无法证明arg有。length属性
+function loggingIdentity<T>(arg: T): T {
+    // console.log(arg.length);  // Error: T doesn't have .length
+    return arg;
+}
+// 1、
+function loggingIdentity1<T>(arg: T[]): T[] {
+    console.log(arg.length);  // Error: T doesn't have .length
+    return arg;
+}
+// 2、
+interface Lengthwise {
+    length: number;
+}
+function loggingIdentity2<T extends Lengthwise>(arg: T): T {
+    console.log(arg.length);  // Error: T doesn't have .length
+    return arg;
+}
+loggingIdentity2({ length: 10, value: 3 })
+
+
+function getPropertys<T extends object, K extends keyof T>(obj: T, key: K) {
+    return obj[key];
+}
+
+// 在泛型里使用类类型
+// 引用构造函数的类类型
+function create<T>(c: { new(): T }): T {
+    return new c()
+}
+
+// 使用原型属性推断并约束构造函数与类实例的关系
+class BeeKeeper {
+    hasMask: boolean=true;
+
+}
+class ZooKeeper {
+    nametag: string ='1111';
+}
+
+class Animal {
+    numLegs!: number;
+}
+class Bee extends Animal {
+    keeper!: BeeKeeper ;
+}
+
+class Lion extends Animal {
+    keeper!: ZooKeeper ;
+}
+
+function createrInstance<A extends Animal>(c: new () => A): A {
+    return new c()
+}
+createrInstance(Lion).keeper.nametag;  // 1111
+createrInstance(Bee).keeper.hasMask;   // true

@@ -56,7 +56,7 @@ export function reactive(target: object) {
     return target
   }
   // target is explicitly marked as readonly by user
-   // 如果目标对象是一个只读的响应数据,则直接返回目标对象
+   // 目标被用户显式标记为只读
   if (readonlyValues.has(target)) {
     return readonly(target)
   }
@@ -110,6 +110,7 @@ function createReactiveObject(
   collectionHandlers: ProxyHandler<any>
 ) {
   if (!isObject(target)) {
+      // 在开发模式抛出警告，生产环境直接返回目标对象
     if (__DEV__) {
       console.warn(`value cannot be made reactive: ${String(target)}`)
     }
