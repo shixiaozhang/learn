@@ -104,3 +104,5 @@ console.log(newName);//foo
 let {c,d=1001}=o
 
 console.log(d);//1001
+
+
