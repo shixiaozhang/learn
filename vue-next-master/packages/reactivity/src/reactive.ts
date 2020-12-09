@@ -163,14 +163,19 @@ export function shallowReadonly<T extends object>(
     readonlyCollectionHandlers
   )
 }
-
+// Target 目标对象
+// isReadonly 是否只读 
+// baseHandlers 基本类型的 handlers
+// collectionHandlers 主要针对(set、map、weakSet、weakMap)的 handlers
 function createReactiveObject(
   target: Target,
   isReadonly: boolean,
   baseHandlers: ProxyHandler<any>,
   collectionHandlers: ProxyHandler<any>
 ) {
+    // 如果不是对象
   if (!isObject(target)) {
+// 在开发模式抛出警告，生产环境直接返回目标对象
     if (__DEV__) {
       console.warn(`value cannot be made reactive: ${String(target)}`)
     }
@@ -178,23 +183,31 @@ function createReactiveObject(
   }
   // target is already a Proxy, return it.
   // exception: calling readonly() on a reactive object
+  // 如果目标对象已经是个 proxy 直接返回
+  // __v_reactive 和 _v_readonly 这两个属性只能有一个存在在源对象上
+  // ReactiveFlags.RAW === "__v_raw" 这个属性在 proxy 的 handler 的get 函数中会直接返回传入的原始对象
+  // 但是其实会多一个 __v_reactive 属性(也有可能是__v_readonly)
   if (
     target[ReactiveFlags.RAW] &&
     !(isReadonly && target[ReactiveFlags.IS_REACTIVE])
+
   ) {
     return target
   }
   // target already has corresponding Proxy
+  // 目标已经有相应的代理
   const proxyMap = isReadonly ? readonlyMap : reactiveMap
   const existingProxy = proxyMap.get(target)
   if (existingProxy) {
     return existingProxy
   }
   // only a whitelist of value types can be observed.
+  // 检查目标对象是否能被观察, 不能直接返回
   const targetType = getTargetType(target)
   if (targetType === TargetType.INVALID) {
     return target
   }
+  // 使用 Proxy 创建 observe 
   const proxy = new Proxy(
     target,
     targetType === TargetType.COLLECTION ? collectionHandlers : baseHandlers

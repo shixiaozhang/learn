@@ -12,6 +12,9 @@ export interface Ref<T = any> {
    * Type differentiator only.
    * We need this to be in public d.ts but don't want it to show up in IDE
    * autocomplete, so we use a private Symbol instead.
+   *仅区分类型。
+   *我们需要将其显示在公共d.ts中，但不希望它显示在IDE中
+   *自动完成功能，因此我们改用私有符号。
    */
   [RefSymbol]: true
   /**
@@ -24,9 +27,12 @@ export type ToRef<T> = T extends Ref ? T : Ref<UnwrapRef<T>>
 export type ToRefs<T = any> = {
   // #2687: somehow using ToRef<T[K]> here turns the resulting type into
   // a union of multiple Ref<*> types instead of a single Ref<* | *> type.
+  //＃2687：在某种程度上使用ToRef <T [K]>会将结果类型转换为
+   //多个Ref <*>类型的并集，而不是单个Ref <* | *>类型。
   [K in keyof T]: T[K] extends Ref ? T[K] : Ref<UnwrapRef<T[K]>>
 }
 
+// 如是是对象则调用 reactive, 否则直接返回 
 const convert = <T extends unknown>(val: T): T =>
   isObject(val) ? reactive(val) : val
 
@@ -53,7 +59,7 @@ export function shallowRef(value?: unknown) {
 
 class RefImpl<T> {
   private _value: T
-
+ // ref 标识
   public readonly __v_isRef = true
 
   constructor(private _rawValue: T, public readonly _shallow = false) {
@@ -61,6 +67,7 @@ class RefImpl<T> {
   }
 
   get value() {
+     // 依赖收集
     track(toRaw(this), TrackOpTypes.GET, 'value')
     return this._value
   }
@@ -69,12 +76,18 @@ class RefImpl<T> {
     if (hasChanged(toRaw(newVal), this._rawValue)) {
       this._rawValue = newVal
       this._value = this._shallow ? newVal : convert(newVal)
+       // 触发依赖
       trigger(toRaw(this), TriggerOpTypes.SET, 'value', newVal)
     }
   }
 }
-
+/**
+ * @description: 
+ * @param {rawValue} 原始值 
+ * @param {shallow} 是否是浅观察 
+ */
 function createRef(rawValue: unknown, shallow = false) {
+   // 如果已经是ref直接返回
   if (isRef(rawValue)) {
     return rawValue
   }

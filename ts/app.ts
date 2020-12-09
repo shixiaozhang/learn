@@ -1657,3 +1657,21 @@ function createrInstance<A extends Animal>(c: new () => A): A {
 }
 createrInstance(Lion).keeper.nametag;  // 1111
 createrInstance(Bee).keeper.hasMask;   // true
+
+
+
+
+
+
+// unknown 类型也被认为是 top type ，但它更安全。
+// 与 any 一样，所有类型都可以分配给unknown。
+
+let uncertain: unknown = 'Hello'!;
+uncertain = 12;
+uncertain = { hello: () => 'Hello!' };
+
+// 我们只能将 unknown 类型的变量赋值给 any 和 unknown。
+let notSure: any = uncertain;
+
+
+

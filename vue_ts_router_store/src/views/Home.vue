@@ -29,13 +29,16 @@ import axios from "axios";
  * reactive 主要是引用数据类型改为动态；一般用在复杂的值多层嵌套；
  * toRef 将某一个值转为 ref类型的值
  * 用法
- * let obj = { name: "syl" };//stateToref===obj.name
+ * 
+ *  let obj = { name: "syl" };    //stateToref===obj.name
     let stateToref = toRef(obj, "name");
     let obj = reactive({ name: "syl", age: "123" });
     let stateToref = toRef(obj, "name"); // 将name拿出来
-  //修改stateToref.value或 obj.name;都可以修改name的值，但是页面不更新stateToref 
+
+  //修改stateToref.value 或 obj.name;都可以修改name的值，但是页面不更新stateToref 
   // `toRef` 是对原数据的一个引用，会影响到原始值。
-  // 其中，如果你使用toref，但是视图并不会发生改变 // ref相对于用起来方便
+  // 其中，如果你使用toref，但是视图并不会发生改变
+   // ref相对于用起来方便
 
   // ---------------
   // toRefs用法：可以把一个对象之类的值，解构并且保持他的响应性

@@ -12,6 +12,7 @@ import { computed } from '@vue/runtime-dom'
 import { shallowRef, unref, customRef, triggerRef } from '../src/ref'
 
 describe('reactivity/ref', () => {
+  // 返回值是一个带有 value 对象, 并且是可以响应的
   it('should hold a value', () => {
     const a = ref(1)
     expect(a.value).toBe(1)
@@ -37,7 +38,7 @@ describe('reactivity/ref', () => {
     expect(calls).toBe(2)
     expect(dummy).toBe(2)
   })
-
+// 嵌套的属性可以响应
   it('should make nested properties reactive', () => {
     const a = ref({
       count: 1
@@ -50,7 +51,7 @@ describe('reactivity/ref', () => {
     a.value.count = 2
     expect(dummy).toBe(2)
   })
-
+// 传递空值也可以响应
   it('should work without initial value', () => {
     const a = ref()
     let dummy
@@ -62,6 +63,7 @@ describe('reactivity/ref', () => {
     expect(dummy).toBe(2)
   })
 
+  // ref 在 reactive 中会被转换成原始值，而非 ref
   it('should work like a normal property when nested in a reactive object', () => {
     const a = ref(1)
     const obj = reactive({
@@ -91,6 +93,7 @@ describe('reactivity/ref', () => {
     assertDummiesEqualTo(4)
   })
 
+  // ref 嵌套时会自动 unwrap, 访问 b.value 相当于 b.value.value
   it('should unwrap nested ref in types', () => {
     const a = ref(0)
     const b = ref(a)
@@ -107,14 +110,14 @@ describe('reactivity/ref', () => {
 
     expect(typeof (c.value.b + 1)).toBe('number')
   })
-
+// 不应解开嵌套在数组内的引用类型
   it('should NOT unwrap ref types nested inside arrays', () => {
     const arr = ref([1, ref(3)]).value
     expect(isRef(arr[0])).toBe(false)
     expect(isRef(arr[1])).toBe(true)
     expect((arr[1] as Ref).value).toBe(3)
   })
-
+// 应该解开引用类型作为数组的支持
   it('should unwrap ref types as props of arrays', () => {
     const arr = [ref(0)]
     const symbolKey = Symbol('')
@@ -128,6 +131,8 @@ describe('reactivity/ref', () => {
     expect(arrRef[symbolKey as any]).toBe(2)
   })
 
+
+  // 会检测传递 ref 的值类型 ，如果是引用类型就 reactive ，不是直接返回结果
   it('should keep tuple types', () => {
     const tuple: [number, string, { a: number }, () => number, Ref<number>] = [
       0,
@@ -164,11 +169,14 @@ describe('reactivity/ref', () => {
     expect(objRef.value[customSymbol]).toStrictEqual(obj[customSymbol])
   })
 
+  // unref 可以将 ref 还原成原始值
   test('unref', () => {
     expect(unref(1)).toBe(1)
     expect(unref(ref(1))).toBe(1)
   })
 
+
+  // shallowRef 不会发生响应，替换掉整个对象会触发响应
   test('shallowRef', () => {
     const sref = shallowRef({ a: 1 })
     expect(isReactive(sref.value)).toBe(false)
