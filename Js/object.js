@@ -158,6 +158,10 @@ Object.freeze(object)
 // 如果对象被冻结，则返回 true
 Object.isFrozen(object)
 
+// 方法设置一个指定的对象的原型 ( 即, 内部[[Prototype]]属性）到另一个对象或  null
+Object.setPrototypeOf(obj,prototype)
+ //obj 要设置其原型的对象  prototype 该对象的新原型(一个对象 或 null).
+
 
 
 // Object.assign()第一个参数是目标对象，后面的都是源对象

@@ -178,6 +178,7 @@ console.log(mapToObj(map4));//[Object: null prototype] { name: '小张', age: '1
     Set、WeakSet 是[值,值]的集合，且具有唯一性
     Map 和 WeakMap 是一种[键,值]的集合，Map 的键可以是任意类型，WeakMap 的键只能是对象类型
     Set 和 Map 有遍历方法，WeakSet 和 WeakMap 属于弱引用不可遍历
+    可以解决循环引用的问题；会把循环引用终结
  * 
  * 
  * 

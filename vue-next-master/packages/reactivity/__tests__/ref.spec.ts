@@ -195,6 +195,7 @@ describe('reactivity/ref', () => {
   test('shallowRef force trigger', () => {
     const sref = shallowRef({ a: 1 })
     let dummy
+    // ref 发生改变会触发effect()
     effect(() => {
       dummy = sref.value.a
     })
@@ -204,6 +205,7 @@ describe('reactivity/ref', () => {
     expect(dummy).toBe(1) // should not trigger yet
 
     // force trigger
+    // 强制触发更新
     triggerRef(sref)
     expect(dummy).toBe(2)
   })
@@ -290,12 +292,12 @@ describe('reactivity/ref', () => {
     expect(dummyX).toBe(4)
     expect(dummyY).toBe(5)
   })
-
+//toRefs应该对普通对象发出警告
   test('toRefs should warn on plain object', () => {
     toRefs({})
     expect(`toRefs() expects a reactive object`).toHaveBeenWarned()
   })
-
+//toRefs应该对普通数组发出警告
   test('toRefs should warn on plain array', () => {
     toRefs([])
     expect(`toRefs() expects a reactive object`).toHaveBeenWarned()
@@ -304,7 +306,6 @@ describe('reactivity/ref', () => {
   test('toRefs reactive array', () => {
     const arr = reactive(['a', 'b', 'c'])
     const refs = toRefs(arr)
-
     expect(Array.isArray(refs)).toBe(true)
 
     refs[0].value = '1'
@@ -313,7 +314,7 @@ describe('reactivity/ref', () => {
     arr[1] = '2'
     expect(refs[1].value).toBe('2')
   })
-
+// 支持自定义 ref, 自由控制 track, trigger 时间
   test('customRef', () => {
     let value = 1
     let _trigger: () => void

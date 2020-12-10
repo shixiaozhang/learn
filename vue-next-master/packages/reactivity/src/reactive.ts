@@ -202,7 +202,7 @@ function createReactiveObject(
     return existingProxy
   }
   // only a whitelist of value types can be observed.
-  // 检查目标对象是否能被观察, 不能直接返回
+  // 白名单
   const targetType = getTargetType(target)
   if (targetType === TargetType.INVALID) {
     return target

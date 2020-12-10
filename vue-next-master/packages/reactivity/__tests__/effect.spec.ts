@@ -11,12 +11,14 @@ import {
 import { ITERATE_KEY } from '../src/effect'
 
 describe('reactivity/effect', () => {
+
+  // 传递给effect的方法，会立即执行一次
   it('should run the passed function once (wrapped by a effect)', () => {
     const fnSpy = jest.fn(() => {})
     effect(fnSpy)
     expect(fnSpy).toHaveBeenCalledTimes(1)
   })
-
+// 在 effect 执行将 observe 对基本类型赋值，observe 进行改变时，将反应到基本类型上
   it('should observe basic properties', () => {
     let dummy
     const counter = reactive({ num: 0 })
@@ -26,7 +28,7 @@ describe('reactivity/effect', () => {
     counter.num = 7
     expect(dummy).toBe(7)
   })
-
+// effect 中是有 cache 存在的
   it('should observe multiple properties', () => {
     let dummy
     const counter = reactive({ num1: 0, num2: 0 })
@@ -37,6 +39,7 @@ describe('reactivity/effect', () => {
     expect(dummy).toBe(21)
   })
 
+  // 在多个 effect 中处理 observe，当 observe 发生改变时，将同步到多个 effect
   it('should handle multiple effects', () => {
     let dummy1, dummy2
     const counter = reactive({ num: 0 })
@@ -50,6 +53,7 @@ describe('reactivity/effect', () => {
     expect(dummy2).toBe(1)
   })
 
+  // 嵌套的 observe 做出改变时，也会产生响应
   it('should observe nested properties', () => {
     let dummy
     const counter = reactive({ nested: { num: 0 } })
@@ -59,7 +63,7 @@ describe('reactivity/effect', () => {
     counter.nested.num = 8
     expect(dummy).toBe(8)
   })
-
+  // 在 effect 执行将 observe 对基本类型赋值，observe 进行删除操作时，将反应到基本类型上
   it('should observe delete operations', () => {
     let dummy
     const obj = reactive({ prop: 'value' })
@@ -71,6 +75,7 @@ describe('reactivity/effect', () => {
     expect(dummy).toBe(undefined)
   })
 
+  //在 effect 执行将 observe in 操作，observe 进行删除操作时，将反应到基本类型上
   it('should observe has operations', () => {
     let dummy
     const obj = reactive<{ prop: string | number }>({ prop: 'value' })
@@ -83,6 +88,7 @@ describe('reactivity/effect', () => {
     obj.prop = 12
     expect(dummy).toBe(true)
   })
+// 对 prototype 的操作也能响应
 
   it('should observe properties on the prototype chain', () => {
     let dummy
@@ -100,7 +106,7 @@ describe('reactivity/effect', () => {
     counter.num = 3
     expect(dummy).toBe(3)
   })
-
+// 观察原型链上是否有操作
   it('should observe has operations on the prototype chain', () => {
     let dummy
     const counter = reactive({ num: 0 })
@@ -108,6 +114,10 @@ describe('reactivity/effect', () => {
     Object.setPrototypeOf(counter, parentCounter)
     effect(() => (dummy = 'num' in counter))
 
+    /**
+     * 当counter 原型上存在num  ，此时获取的num就是counter上的；
+     * 当counter 原型上不存在num ，此时获取的就是parentCouneter的num；
+     */
     expect(dummy).toBe(true)
     // @ts-ignore
     delete counter.num
@@ -138,13 +148,14 @@ describe('reactivity/effect', () => {
     expect(parentDummy).toBe(undefined)
     obj.prop = 4
     expect(dummy).toBe(4)
-    // this doesn't work, should it?
+    // this doesn't work, should it?yes
     // expect(parentDummy).toBe(4)
+    // 对parent上操作可以影响obj
     parent.prop = 2
     expect(dummy).toBe(2)
     expect(parentDummy).toBe(2)
   })
-
+// 对 function 的操作也能响应
   it('should observe function call chains', () => {
     let dummy
     const counter = reactive({ num: 0 })
@@ -158,7 +169,7 @@ describe('reactivity/effect', () => {
     counter.num = 2
     expect(dummy).toBe(2)
   })
-
+// 对 iteration 响应
   it('should observe iteration', () => {
     let dummy
     const list = reactive(['Hello'])
@@ -170,7 +181,7 @@ describe('reactivity/effect', () => {
     list.shift()
     expect(dummy).toBe('World!')
   })
-
+// 数组隐式的变化可以响应
   it('should observe implicit array length changes', () => {
     let dummy
     const list = reactive(['Hello'])
@@ -195,7 +206,7 @@ describe('reactivity/effect', () => {
     list.pop()
     expect(dummy).toBe('Hello')
   })
-
+// 计算操作可以被响应
   it('should observe enumeration', () => {
     let dummy = 0
     const numbers = reactive<Record<string, number>>({ num1: 3 })
@@ -212,7 +223,7 @@ describe('reactivity/effect', () => {
     delete numbers.num1
     expect(dummy).toBe(4)
   })
-
+// Symbol 类型可以响应
   it('should observe symbol keyed properties', () => {
     const key = Symbol('symbol keyed prop')
     let dummy, hasDummy
@@ -229,7 +240,7 @@ describe('reactivity/effect', () => {
     expect(dummy).toBe(undefined)
     expect(hasDummy).toBe(false)
   })
-
+  // well-known symbol 不能被观察
   it('should not observe well-known symbol keyed properties', () => {
     const key = Symbol.isConcatSpreadable
     let dummy
