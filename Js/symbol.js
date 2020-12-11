@@ -55,3 +55,39 @@ Symbol.keyFor(Symbol.iterator) // undefined
  * 它会首先检查给定的 key 是否已经在注册表中了。
  * 假如是，则会直接返回上次存储的那个。否则，它会再新建一个。
  */
+// Symbol.isConcatSpreadable
+
+
+// 默认情况下，Array.prototype.concat()展开其元素连接到结果中：
+
+var alpha = ['a', 'b', 'c'], 
+    numeric = [1, 2, 3]; 
+
+var alphaNumeric = alpha.concat(numeric); 
+
+console.log(alphaNumeric); // Result: ['a', 'b', 'c', 1, 2, 3]
+
+// 设置Symbol.isConcatSpreadable为false：
+
+var alpha = ['a', 'b', 'c'], 
+    numeric = [1, 2, 3]; 
+
+numeric[Symbol.isConcatSpreadable] = false;
+var alphaNumeric = alpha.concat(numeric); 
+
+console.log(alphaNumeric); // Result: ['a', 'b', 'c', [1, 2, 3] ]
+
+
+// Array-like 对象
+// 对于类数组 (array-like)对象，默认不展开。期望展开其元素用于连接，需要设置 Symbol.isConcatSpreadable 为true：
+
+var x = [1, 2, 3];
+
+var fakeArray = { 
+  [Symbol.isConcatSpreadable]: true, 
+  length: 2, 
+  0: 'hello', 
+  1: 'world' 
+}
+
+x.concat(fakeArray); // [1, 2, 3, "hello", "world"]
