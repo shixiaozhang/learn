@@ -1,18 +1,21 @@
-import React,{ Component } from 'react'
+import React, { Component } from 'react'
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Link, Route } from 'react-router-dom'
-
+// 懒加载组件
+const OtherComponent = React.lazy(() => import('./Login'));
+// React.lazy 目前只支持默认导出（export default）
 
 
 
 class App extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+    console.log(props);
     this.state = {
       name: 'xiaozhang',
       date: new Date(),
-      user: true,
+      user: false,
       list: [1, 2, 3]
     }
   }
@@ -182,23 +185,33 @@ class App extends Component {
               return <li key={index}>{item}</li>
             })}
         </ul>
+
+        {/* 懒加载组件：即React.lazy加载的组件只能在<React.Suspense>组件下使用 */}
+        {/* fallback 属性接受任何在组件加载过程中你想展示的 React 元素。
+          你可以将 Suspense 组件置于懒加载组件之上的任何位置。
+          你甚至可以用一个 Suspense 组件包裹多个懒加载组件 */}
+       {this.state.user && <React.Suspense fallback={<div>loading...</div>}>
+          <OtherComponent />
+        </React.Suspense>}
+
+
         <NameForm ></NameForm>
 
 
         <WelcomeDialog></WelcomeDialog>
-      
-        <App1 fallback={<h1>loading....</h1>} name={this.state.name} changeName={this.changeName} key='1'>
+
+        <App1 name={this.state.name} changeName={this.changeName} key='1'>
 
 
         </App1>
-        {/* <OtherComponent></OtherComponent> */}
+
+      
 
       </div>
 
     )
   }
 }
-// const OtherComponent = React.lazy(() => import('./Login'));
 
 function App1(props) {
 
@@ -264,7 +277,7 @@ class NameForm extends Component {
 
   handleSubmit = (event) => {
     console.log(event);
-    alert('提交的名字: ' + this.state.value);
+    alert('提交的名字: ' + this.state.textName);
     event.preventDefault();
   }
   render() {
@@ -313,21 +326,21 @@ function FancyBorder(props) {
 function FancyBorder2(props) {
   console.log(props);
   return (
-  <>
-  {/* <> </> 占位符 */}
-    <div className={'FancyBorder FancyBorder-' + props.color}>
-      <h1>left{props.left}</h1>
-      <h1>right{props.right}</h1>
-    </div>
-    <p></p>
-  </>
+    <>
+      {/* <> </> 占位符 */}
+      <div className={'FancyBorder FancyBorder-' + props.color}>
+        <h1>left{props.left}</h1>
+        <h1>right{props.right}</h1>
+      </div>
+      <p></p>
+    </>
   );
 }
 //插槽
 function WelcomeDialog() {
   return (
-      <div>
-    <FancyBorder color="blue">
+    <div>
+      <FancyBorder color="blue">
         <h1 className="Dialog-title">
           Welcome
             </h1>
@@ -335,8 +348,8 @@ function WelcomeDialog() {
           Thank you for visiting our spacecraft!
             </p>
       </FancyBorder>
-      <FancyBorder2 left={<UserOne/>} right={<UserTwo/>} ></FancyBorder2>
-      </div>
+      <FancyBorder2 left={<UserOne />} right={<UserTwo />} ></FancyBorder2>
+    </div>
   );
 }
 
