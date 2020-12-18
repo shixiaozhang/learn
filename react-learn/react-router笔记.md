@@ -96,20 +96,7 @@
 
 
 ###     动态路由
-            <BrowserRouter>
-                <Switch>
-                    <Route path="/" component={App}>
-                        <IndexRoute component={Dashboard} />
-                        <Route path="about" component={About} />
-                        <Route path="inbox" component={Inbox}>
-                            <Route path="messages/:id" component={Message} />
-                        </Route>
-                    </Route>
-                </Switch>
-            </BrowserRouter>
 
-
-### 或
 
             const routes = [
                {
