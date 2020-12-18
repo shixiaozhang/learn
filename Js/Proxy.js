@@ -8,15 +8,15 @@
     has	                           in操作	                                                                                            Reflect.has()
     deleteProperty	               delete操作符	                                                                                    Reflect.deleteProperty()
     getAPrototypeof	               Object.getAPrototypeof ()	  获取指定对象的原型                                               Reflect.getAPrototypeof ()
-    setAPrototypeof	               Object.setAPrototypeof ()	  获取指定对象的原型                                                  Reflect.setAPrototypeof ()
+    setAPrototypeof	               Object.setAPrototypeof ()	  修改指定对象的原型                                                  Reflect.setAPrototypeof ()
     isExtensible	               Object.isExtensible()	           判断一个对象是否可扩展                                                             Reflect.isExtensible()
     preventExtensions	           Object.preventExtensions()	       让一个对象变的不可扩展                                                                  Reflect.preventExtensions()
     getOwnPropertyDescriptor	   Object.getOwnPropertyDescriptor()	返回指定对象上一个自有属性对应的属性描述符                           Reflect.getOwnPropertyDescriptor()
     defineaProperty	               Object.defineaProperty()	       在一个对象上定义一个新属性，或者修改一个对象的现有属性， 并返回这个对象      Reflect.defineaProperty()
     ownKeys	                       Object.keys() 、Object.getOwnPropertyNames()   返回一个由指定对象的所有自身属性的属性名
                                    Object.getOwnPropertySysmbols()	 返回一个给定对象自身的所有 Symbol 属性的数组。                                                               Reflect.ownKeys()
-    apply	                       调用一个函数	                                                                                         Reflect.apply()
-    construct	                   用new调用一个函数	                                                                                    Reflect.construct()
+    apply	                       调用一个函数，就是当代理对象被当做函数执行时	   （target，this，value）                                                                                      Reflect.apply()
+    construct	                   用new调用一个函数的代理对象	                                                                                    Reflect.construct()
   
  */
 // trapTarget 被读取属性源对象（代理的目标）
