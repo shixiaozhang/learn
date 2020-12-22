@@ -271,6 +271,7 @@ class NameForm extends Component {
       // var partialState = {};
       // partialState[name] = value;
       // this.setState(partialState);
+
       [name]: value
     });
   }
@@ -323,6 +324,7 @@ function FancyBorder(props) {
     </div>
   );
 }
+//插槽
 function FancyBorder2(props) {
   console.log(props);
   return (
@@ -337,6 +339,7 @@ function FancyBorder2(props) {
   );
 }
 //插槽
+
 function WelcomeDialog() {
   return (
     <div>

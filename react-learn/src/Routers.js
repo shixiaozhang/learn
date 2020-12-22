@@ -14,6 +14,7 @@ const Login = lazy(() => import('./Login'));
 
 
 const Routers = (props) => {
+    
     return (
         <Router >
             <ul>
@@ -42,6 +43,7 @@ const Routers = (props) => {
 function R1() {
     let { path, url } = useRouteMatch();
     console.log(path, url);
+    
     return (
         <>
             <h1>r1</h1>

@@ -4,4 +4,4 @@ function Login(props){
         <h1>denglu</h1>
     )
 }
-export default  Login
+export default Login
