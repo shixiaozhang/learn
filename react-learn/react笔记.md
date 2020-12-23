@@ -136,7 +136,7 @@
         }
 ### 2. 更新过程
 
-####  2.1. componentWillReceiveProps (nextProps)被getDerivedStateFromProps(nextProps, prevState)替代
+####  2.1. componentWillReceiveProps (nextProps)被static getDerivedStateFromProps(nextProps, prevState)替代
 
         在接受父组件改变后的props需要重新渲染组件时用到的比较多
         接受一个参数nextProps
@@ -378,11 +378,11 @@
 
 ###  API
 
-      React.createContext
-      Context.Provider
-      Class.contextType
-      Context.Consumer
-      Context.displayName
+      React.createContext  创建一个 Context 对象
+      Context.Provider     Provider 接收一个 value 属性，传递给消费组件
+      Class.contextType    在组件内使用context的前置
+      Context.Consumer     消费组件订阅值  {value => /* 基于 context 值进行渲染*/}
+      Context.displayName   
 
 
 ####  React.createContext：
@@ -534,6 +534,9 @@ context 对象接受一个名为 displayName 的 property，类型为字符串�
 ###  使用：
 
 #### 1、回调引用：给DOM元素添加ref属性
+
+      ref={ele => this.eleInput = ele }
+
       在项目中常用的方式是refs回调。即为ref属性设置回调函数，当设置ref时，React会调用这个函数，并将element作为第一个参数传递给该函数。
       
 
@@ -584,7 +587,7 @@ context 对象接受一个名为 displayName 的 property，类型为字符串�
           return <Foo ref={ele => { this.componentEle = ele; console.log(ele) }} />;   // ele指向当前组件的实例
         }
       }
-refs与函数式组件:
+### refs与函数式组件:
 ref属性不能用在函数式声明的组件上，因为函数式组件不能被实例化。如以下ref赋值方式无效并且会报错：
 
 
@@ -601,10 +604,46 @@ ref属性不能用在函数式声明的组件上，因为函数式组件不能�
             return <InputText ref = {el => {this.componEle = el}}/>
           }
         }
+#### 函数式组件使用ref
 
+        function CustomTextInput(props) {
+          // 这里必须声明 textInput，这样 ref 才可以引用它
+          const textInput = useRef(null);
+
+          function handleClick() {
+            textInput.current.focus();
+          }
+
+          return (
+            <div>
+              <input
+                type="text"
+                ref={textInput} />
+              <input
+                type="button"
+                value="Focus the text input"
+                onClick={handleClick}
+              />
+            </div>
+          );
+        }
 ###  React.createRef()
 
 React提供了creatRef()函数来创建Refs，并通过该方法将ref属性附加到React组件的DOM元素上。
+
+
+
+#### ref 的值根据节点的类型而有所不同：
+
+      当 ref 属性用于 HTML 元素时，构造函数中使用 React.createRef() 创建的 ref 接收底层 DOM 元素作为其 current 属性。
+      当 ref 属性用于自定义 class 组件时，ref 对象接收组件的挂载实例作为其 current 属性。
+      你不能在函数组件上使用 ref 属性，因为他们没有实例。
+
+
+      React 会在组件挂载时给 current 属性传入 DOM 元素，并在组件卸载时传入 null 值。ref 会在 componentDidMount 或 componentDidUpdate 生命周期钩子触发前更新
+
+
+
 
 比如，我们在组件的构造函数中创建一个ref实例，使其在整个组件内可用，并将其赋值给 this.firstRef，然后在render()方法内部，将创建的ref示例传递给HTML元素。
 
@@ -618,6 +657,7 @@ React提供了creatRef()函数来创建Refs，并通过该方法将ref属性附�
           return <div ref={this.firstRef} />;
         }
       }
+
 通过这种方式创建ref，我们可以重构一些现有的业务场景。 来看一个例子：
 
         class CustomTextInput extends React.Component {
@@ -651,6 +691,7 @@ React提供了creatRef()函数来创建Refs，并通过该方法将ref属性附�
         }
 
 ### 转发refs（Forwarding refs）
+
 React提供的 Ref forwarding 方案用来将 ref 通过组件传递给其子节点。这种场景对于可复用组件库和高阶组件很有用。
 
 也就是说，可以使用 React.forwardRef 函数将 ref 转发到组件中，Ref forwarding 允许组件接收一个 ref，并将它向下传递 / 转发（用来点题）给子组件。
@@ -762,4 +803,136 @@ React提供的 Ref forwarding 方案用来将 ref 通过组件传递给其子节
 
 #### Profiler API测量渲染一个 React 应用多久渲染一次以及渲染一次的“代价”。 它的目的是识别出应用中渲染较慢的部分，或是可以使用类似 memoization 优化的部分，并从相关优化中获益。
 
+### 关于 key ：推荐使用数据里面的id作为key；
+
+受控组件：<input value={someValue} onChange={handleChange} /> 接受当前的值作为参数
+非受控组件： <input type="text" />类似于传统的表单输入
+
+####  用下标作为key会导致问题；
+
+1、当数据发生改变：非受控组件
+  a、当数据顺序不变：不存在问题；
+  b、当数据顺序变化: 一旦有顺序修改，diff 就会变得慢；例如有input输入框时；数居未变前，input的内容，不管怎么怎么追加元素；它的内容永远绑定在之前的key的下标上；
+  [a,b,c]
+   a循环的input上输入111；
+   给数组追加头追加d [d,a,b,c]；
+   111会绑定在d，所循环出的input上；
+   也就是永远绑定在下标为0 的dom节点上；
+
+####  用下标作为随机数Math.random() 会导致问题；
+  1、会diff对比每次的key都不一样；从而销毁改dom节点；创建新的dom节点；增加负担；
+
+
+
+
+### Render Props 指一种在 React 组件之间使用一个值为函数的 prop 共享代码的简单技术
+
+具有 render prop 的组件接受一个函数，该函数返回一个 React 元素并调用它而不是实现自己的渲染逻辑
+
+      <DataProvider render={data => (
+        <h1>Hello {data.target}</h1>
+      )}/>
+使用：
+
+    class MouseTracker extends React.Component {
+      render() {
+        return (
+          <div>
+            <h1>移动鼠标!</h1>
+            <Mouse render={mouse => (
+              <Cat mouse={mouse} />
+            )}/>
+          </div>
+        );
+      }
+    }
+    class Mouse extends React.Component {
+        render() {
+            return (
+              <div style={{ height: '100vh' }} onMouseMove={this.handleMouseMove}>
+
+                {/*
+                  Instead of providing a static representation of what <Mouse> renders,
+                  use the `render` prop to dynamically determine what to render.
+                */}
+                {this.props.render(this.state)}
+              </div>
+            );
+          }
+
+    }
+    class Cat extends React.Component {
+        render() {
+          const mouse = this.props.mouse;
+          return (
+            <img src="/cat.jpg" style={{ position: 'absolute', left: mouse.x, top: mouse.y }} />
+          );
+        }
+      }
+
+
+重要的是要记住，render prop 是因为模式才被称为 render prop ，你不一定要用名为 render 的 prop 来使用这种模式。事实上， 任何被用于告知组件需要渲染什么内容的函数 prop 在技术上都可以被称为 “render prop”.
+
+这样
+
+    <Mouse children={mouse => (
+      <p>鼠标的位置是 {mouse.x}，{mouse.y}</p>
+    )}/>
+
+这样
+
+    <Mouse>
+      {mouse => (
+        <p>鼠标的位置是 {mouse.x}，{mouse.y}</p>
+      )}
+    </Mouse>
+
+
+## React.Component 与 React.PureComponent
+
+
+### 1、 继承PureComponent时，不能再重写shouldComponentUpdate，否则会引发警告
+
+### 2、继承PureComponent时，进行的是浅比较，也就是说，如果是引用类型的数据，只会比较是不是同一个地址，而不会比较具体这个地址存的数据是否完全一致 
+
+### 3. 浅比较会忽略属性或状态突变的情况，其实也就是，数据引用指针没变而数据被改变的时候，也不新渲染组件。但其实很大程度上，我们是希望重新渲染的。所以，这就需要开发者自己保证避免数据突变。
+
+      class ListOfWords extends React.PureComponent {
+          render() {
+          return
+          {this.props.words.join(',')};
+          }
+      }
+      class WordAdder extends React.Component {
+            constructor(props) {
+              super(props);
+                this.state = {
+                    words: ['marklar']
+                };
+                this.handleClick = this.handleClick.bind(this);
+            }
+
+            handleClick() {
+            const words = this.state.words;
+
+            words.push('marklar');
+
+            this.setState({words: words});
+
+            }
+
+          render() {
+                return (
+
+                <button onClick={this.handleClick}>
+                click
+                </button>
+                );
+          }
+      }
+
+
+如果想使`2`中的按钮被点击后可以正确渲染*ListOfWords*，也很简单，在*WordAdder*的*handleClick*内部，
+将 `const words = this.state.words;` 改为`const words = this.state.words.slice(0);` 
+就行啦~（这时的words是在原来state的基础上复制出来一个新数组，所以引用地址当然变啦）
 

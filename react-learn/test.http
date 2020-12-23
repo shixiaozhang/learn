@@ -1,0 +1,34 @@
+### 第一个HTTP测试
+
+//httpbin.org 这个网站能测试 HTTP 请求和响应的各种信息，
+//比如 cookie、ip、headers 和登录验证等，且支持 GET、POST
+// 等多种方法，对 web 开发和测试很有帮助。
+
+GET http://httpbin.org/ip
+
+
+### 第二个HTTP测试
+
+GET http://httpbin.org/user-agent
+
+
+
+###
+
+
+### 发送JSON数据
+
+POST https://httpbin.org/post
+Content-Type: application/json
+//这里必须有一空行
+
+{
+  "query": {"a":1,"b":2}
+}
+
+
+### 定义一个变量
+
+@testurl = http://httpbin.org/cookies/set?name=value
+
+GET  {{testurl}}

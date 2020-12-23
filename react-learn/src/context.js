@@ -1,3 +1,4 @@
+
 /**
  * Context:
  * 
@@ -16,6 +17,9 @@
  *   Context.Consumer
  *   Context.displayName
  */
+
+
+
 import React, { Component, createContext } from 'react'
 
 // Context 可以让我们无须明确地传遍每一个组件，就能将值深入传递进组件树。
@@ -26,6 +30,7 @@ const UserContext = React.createContext({
     name: 'Guest',
 
 });
+
 
 class Bdd extends Component {
     constructor(props) {
@@ -56,10 +61,9 @@ class Bdd extends Component {
     }
 }
 
-
-
 // 中间件
-function Toolbar() {
+
+function Toolbar(props,aa,cc,v,bb,dd) {
     return (
         <div>
             <ThemeButton></ThemeButton>
@@ -68,7 +72,15 @@ function Toolbar() {
 }
 
 
+
+class test{
+    constructor(name){
+
+    }
+}
+
 // 中间件2
+
 function Layout() {
     return (
         <div>
