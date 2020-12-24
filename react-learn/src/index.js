@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-14 14:16:53
- * @LastEditTime: 2020-12-23 15:16:25
+ * @LastEditTime: 2020-12-24 17:24:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\react-learn\src\index.js
@@ -13,11 +13,13 @@ import './index.css';
 
 // import Bdd from './context'
 // import Refffff from './refs'
-import MouseTracker from './render'
+// import MouseTracker from './render'
+// import Api from './reactApi'
+import Example from './Hook'
 // import Routers from './Routers'
 
 ReactDOM.render(
-  <MouseTracker />
+  <Example />
   , document.getElementById('root')
 );
 

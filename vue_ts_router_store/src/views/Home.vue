@@ -9,12 +9,20 @@
     </HelloWorld>
     <h1>{{ store.state.userName }}</h1>
     <my-component-name></my-component-name>
-    <ChildComp :name='nameChild'  @change-name='changeName'/>
+    <ChildComp :name="nameChild" @change-name="changeName" />
   </div>
 </template>
   <!--<script lang='ts'>  -->
 <script >
-import { ref,toRef,toRefs, reactive, onMounted, computed, getCurrentInstance } from "vue";
+import {
+  ref,
+  toRef,
+  toRefs,
+  reactive,
+  onMounted,
+  computed,
+  getCurrentInstance,
+} from "vue";
 import { provide } from "vue"; //provide和inject 在子孙组件中传值
 import { useStore } from "vuex";
 import { useRouter, useLink, useRoute } from "vue-router";
@@ -88,7 +96,7 @@ export default {
   },
   setup(props, context) {
     console.log(props, context);
-    const nameChild=ref("我是要传给子组件的数据")
+    const nameChild = ref("我是要传给子组件的数据");
     const data = useGetData();
     // -----------
     // getCurrentInstance 方法获取当前组件的实例，然后通过 ctx 属性获得当前上下文，
@@ -110,6 +118,7 @@ export default {
     setTimeout(() => {
       router.push({ path: "/about", query: { user: "小张在跳转" } });
     }, 15000);
+    
     //  vue3中store调用新方式
     const store = useStore();
     store.commit("edit", "jack");
@@ -125,6 +134,7 @@ export default {
         console.log(err);
       });
     console.log(data);
+
     // 封装的接口的返回值
     const post = (api, params) => {
       // return 才能接then和catch
@@ -142,13 +152,13 @@ export default {
           });
       });
     };
+
     post("login", { name: "小张" }).catch((err) => {
       console.log(err);
     });
     // 子孙组件传值
 
-
-    const msg = ref('子孙组件的传值');
+    const msg = ref("子孙组件的传值");
     const state = reactive({
       testMsg: "测试往下透传一个数据",
       testMsg2: "透传一个静态",
@@ -159,21 +169,22 @@ export default {
       msg.value++;
     };
 
-  provide("testMsg", toRef(state, 'testMsg'))
-    provide("testMsg2", state.testMsg2)
-    provide("msg", msg)
-// 子组件触发父组件事件
-const changeName=()=>{
-  nameChild.value="我是修改过的父组件的传参"
-}
-    return { 
+    provide("testMsg", toRef(state, "testMsg"));
+    provide("testMsg2", state.testMsg2);
+    provide("msg", msg);
+    // 子组件触发父组件事件
+    const changeName = () => {
+      nameChild.value = "我是修改过的父组件的传参";
+    };
+    return {
       nameChild,
-      data, 
+      data,
       store,
       ...toRefs(state),
       changeTest,
       msg,
-      changeName };
+      changeName,
+    };
   },
 };
 </script>

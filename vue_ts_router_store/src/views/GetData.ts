@@ -1,4 +1,12 @@
-// 分装部分功能
+/*
+ * @Author: your name
+ * @Date: 2020-11-25 17:33:46
+ * @LastEditTime: 2020-12-24 17:26:23
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \learn\vue_ts_router_store\src\views\GetData.ts
+ */
+// 封装部分功能
 
 import { ref, reactive, onMounted, computed } from "vue";
 export  const useGetData = function () {

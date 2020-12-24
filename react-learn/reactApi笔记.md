@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-23 16:42:38
- * @LastEditTime: 2020-12-23 17:57:06
+ * @LastEditTime: 2020-12-24 16:51:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\react-learn\reactApi.md
@@ -65,15 +65,6 @@
 * props
 * state
 
-## React.PureComponent
-
-    React.PureComponent 与 React.Component 很相似。两者的区别在于 React.Component 并未实现 shouldComponentUpdate()，而 React.PureComponent 中以浅层对比 prop 和 state 的方式来实现了该函数。
-
-    如果赋予 React 组件相同的 props 和 state，render() 函数会渲染相同的内容，那么在某些情况下使用 React.PureComponent 可提高性能
-
-    React.PureComponent 中的 shouldComponentUpdate() 仅作对象的浅层比较。如果对象中包含复杂的数据结构，则有可能因为无法检查深层的差别，产生错误的比对结果。仅在你的 props 和 state 较为简单时，才使用 React.PureComponent，或者在深层数据结构发生变化时调用 forceUpdate() 来确保组件被正确地更新。你也可以考虑使用 immutable 对象加速嵌套数据的比较。
-
-    此外，React.PureComponent 中的 shouldComponentUpdate() 将跳过所有子组件树的 prop 更新。因此，请确保所有子组件也都是“纯”的组件。
 
 ### render()
 
@@ -120,6 +111,16 @@
  ### componentWillUnmount()
 
  componentWillUnmount() 会在组件卸载及销毁之前直接调用。在此方法中执行必要的清理操作
+
+## React.PureComponent
+
+    React.PureComponent 与 React.Component 很相似。两者的区别在于 React.Component 并未实现 shouldComponentUpdate()，而 React.PureComponent 中以浅层对比 prop 和 state 的方式来实现了该函数。
+
+    如果赋予 React 组件相同的 props 和 state，render() 函数会渲染相同的内容，那么在某些情况下使用 React.PureComponent 可提高性能
+
+    React.PureComponent 中的 shouldComponentUpdate() 仅作对象的浅层比较。如果对象中包含复杂的数据结构，则有可能因为无法检查深层的差别，产生错误的比对结果。仅在你的 props 和 state 较为简单时，才使用 React.PureComponent，或者在深层数据结构发生变化时调用 forceUpdate() 来确保组件被正确地更新。你也可以考虑使用 immutable 对象加速嵌套数据的比较。
+
+    此外，React.PureComponent 中的 shouldComponentUpdate() 将跳过所有子组件树的 prop 更新。因此，请确保所有子组件也都是“纯”的组件。
 
  ## 不常用的生命周期方法
 
@@ -213,3 +214,162 @@ Suspense 使得组件可以“等待”某些操作结束后，再进行渲染�
 
 * React.lazy
 * React.Suspense
+
+
+
+## React.memo 记忆组件渲染
+React.memo 为高阶组件。它与 React.PureComponent 非常相似，但只适用于函数组件，而不适用 class 组件
+
+        const MyComponent = React.memo(function MyComponent(props) {
+        /* 使用 props 渲染 */
+        });
+
+默认情况下其只会对复杂对象做浅层对比，如果你想要控制对比过程，那么请将自定义的比较函数通过第二个参数传入来实现
+
+        function MyComponent(props) {
+        /* 使用 props 渲染 */
+        }
+        function areEqual(prevProps, nextProps) {
+        /*
+        如果把 nextProps 传入 render 方法的返回结果与
+        将 prevProps 传入 render 方法的返回结果一致则返回 true，
+        否则返回 false
+        */
+        }
+        export default React.memo(MyComponent, areEqual);
+
+        
+
+
+        
+## Dom元素:
+
+### dangerouslySetInnerHTML
+
+dangerouslySetInnerHTML 是 React 为浏览器 DOM 提供 innerHTML 的替换方案。
+
+使用代码直接设置 HTML 存在风险，因为很容易无意中使用户暴露于跨站脚本（XSS）的攻击
+
+可以直接在 React 中设置 HTML，但当你想设置 dangerouslySetInnerHTML 时，需要向其传递包含 key 为 __html 的对象，以此来警示你。例如：
+
+        function createMarkup() {
+        return {__html: 'First &middot; Second'};
+        }
+
+        function MyComponent() {
+        return <div dangerouslySetInnerHTML={createMarkup()} />;
+        }
+
+### style:接收一个对象作为参数；
+
+        const divStyle = {
+        color: 'blue',
+        backgroundImage: 'url(' + imgUrl + ')',
+        };
+
+        function HelloWorldComponent() {
+        return <div style={divStyle}>Hello World!</div>;
+        }
+        或
+        function HelloWorldComponent() {
+        return <div style={{color: 'blue'}}>Hello World!</div>;
+        }
+
+### 注意：可以使用自定义属性，但要注意属性名全都为小写。
+
+## 事件：
+
+### 剪贴板事件
+
+事件名：
+
+    onCopy onCut onPaste
+
+### 复合事件
+
+事件名：
+
+   onCompositionEnd onCompositionStart onCompositionUpdate
+
+### 键盘事件
+
+事件名:
+
+    onKeyDown onKeyPress onKeyUp
+
+
+### 焦点事件
+
+事件名：
+
+    onFocus onBlur
+
+
+###  表单事件
+
+ 事件名：
+
+    onChange onInput onInvalid onReset onSubmit 
+
+
+###  通用事件
+
+事件名称：
+
+    onError onLoad
+
+
+ ### 鼠标事件：
+
+    onClick onContextMenu onDoubleClick onDrag onDragEnd onDragEnter onDragExit
+    onDragLeave onDragOver onDragStart onDrop onMouseDown onMouseEnter onMouseLeave
+    onMouseMove onMouseOut onMouseOver onMouseUp
+
+### 触摸事件
+事件名：
+
+    onTouchCancel onTouchEnd onTouchMove onTouchStart
+
+
+
+### UI 事件
+事件名：
+
+    onScroll
+
+
+### 滚轮事件
+事件名：
+
+    onWheel
+
+### 媒体事件
+事件名：
+
+    onAbort onCanPlay onCanPlayThrough onDurationChange onEmptied onEncrypted
+    onEnded onError onLoadedData onLoadedMetadata onLoadStart onPause onPlay
+    onPlaying onProgress onRateChange onSeeked onSeeking onStalled onSuspend
+    onTimeUpdate onVolumeChange onWaiting
+
+
+###  图像事件
+事件名：
+
+    onLoad onError
+
+### 动画事件
+事件名：
+
+    onAnimationStart onAnimationEnd onAnimationIteration
+
+
+### 过渡事件
+事件名：
+
+    onTransitionEnd
+
+
+### 其他事件
+事件名：
+
+    onToggle
