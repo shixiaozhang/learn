@@ -584,7 +584,7 @@ context 对象接受一个名为 displayName 的 property，类型为字符串�
              
           }
         render() {
-          return <Foo ref={ele => { this.componentEle = ele; console.log(ele) }} />;   // ele指向当前组件的实例
+          return <Foo ref={ele => { this.componentEle = ele; console.log(ele) }} />;   // ele指向当前组件的实例,ref只能添加到class组件上，不能添加到函数组件上
         }
       }
 ### refs与函数式组件:
@@ -742,7 +742,8 @@ React提供的 Ref forwarding 方案用来将 ref 通过组件传递给其子节
       );
 可以这样使用这个高阶组件：
 
-      // 将 TextInput 传入 Input 高阶组件，会返回一个 InputField component
+      // 将 TextInput 传入 Input 高阶组件，会返回一个 InputField component:
+      
         const InputField = Input(TextInput);
         class CustomTextInput extends React.Component {
           render() {;

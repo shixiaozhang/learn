@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-24 17:14:31
- * @LastEditTime: 2020-12-25 16:54:21
+ * @LastEditTime: 2020-12-28 18:05:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\react-learn\Hook笔记.md
@@ -20,7 +20,7 @@
 只能在函数最外层调用 Hook。不要在循环、条件判断或者子函数中调用。
 只能在 React 的函数组件中调用 Hook。不要在其他 JavaScript 函数中调用。（还有一个地方可以调用 Hook —— 就是自定义的 Hook 中，我们稍后会学习到。）
 
-## useState
+## useState 浅比较
 
 ### 使用：const [count, setCount] = useState(0);
         import React, { useState, useEffect } from 'react';
@@ -68,7 +68,7 @@
 
         useEffect(() => {
         document.title = `You clicked ${count} times`;
-        }, []); // 仅在 count 更改时更新
+        }, []); // 仅在 count 更改时更新，也是浅比较
 
 
 
@@ -306,3 +306,219 @@ initialState 参数只会在组件的初始渲染中起作用，后续渲染时�
 然而，并非所有 effect 都可以被延迟执行。例如，在浏览器执行下一次绘制前，用户可见的 DOM 变更就必须同步执行，这样用户才不会感觉到视觉上的不一致。（概念上类似于被动监听事件和主动监听事件的区别。）React 为此提供了一个额外的 useLayoutEffect Hook 来处理这类 effect。它和 useEffect 的结构相同，区别只是调用时机不同。
 
 虽然 useEffect 会在浏览器绘制后延迟执行，但会保证在任何新的渲染前执行。React 将在组件更新前刷新上一轮渲染的 effect。
+
+
+
+
+### useContext
+
+        const value = useContext(MyContext);
+
+接收一个 context 对象（React.createContext 的返回值）并返回该 context 的当前值。当前的 context 值由上层组件中距离当前组件最近的 <MyContext.Provider> 的 value prop 决定。
+
+当组件上层最近的 <MyContext.Provider> 更新时，该 Hook 会触发重渲染，并使用最新传递给 MyContext provider 的 context value 值。即使祖先使用 React.memo 或 shouldComponentUpdate，也会在组件本身使用 useContext 时重新渲染。
+
+* 正确： useContext(MyContext)
+* 错误： useContext(MyContext.Consumer)
+* 错误： useContext(MyContext.Provider)
+
+调用了 useContext 的组件总会在 context 值变化时重新渲染。
+
+#### 注意
+
+useContext(MyContext) 相当于 class 组件中的 static contextType = MyContext 或者 <MyContext.Consumer>。
+
+useContext(MyContext) 只是让你能够读取 context 的值以及订阅 context 的变化。你仍然需要在上层组件树中使用 <MyContext.Provider> 来为下层组件提供 context
+
+## 额外的 Hook
+
+### useReducer
+
+        const [state, dispatch] = useReducer(reducer, initialArg);
+    
+
+useState 的替代方案。它接收一个形如 (state, action) => newState 的 reducer，并返回当前的 state 以及与其配套的 dispatch 方法。
+
+        const [state, dispatch] = useReducer(reducer, initialArg, init);
+
+你可以选择惰性地创建初始 state。为此，需要将 init 函数作为 useReducer 的第三个参数传入，这样初始 state 将被设置为 init(initialArg)
+
+
+
+        const initialState = {count: 0};
+
+        function reducer(state, action) {
+        switch (action.type) {
+            case 'increment':
+            return {count: state.count + 1};
+            case 'decrement':
+            return {count: state.count - 1};
+            default:
+            throw new Error();
+        }
+        }
+
+        function Counter() {
+        const [state, dispatch] = useReducer(reducer, initialState);
+        return (
+            <>
+            Count: {state.count}
+            <button onClick={() => dispatch({type: 'decrement'})}>-</button>
+            <button onClick={() => dispatch({type: 'increment'})}>+</button>
+            </>
+        );
+        }
+
+#### 指定初始 state
+有两种不同初始化 useReducer state 的方式，你可以根据使用场景选择其中的一种。将初始 state 作为第二个参数传入 useReducer 是最简单的方法：
+
+        const [state, dispatch] = useReducer(
+            reducer,
+            {count: initialCount}
+        );
+
+
+#### 惰性初始化
+你可以选择惰性地创建初始 state。为此，需要将 init 函数作为 useReducer 的第三个参数传入，这样初始 state 将被设置为 init(initialArg)。
+
+这么做可以将用于计算 state 的逻辑提取到 reducer 外部，这也为将来对重置 state 的 action 做处理提供了便利：
+
+        function init(initialCount) {
+        return {count: initialCount};
+        }
+
+        function reducer(state, action) {
+        switch (action.type) {
+            case 'increment':
+            return {count: state.count + 1};
+            case 'decrement':
+            return {count: state.count - 1};
+            case 'reset':
+            return init(action.payload);
+            default:
+            throw new Error();
+        }
+        }
+
+        function Counter({initialCount}) {
+        const [state, dispatch] = useReducer(reducer, initialCount, init);
+        return (
+            <>
+            Count: {state.count}
+            <button
+                onClick={() => dispatch({type: 'reset', payload: initialCount})}>
+                Reset
+            </button>
+            <button onClick={() => dispatch({type: 'decrement'})}>-</button>
+            <button onClick={() => dispatch({type: 'increment'})}>+</button>
+            </>
+        );
+        }
+
+### useCallback 、useMemo
+
+    useCallback(fn,[xxx])
+    useMemo(fn,[xxx])
+
+useCallback和useMemo写法类似但是：
+
+*    useCallback返回一个不会因为页面渲染而重新定义的函数；
+*    useMemo返回的是一个不会因为页面渲染重新加载的函数的返回值
+
+
+两者多用于，父组件更新导致子组件跟着重新渲染，导致子组件的某些函数或者值重新加载造成性能浪费；
+
+       
+
+### useRef
+
+    const refContainer = useRef(initialValue);
+
+useRef 返回一个可变的 ref 对象，其 .current 属性被初始化为传入的参数（initialValue）。返回的 ref 对象在组件的整个生命周期内保持不变。
+
+这是因为它创建的是一个普通 Javascript 对象。而 useRef() 和自建一个 {current: ...} 对象的唯一区别是，useRef 会在每次渲染时返回同一个 ref 对象
+
+###  callback ref 
+当 ref 对象内容发生变化时，useRef 并不会通知你。变更 .current 属性不会引发组件重新渲染。如果想要在 React 绑定或解绑 DOM 节点的 ref 时运行某些代码，则需要使用回调 ref 来实现。
+
+getBoundingClientRect用于获取某个元素相对于视窗的位置集合。集合中有top, right, bottom, left等属性。
+
+    function MeasureExample() {
+        const [height, setHeight] = useState(0);
+
+        const measuredRef = useCallback(node => {
+            if (node !== null) {
+                
+            setHeight(node.getBoundingClientRect().height);
+            }
+        }, []);
+
+        return (
+            <>
+            <h1 ref={measuredRef}>Hello, world</h1>
+            <h2>The above header is {Math.round(height)}px tall</h2>
+            </>
+        );
+    }
+
+
+### useImperativeHandle
+
+    useImperativeHandle(ref, createHandle, [deps])
+
+* ref：定义 current 对象的 ref ,
+  
+* createHandle：一个函数，返回值是一个对象，即这个 ref 的 current对象 
+  
+* [deps]：即依赖列表，当监听的依赖发生变化useImperativeHandle 才会重新将子组件的实例属性输出到父组件
+  
+
+
+useImperativeHandle 可以让你在使用 ref 时自定义暴露给父组件的实例值。在大多数情况下，应当避免使用 ref 这样的命令式代码。useImperativeHandle 应当与 forwardRef 一起使用：
+
+        function FancyInput(props, ref) {
+            const inputRef = useRef();
+            useImperativeHandle(ref, () => ({
+                focus: () => {
+                    inputRef.current.focus();
+                }
+            }));
+
+            return <input ref={inputRef} ... />;
+        }
+        FancyInput = forwardRef(FancyInput);
+        
+        //父组件中
+
+        const Ref=useRef()
+        
+         <FancyInput ref={Ref} />
+
+        渲染 <FancyInput ref={inputRef} /> 的父组件可以调用 inputRef.current.focus()。
+
+        const attRef = useRef(0);
+        {attRef.current}//0
+
+
+
+#### 总结：
+ 就是把父组件传过来的ref，传入useImperativeHandle第一个参数，把他当做一个对象key，而useImperativeHandle的第二个参数（回调函数）会返回一个对象来当父组件传过来的Ref对象的值相当于一个map；key是父组件的Ref，值是子组件的返回对象；
+返回对象里可以有各种属性：
+1、通过子组件的inputRef；获取子组件的dom节点对象，或对其进行的操作；
+{
+focus: () => {
+    inputRef.current.focus();
+  }
+}
+2、子组件的各种参数，ref可以当变量使用,改变不会重新渲染；
+const [ fresh, setFresh ] = useState(false)
+const attRef = useRef(0);
+
+{
+      attRef,
+      fresh
+}
+
+
+#### 注意 
+Ref和inputRef一共两个ref，分别是父组件定义的ref，和子组件定义的ref；
