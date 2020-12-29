@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-24 17:14:31
- * @LastEditTime: 2020-12-28 18:05:21
+ * @LastEditTime: 2020-12-29 11:23:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\react-learn\Hook笔记.md
@@ -337,7 +337,7 @@ useContext(MyContext) 只是让你能够读取 context 的值以及订阅 contex
         const [state, dispatch] = useReducer(reducer, initialArg);
     
 
-useState 的替代方案。它接收一个形如 (state, action) => newState 的 reducer，并返回当前的 state 以及与其配套的 dispatch 方法。
+useState 的替代方案。它接收一个形如 (state, action) => newState 的 reducer，和一个初始值initialArg。并返回当前的 state 以及与其配套的 dispatch 方法。
 
         const [state, dispatch] = useReducer(reducer, initialArg, init);
 
@@ -348,28 +348,31 @@ useState 的替代方案。它接收一个形如 (state, action) => newState 的
         const initialState = {count: 0};
 
         function reducer(state, action) {
-        switch (action.type) {
-            case 'increment':
-            return {count: state.count + 1};
-            case 'decrement':
-            return {count: state.count - 1};
-            default:
-            throw new Error();
-        }
+            switch (action.type) {
+                case 'increment':
+                return {count: state.count + 1};
+                case 'decrement':
+                return {count: state.count - 1};
+                default:
+                throw new Error();
+            }
         }
 
         function Counter() {
-        const [state, dispatch] = useReducer(reducer, initialState);
-        return (
-            <>
-            Count: {state.count}
-            <button onClick={() => dispatch({type: 'decrement'})}>-</button>
-            <button onClick={() => dispatch({type: 'increment'})}>+</button>
-            </>
-        );
+            
+            const [state, dispatch] = useReducer(reducer, initialState);
+
+            return (
+                <>
+                Count: {state.count}
+                <button onClick={() => dispatch({type: 'decrement'})}>-</button>
+                <button onClick={() => dispatch({type: 'increment'})}>+</button>
+                </>
+            );
         }
 
 #### 指定初始 state
+
 有两种不同初始化 useReducer state 的方式，你可以根据使用场景选择其中的一种。将初始 state 作为第二个参数传入 useReducer 是最简单的方法：
 
         const [state, dispatch] = useReducer(
@@ -379,6 +382,7 @@ useState 的替代方案。它接收一个形如 (state, action) => newState 的
 
 
 #### 惰性初始化
+
 你可以选择惰性地创建初始 state。为此，需要将 init 函数作为 useReducer 的第三个参数传入，这样初始 state 将被设置为 init(initialArg)。
 
 这么做可以将用于计算 state 的逻辑提取到 reducer 外部，这也为将来对重置 state 的 action 做处理提供了便利：
@@ -522,3 +526,16 @@ const attRef = useRef(0);
 
 #### 注意 
 Ref和inputRef一共两个ref，分别是父组件定义的ref，和子组件定义的ref；
+
+
+### useLayoutEffect ：useEffect同步版本
+
+其函数签名与 useEffect 相同，但它会在所有的 DOM 变更之后同步调用 effect。可以使用它来读取 DOM 布局并同步触发重渲染。在浏览器执行绘制之前，useLayoutEffect 内部的更新计划将被同步刷新。
+
+### useDebugValue
+
+    useDebugValue(value)
+
+    useDebugValue(date, date => date.toDateString());
+
+    useDebugValue 可用于在 React 开发者工具中显示自定义 hook 的标签。
