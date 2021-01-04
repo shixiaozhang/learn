@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-30 21:05:51
- * @LastEditTime: 2020-12-30 21:14:43
+ * @LastEditTime: 2021-01-04 14:33:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\react-learn\react-redux-api.md
@@ -22,23 +22,23 @@
 ### Vanilla React
 
         ReactDOM.render(
-        <Provider store={store}>
-            <MyRootComponent />
-        </Provider>,
-        rootEl
+            <Provider store={store}>
+                <MyRootComponent />
+            </Provider>,
+        document.getElementById('root')
         )
         
 ### React Router
 
         ReactDOM.render(
-        <Provider store={store}>
-            <Router history={history}>
-            <Route path="/" component={App}>
-                <Route path="foo" component={Foo}/>
-                <Route path="bar" component={Bar}/>
-            </Route>
-            </Router>
-        </Provider>,
+            <Provider store={store}>
+                <Router history={history}>
+                <Route path="/" component={App}>
+                    <Route path="foo" component={Foo}/>
+                    <Route path="bar" component={Bar}/>
+                </Route>
+                </Router>
+            </Provider>,
         document.getElementById('root')
         )
 
@@ -51,12 +51,14 @@
 
 ## connect 参数:
 
+
 ### [mapStateToProps(state, [ownProps]): stateProps] (Function): 
 
 如果定义该参数，组件将会监听 Redux store 的变化。任何时候，只要 Redux store 发生改变，mapStateToProps 函数就会被调用。该回调函数必须返回一个纯对象，这个对象会与组件的 props 合并。如果你省略了这个参数，你的组件将不会监听 Redux store。如果指定了该回调函数中的第二个参数 ownProps，则该参数的值为传递到组件的 props，而且只要组件接收到新的 props，mapStateToProps 也会被调用（例如，当 props 接收到来自父组件一个小小的改动，那么你所使用的 ownProps 参数，mapStateToProps 都会被重新计算）。
 
 #### 注意：
 在高级章节中，你需要更好地去控制渲染的性能，所用到的 mapStateToProps() 会返回一个函数。在这种情况下，那个函数将被作为 mapStateToProps() 在独有的组件实例中调用。这样就允许你在每一个实例中去记录。你可以参考 #279 去测试和了解其中的详细内容。但在绝大多数的应用中不会用到。
+
 
 ###  [mapDispatchToProps(dispatch, [ownProps]): dispatchProps] (Object or Function): 
 
@@ -68,8 +70,11 @@
 
 在高级章节中，你需要更好地去控制渲染的性能，所用到的 mapStateToProps() 会返回一个函数。但在这个例子中，这个函数将被 mapStateToProps() 在独有的组件实例中调用。这样就允许你在每一个实例中去记录。你可以参考 #279 去测试和了解其中的详细内容。但在绝大多数的应用中不会用到。
 
+
 ###   [mergeProps(stateProps, dispatchProps, ownProps): props] (Function):
+
  如果指定了这个参数，mapStateToProps() 与 mapDispatchToProps() 的执行结果和组件自身的 props 将传入到这个回调函数中。该回调函数返回的对象将作为 props 传递到被包装的组件中。你也许可以用这个回调函数，根据组件的 props 来筛选部分的 state 数据，或者把 props 中的某个特定变量与 action creator 绑定在一起。如果你省略这个参数，默认情况下返回 Object.assign({}, ownProps, stateProps, dispatchProps) 的结果。
+
 
 ###  [options] (Object) 如果指定这个参数，可以定制 connector 的行为:
 
@@ -86,26 +91,27 @@
 如果定义一个包含强制性参数函数（这个函数的长度为 1）时，ownProps 不会传到 mapStateToProps 和 mapDispatchToProps 中。举个例子，如下这样定义一个函数时将不会接收到 ownProps 作为第二个参数。
 
         function mapStateToProps(state) {
-        console.log(state); // state
-        console.log(arguments[1]); // undefined
+            console.log(state); // state
+            console.log(arguments[1]); // undefined
         }
         const mapStateToProps = (state, ownProps = {}) => {
-        console.log(state); // state
-        console.log(ownProps); // undefined
+            console.log(state); // state
+            console.log(ownProps); // undefined
         }
+        
         当函数没有强制性的参数或两个参数时将接收到 ownProps。
 
         const mapStateToProps = (state, ownProps) => {
-        console.log(state); // state
-        console.log(ownProps); // ownProps
+            console.log(state); // state
+            console.log(ownProps); // ownProps
         }
         function mapStateToProps() {
-        console.log(arguments[0]); // state
-        console.log(arguments[1]); // ownProps
+            console.log(arguments[0]); // state
+            console.log(arguments[1]); // ownProps
         }
         const mapStateToProps = (...args) => {
-        console.log(args[0]); // state
-        console.log(args[1]); // ownProps
+            console.log(args[0]); // state
+            console.log(args[1]); // ownProps
         }
         
 ## connect 返回值:
@@ -121,10 +127,12 @@ WrappedComponent (Component): 传递到 connect() 函数的原始组件类。
 组件原来的静态方法都被提升到被包装的 React 组件。
 
 ## connect 实例方法
+
 getWrappedInstance(): ReactComponent
 仅当 connect() 函数的第四个参数 options 设置了 { withRef: true } 才返回被包装的组件实例。
 
 ## connect 备注
+
 函数将被调用两次。第一次是设置参数，第二次是组件与 Redux store 连接：connect(mapStateToProps, mapDispatchToProps, mergeProps)(MyComponent)。
 
 connect 函数不会修改传入的 React 组件，返回的是一个新的已与 Redux store 连接的组件，而且你应该使用这个新组件。
@@ -156,7 +164,7 @@ mapStateToProps 函数接收整个 Redux store 的 state 作为 props，然后�
 ### 注入 dispatch 和 todos
 
     function mapStateToProps(state) {
-    return { todos: state.todos }
+        return { todos: state.todos }
     }
 
     export default connect(mapStateToProps)(TodoApp)
