@@ -1,24 +1,24 @@
 /*
  * @Author: your name
  * @Date: 2021-01-04 17:28:14
- * @LastEditTime: 2021-01-05 17:58:02
+ * @LastEditTime: 2021-01-05 21:23:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\react-learn\src\reduxAsync\reducers\index.js
  */
 import { combineReducers } from 'redux'
-const state = {
+const data = {
     type: 'A',
     student: [
         {
             id: '0',
             name: 'zhangsan',
-            sge: 18
+            age: 18
         },
         {
             id: '1',
             name: 'lisi',
-            sge: 18
+            age: 18
         }
     ],
     teacher: [
@@ -30,7 +30,7 @@ const state = {
         {
             id: '1',
             name: 'liu',
-            age: '29'
+            age:29
         }
     ]
 }
@@ -39,12 +39,11 @@ export const ADD_A = 'ADD_A';
 export const ADD_B = 'ADD_B';
 export const DEL_A = "DEL_A";
 export const DEL_B = "DEL_B";
-export const UPDATE = 'UPDATE'
 
 export const SHOW = 'SHOW';
 
 
-export const student = (state = [], action) => {
+export const student = (state = data.student, action) => {
     switch (action.type) {
         case ADD_A:
             const id = state.map(item => {
@@ -53,19 +52,13 @@ export const student = (state = [], action) => {
             if (id) {
                 return [...state, action.val]
             }
-
+            return  state
         case DEL_A:
             return state.filter(item => {
                 return !(item.id === action.val.id)
 
             })
 
-        case UPDATE:
-
-            return state.map(item => {
-                item.id === action.val.id && (item = action.val);
-                return item
-            })
 
         default:
             return state
@@ -74,7 +67,7 @@ export const student = (state = [], action) => {
 }
 
 
-export const teacher = (state = [], action) => {
+export const teacher = (state = data.teacher, action) => {
     switch (action.type) {
         case ADD_B:
             const id = state.map(item => {
@@ -83,18 +76,11 @@ export const teacher = (state = [], action) => {
             if (id) {
                 return [...state, action.val]
             }
-
+            return state
         case DEL_B:
             return state.filter(item => {
                 return !(item.id === action.val.id)
 
-            })
-
-        case UPDATE:
-
-            return state.map(item => {
-                item.id === action.val.id && (item = action.val);
-                return item
             })
 
         default:
@@ -103,12 +89,10 @@ export const teacher = (state = [], action) => {
 }
 
 
-export const type = (state = 'A', action) => {
+export const show = (state = 'A', action) => {
     switch (action.type) {
         case SHOW:
-
             return action.class
-
         default:
             return state
     }
@@ -117,7 +101,7 @@ export const type = (state = 'A', action) => {
 
 export const reducers = combineReducers(
     {
-        type,
+        show,
         student,
         teacher
     }

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-03 11:34:43
- * @LastEditTime: 2021-01-04 17:14:06
+ * @LastEditTime: 2021-01-05 21:37:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\node\app.js
@@ -41,7 +41,16 @@
 const path = require('path')
 const express = require('express')
 const app = express()
+
 app.set("port", process.env.PORT || 8000);
+app.all('*', (req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+  res.header("X-Powered-By",' 3.2.1')
+  res.header("Content-Type", "application/json;charset=utf-8");
+  next();
+});
 app.get('/', (req, res) => {
   res.send('测试')//普通返回值string
 })
@@ -50,7 +59,11 @@ app.get("/headers", (req, res) => {
 
   console.log(req);
   // res.send('测试2')//普通返回值string
-  res.json({ layout: "custom" })//json类型返回值
+  res.json({
+    id: '4',
+    name: 'zzzzzzzzz',
+    age: 29
+  })//json类型返回值
 });
 app.post("/headers", function (req, res) {
   res.set("Content-Type", "text/plain");
