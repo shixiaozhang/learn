@@ -55,6 +55,8 @@ module.exports={
     //热更新过cnpm install webpack-dev-server -g
     //启动webpack-dev-server
     devServer:{
+      // 告诉服务器内容的来源。仅在需要提供静态文件时才进行配置。
+      // devServer.publicPath 将用于确定 bundle 的来源，并具有优先级高于 contentBase。
       contentBase:path.resolve(__dirname,"dist"),
       //启动编码压缩
       compress:true,
