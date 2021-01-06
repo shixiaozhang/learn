@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-06 14:34:26
- * @LastEditTime: 2021-01-06 15:48:20
+ * @LastEditTime: 2021-01-06 19:59:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\WebpackDome\Webpack笔记.md
@@ -36,6 +36,28 @@
     | | |____page1
     | | | |____index.css
     | | | |____index.jsx
+
+
+
+    .  
+    |-- src                             项目源代码  
+    |-- components                    项目通用组件
+    |-- pages                         项目功能模块
+        |-- index.js                    项目入口文件
+    |-- static                          项目静态资源，图片，字体文件  
+    |-- webpack                         webpack 打包相关的配置  
+    |-- config.js                     通用配置变量抽离
+    |-- webpack.config.common.js      webpack 公共配置
+    |-- webpack.config.dev.js         本地开发环境打包配置
+    |-- webpack.config.production.js  正式环境打包配置
+    |-- config.js
+    |-- index.html                      打包模板
+    |-- .babelrc                        babel 相关配置文件
+    |-- postcss.config.js               postcss 相关配置文件
+    |-- .npmrc                          npm 安装源设置
+    |-- package.json         
+
+
 
 
 ## Webpack 配置
