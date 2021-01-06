@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-01-06 18:43:00
+ * @LastEditTime: 2021-01-06 21:21:26
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \learn\WebpackDome\webpack5\webpack.config.js
+ */
 let path=require('path')//node 自带的path模块可以获取自身所在的目录
 // console.log(path.resolve(__dirname,"dist"))
 //安装cnpm install html-webpack-plugin 
@@ -53,7 +61,7 @@ module.exports={
       })
     ],
     //热更新过cnpm install webpack-dev-server -g
-    //启动webpack-dev-server
+    //启动 webpack-dev-server
     devServer:{
       // 告诉服务器内容的来源。仅在需要提供静态文件时才进行配置。
       // devServer.publicPath 将用于确定 bundle 的来源，并具有优先级高于 contentBase。
