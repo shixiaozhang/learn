@@ -1,25 +1,25 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\DaFu\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js satrt
+  C:\Program Files\nodejs\node.exe C:\Users\Administrator\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js
 
 PATH: 
-  C:\Program Files (x86)\Razer Chroma SDK\bin;C:\Program Files\Razer Chroma SDK\bin;C:\Program Files (x86)\Razer\ChromaBroadcast\bin;C:\Program Files\Razer\ChromaBroadcast\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Users\DaFu\AppData\Local\Microsoft\WindowsApps;C:\Program Files\nodejs\;C:\Program Files (x86)\Git\cmd;C:\Users\DaFu\AppData\Local\Microsoft\WindowsApps;C:\Users\DaFu\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\Bandizip\;C:\Users\DaFu\AppData\Roaming\npm;C:\Users\DaFu\AppData\Local\GitHubDesktop\bin
+  C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;D:\anaconda\Lib;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files\TortoiseSVN\bin;D:\Microsoft VS Code\bin;C:\Program Files\Bandizip\;C:\Users\Administrator\AppData\Roaming\npm
 
 Yarn version: 
   1.22.10
 
 Node version: 
-  14.15.0
+  12.19.0
 
 Platform: 
   win32 x64
 
 Trace: 
-  SyntaxError: C:\Users\DaFu\Desktop\work\learn\WebpackDome\webpack简单版\package.json: Unexpected token } in JSON at position 226
+  SyntaxError: D:\learn\learn\WebpackDome\webpack简单版\package.json: Unexpected token } in JSON at position 226
       at JSON.parse (<anonymous>)
-      at C:\Users\DaFu\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:1625:59
+      at C:\Users\Administrator\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:1625:59
       at Generator.next (<anonymous>)
-      at step (C:\Users\DaFu\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:310:30)
-      at C:\Users\DaFu\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:321:13
+      at step (C:\Users\Administrator\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:310:30)
+      at C:\Users\Administrator\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:321:13
 
 npm manifest: 
   {
