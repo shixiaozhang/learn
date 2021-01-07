@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-01-06 18:43:00
- * @LastEditTime: 2021-01-06 21:21:26
- * @LastEditors: your name
+ * @LastEditTime: 2021-01-07 17:39:30
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\WebpackDome\webpack5\webpack.config.js
  */
@@ -14,6 +14,7 @@ module.exports={
     //入口文件
     entry:"./src/index.js",
     output:{
+      publicPath: './',
         //s输出的文件名
         filename:"bundle.js",
         //输出的路径
@@ -56,9 +57,11 @@ module.exports={
     },
     //插件的配置
     plugins:[
+     
       new htmlWebpackPlugin({
         template:'./src/index.html'
       })
+      
     ],
     //热更新过cnpm install webpack-dev-server -g
     //启动 webpack-dev-server

@@ -1,12 +1,36 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-06 14:34:26
- * @LastEditTime: 2021-01-06 19:59:47
+ * @LastEditTime: 2021-01-07 16:38:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\WebpackDome\Webpack笔记.md
 -->
 # 简易搭建流程（多页面）
+
+
+## webpack-merge合并配置
+webpack-merge做了两件事：它允许连接数组并合并对象，而不是覆盖组合。如下所示：
+
+    const merge = require("webpack-merge");
+    merge(
+        {a : [1],b:5,c:20},
+        {a : [2],b:10, d: 421}
+    )
+    //合并后的结果
+    {a : [1,2] ,b :10 , c : 20, d : 421}
+
+
+
+## --env值传参
+
+    "dev": "webpack --env development ",
+    "prod": "webpack --env production",
+    "dev:server": "webpack-dev-server --env development "
+
+使用--env允许将字符串传递给配置。我们来修改下package.json,使得env参数mode环境参数传入到webpack.config.js中，就可以判断是生产环境还是开发环境
+
+
 
 ## npm 初始化
 
@@ -175,9 +199,17 @@
         module: {
             
             //对某种格式文件转换处理,rules转换规则
-
+               
             rules: [
             {
+
+
+                //test:表示loader匹配的test正则，默认为css，这里可以是（less、sass、stylus）。
+                //include:表示所要打包的文件夹。
+                //exclude：表示要跳过打包的文件夹。
+                //use：外部导入的loader。
+
+                
                 test: /\.css$/,
                 use: [//loader转换方式从下往上执行（逆序）
                 //将js的样式内容插入style标签里面

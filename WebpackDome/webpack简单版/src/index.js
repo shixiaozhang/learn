@@ -1,3 +1,12 @@
+/*
+ * @Author: your name
+ * @Date: 2021-01-07 09:53:08
+ * @LastEditTime: 2021-01-07 16:04:01
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \learn\WebpackDome\webpack简单版\src\index.js
+ */
+
 import data  from './data.json'
 
 //引入css
@@ -7,11 +16,8 @@ function fn1(){
 }
 fn1()
 console.log(data)
-// 开发环境下打包命令
-//webpack ./src/index.js -o ./dist/bundle.js --mode=development
-//webpack 入口文件 -o 出口文件 --mode=development（开发)/（生产）production
-//webpack默认可以处理js json
-//生产环境比开发环境多了压缩和代码混淆
+
+
 
 
 
