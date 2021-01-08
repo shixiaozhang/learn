@@ -1,0 +1,1 @@
+(self.webpackChunkreact_multi_page_app=self.webpackChunkreact_multi_page_app||[]).push([[373],{443:(e,t,a)=>{"use strict";var l=a(294);const n=function(){return l.createElement("div",{id:"page2"},"我是PAGE2，Hello World")};a(935).render(l.createElement(n,null),document.getElementById("root"))}},0,[[443,394]]]);
