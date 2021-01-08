@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-08 15:14:19
- * @LastEditTime: 2021-01-08 18:01:22
+ * @LastEditTime: 2021-01-08 21:09:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit 
  * @FilePath: \learn\WebpackDome\webpack-react\webpack\webpack.base.js
@@ -11,9 +11,19 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const htmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-    entry: {
-        app: '/src/index.jsx'
-    },
+    // entry: {
+    //     app: '/src/index.jsx'
+    // },
+      entry:{
+        app:{
+            import: '/src/index.jsx',
+            dependOn: 'react_vendors',
+        },
+        react_vendors: {
+            import: ['react', 'react-dom'], 
+            filename: '_commom/[name].js'
+        }
+      },
     output: {
         path: path.resolve(__dirname, '../dist'),
         filename: '[name].[chunkhash].js'

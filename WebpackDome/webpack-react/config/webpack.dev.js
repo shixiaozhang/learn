@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-08 15:15:05
- * @LastEditTime: 2021-01-08 17:21:57
+ * @LastEditTime: 2021-01-08 20:39:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\WebpackDome\webpack-react\webpack\webpack.dev.js
@@ -16,6 +16,6 @@ module.exports=merge(base,{
         contentBase:path.join(__dirname,'./dist'),
         inline:true,
         hot:true,
-        port:8000
+        port:8888
     }
 })

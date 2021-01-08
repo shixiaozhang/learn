@@ -1,15 +1,40 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-06 14:34:26
- * @LastEditTime: 2021-01-08 16:25:38
+ * @LastEditTime: 2021-01-08 21:39:35
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\WebpackDome\Webpack笔记.md
 -->
 # 简易搭建流程（多页面）
 
+# react-webpack
 
+当jsx转js 和 es6 转es5 时babel-loader 的配置
+
+        options: {
+                presets: ['@babel/preset-react', '@babel/preset-env'],
+                plugins: ['@babel/plugin-proposal-class-properties']
+                }
+
+或者在.babelrc 文件中配置：
+
+    {
+        "presets": ["@babel/preset-react", "@babel/preset-env"],
+        "plugins": ["@babel/plugin-proposal-class-properties"]
+    }
+
+## 在 postcss.config.js文件中配置：
+
+    module.exports = {  
+        plugins: {  
+        'autoprefixer': {browsers: 'last 5 version'}  
+        }  
+    } 
+
+WebpackDome/webpack-vue/node_modules
 ## webpack-merge合并配置
+
 webpack-merge做了两件事：它允许连接数组并合并对象，而不是覆盖组合。如下所示：
 
     const merge = require("webpack-merge");
