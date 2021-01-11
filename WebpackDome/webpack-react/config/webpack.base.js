@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-08 15:14:19
- * @LastEditTime: 2021-01-08 21:09:44
+ * @LastEditTime: 2021-01-11 11:07:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit 
  * @FilePath: \learn\WebpackDome\webpack-react\webpack\webpack.base.js
@@ -14,16 +14,16 @@ module.exports = {
     // entry: {
     //     app: '/src/index.jsx'
     // },
-      entry:{
-        app:{
+    entry: {
+        app: {
             import: '/src/index.jsx',
             dependOn: 'react_vendors',
         },
         react_vendors: {
-            import: ['react', 'react-dom'], 
+            import: ['react', 'react-dom'],
             filename: '_commom/[name].js'
         }
-      },
+    },
     output: {
         path: path.resolve(__dirname, '../dist'),
         filename: '[name].[chunkhash].js'
@@ -65,7 +65,6 @@ module.exports = {
                 use: [
                     'style-loader',
                     'css-loader',
-                     
                     'less-loader'
                 ]
             },
@@ -86,7 +85,7 @@ module.exports = {
         ]
     },
     plugins: [
-        
+
         new CleanWebpackPlugin(),
         new htmlWebpackPlugin({
             template: './index.html',

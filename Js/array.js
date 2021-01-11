@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-12-11 11:55:01
+ * @LastEditTime: 2021-01-11 17:30:56
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edita
+ * @FilePath: \learn\Js\array.js
+ */
 
 
 
@@ -26,3 +34,12 @@
 // toLocaleString()	把数组转换为本地数组，并返回结果。
 
 // valueOf()	返回数组对象的原始值
+
+
+array.sort((a,b)=>{
+	return a-b
+})
+// 若 a 小于 b，即 a - b 小于零，则返回一个小于零的值，数组将按照升序排列。
+// 若 a 等于 b，则返回 0。
+// 若 a 大于 b, 即 a - b 大于零，则返回一个大于零的值，数组将按照降序排列。
+// array.sort() 按照降序排列
