@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-11 17:26:34
- * @LastEditTime: 2021-01-11 20:38:45
+ * @LastEditTime: 2021-01-12 10:10:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\Other\算法\搜索推荐系统.js
@@ -16,7 +16,7 @@ var suggestedProducts = function (products, searchWord) {
     let newStr = strArr.reduce((a, b) => {
         return `(${a})${b}`
     })
-    // products = products.sort()
+    products = products.sort()
     newStr = `(${newStr})`
     let reg = new RegExp(newStr)
     let n = searchWord.match(reg)
@@ -34,7 +34,6 @@ var suggestedProducts = function (products, searchWord) {
                 index++
                 return reg.test(val)
             }
-            
         })
         return list
     })
