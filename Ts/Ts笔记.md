@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-12 17:18:39
- * @LastEditTime: 2021-01-12 17:54:35
+ * @LastEditTime: 2021-01-12 20:59:48
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\Ts\Ts笔记.md
@@ -177,3 +177,176 @@ const someOtherVar = 123;
 # 文件模块详情
 
 使用 module: commonjs 选项以及使用 ES 模块语法导入、导出、编写模块
+
+# 模块路径
+
+如果你需要使用 moduleResolution: node 选项，你应该将此选项放入你的配置文件中。如果你使用了 module: commonjs 选项， moduleResolution: node 将会默认开启。
+
+这里存在两种截然不同的模块：
+
+* 相对模块路径（路径以 . 开头，例如：./someFile 或者 ../../someFolder/someFile 等）；
+* 其他动态查找模块（如：core-js，typestyle，react 或者甚至是 react/core 等）。
+
+## 它们的主要区别在于系统如何解析模块。
+
+
+    我将会使用一个概念性术语，place -- 将在提及查找模式后解释它。
+
+
+# 相对模块路径：就是简单的相对路径；
+
+    import * as foo from './foo'
+    import * as foo from '../foo'
+    import * as foo from '../someFolder/foo'
+
+# 动态查找：当导入路径不是相对路径时，模块解析将会模仿 Node 模块解析策略，
+* 当你使用 import * as foo from 'foo'，将会按如下顺序查找模块：
+  
+   * ./node_modules/foo 
+   * ../node_modules/foo
+   * ../../node_modules/foo
+   * 直到系统的根目录
+
+* 当你使用 import * as foo from 'something/foo'，将会按照如下顺序查找内容
+  
+   * ./node_modules/something/foo
+   * ../node_modules/something/foo
+   * ../../node_modules/something/foo
+   * 直到系统的根目录
+
+# 什么是 place
+当我提及被检查的 place 时，我想表达的是在这个 place 上，TypeScript 将会检查以下内容（例如一个 foo 的 place）：
+
+* 如果这个 place 表示一个文件，如：foo.ts，欢呼！
+* 否则，如果这个 place 是一个文件夹，并且存在一个文件 foo/index.ts，欢呼！
+* 否则，如果这个 place 是一个文件夹，并且存在一个 foo/package.json 文件，在该文件中指定 types 的文件存在，那么就欢呼！
+* 否则，如果这个 place 是一个文件夹，并且存在一个 package.json 文件，在该文件中指定 main 的文件存在，那么就欢呼！
+* 从文件类型上来说，我实际上是指 .ts， .d.ts 或者 .js
+
+从文件类型上来说，我实际上是指 .ts， .d.ts 或者 .js
+
+
+# 重写类型的动态查找
+
+
+在你的项目里，你可以通过 declare module 'somePath' 声明一个全局模块的方式，来解决查找模块路径的问题。
+
+    // global.d.ts
+    declare module 'foo' {
+    // some variable declarations
+    export var bar: number;
+    }
+
+接着 ：
+
+    // anyOtherTsFileInYourProject.ts
+    import * as foo from 'foo';
+    // TypeScript 将假设（在没有做其他查找的情况下）
+    // foo 是 { bar: number }
+
+
+# import/require 仅仅是导入类型
+
+
+以下导入语法：
+
+    import foo = require('foo');
+
+它实际上只做了两件事：
+
+1.导入 foo 模块的所有类型信息；
+2.确定 foo 模块运行时的依赖关系。
+
+
+# global.d.ts 文件
+
+global.d.ts 文件，用来将一些接口或者类型放入全局命名空间里，这些定义的接口和类型能在你的所有 TypeScript 代码里使用
+
+tips：对于任何需要编译成 JavaScript 的代码，我们强烈建议你放入文件模块里。
+
+* global.d.ts 是一种扩充 lib.d.ts 很好的方式，如果你需要的话。
+* 当你从 JS 迁移到 TS 时，定义 declare module "some-library-you-dont-care-to-get-defs-for" 能让你快速开始
+
+
+# 命名空间
+
+在确保创建的变量不会泄漏至全局命名空间时，这种方式在 JavaScript 中很常见。当基于文件模块使用时，你无须担心这点，但是该模式仍然适用于一组函数的逻辑分组。因此 TypeScript 提供了 namespace 关键字来描述这种分组，如下所示。
+
+    namespace Utility {
+    export function log(msg) {
+        console.log(msg);
+    }
+    export function error(msg) {
+        console.log(msg);
+    }
+    }
+
+    // usage
+    Utility.log('Call me');
+    Utility.error('maybe');
+
+namespace 关键字编译后的 JavaScript 代码，与我们早些时候看到的 JavaScript 代码一样。
+
+    (function (Utility) {
+    // 添加属性至 Utility
+    })(Utility || Utility = {});
+
+
+ #   动态导入表达式
+ 
+动态导入表达式是 ECMAScript 的一个新功能，它允许你在程序的任意位置异步加载一个模块，TC39 JavaScript 委员会有一个提案，目前处于第四阶段，它被称为 import() proposal for JavaScript。
+
+此外，webpack bundler 有一个 Code Splitting 功能，它能允许你将代码拆分为许多块，这些块在将来可被异步下载。因此，你可以在程序中首先提供一个最小的程序启动包，并在将来异步加载其他模块。
+
+这很自然就会让人想到（如果我们工作在 webpack dev 的工作流程中）TypeScript 2.4 dynamic import expressions 将会把你最终生成的 JavaScript 代码自动分割成很多块。但是这似乎并不容易实现，因为它依赖于我们正在使用的 tsconfig.json 配置文件。
+
+webpack 实现代码分割的方式有两种：使用 import() （首选，ECMAScript 的提案）和 require.ensure() （最后考虑，webpack 具体实现）。因此，我们期望 TypeScript 的输出是保留 import() 语句，而不是将其转化为其他任何代码。
+
+让我们来看一个例子，在这个例子中，我们演示了如何配置 webpack 和 TypeScript 2.4 +。
+
+在下面的代码中，我希望懒加载 moment 库，同时我也希望使用代码分割的功能，这意味 moment 会被分割到一个单独的 JavaScript 文件，当它被使用时，会被异步加载。
+
+        import(/* webpackChunkName: "momentjs" */ 'moment')
+            .then(moment => {
+                // 懒加载的模块拥有所有的类型，并且能够按期工作
+                // 类型检查会工作，代码引用也会工作  :100:
+                const time = moment().format();
+                console.log('TypeScript >= 2.4.0 Dynamic Import Expression:');
+                console.log(time);
+            })
+            .catch(err => {
+                console.log('Failed to load moment', err);
+            });
+
+ 这是 tsconfig.json 的配置文件：
+
+            {
+                "compilerOptions": {
+                    "target": "es5",
+                    "module": "esnext",
+                    "lib": [
+                    "dom",
+                    "es5",
+                    "scripthost",
+                    "es2015.promise"
+                    ],
+                    "jsx": "react",
+                    "declaration": false,
+                    "sourceMap": true,
+                    "outDir": "./dist/js",
+                    "strict": true,
+                    "moduleResolution": "node",
+                    "typeRoots": [
+                    "./node_modules/@types"
+                    ],
+                    "types": [
+                    "node",
+                    "react",
+                    "react-dom"
+                    ]
+                }
+            }
+
+##重要的提示
+
+使用 "module": "esnext" 选项：TypeScript 保留 import() 语句，该语句用于 Webpack Code Splitting。
