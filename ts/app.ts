@@ -230,6 +230,7 @@ class Student extends Person {
         console.log('student的多态')
     }
 }
+
 class Child extends Person {
     public name: string
     constructor(name: string) {
@@ -1092,7 +1093,8 @@ interface Employee {
 
 
 // 类型别名: 类型别名有时和接口很像，
-//           但是可以作用于原始值，联合类型，元组以及其它任何你需要手写的类型
+//          但是可以作用于原始值，联合类型，
+//          元组以及其它任何你需要手写的类型
 // type 关键字用来定义一种类型
 /**
  * 
@@ -1180,6 +1182,7 @@ interface Interface {
 
 declare function aliased(arg: Alinas): Alinas;
 declare function interfaced(arg: Interface): Interface;
+
 //2、 typeof 关键词
 
 /**
@@ -1211,8 +1214,7 @@ function padLeft(value: string, padding: string | number) {
         构造签名所返回的类型的联合
 
 在js中的instanceof：
-            instanceof 运算符用于检测构造函数的 
-            prototype 属性是否出现在某个实例对象的原型链
+            instanceof 运算符用于检测构造函数的 prototype 属性是否出现在某个实例对象的原型链
  */
 
 

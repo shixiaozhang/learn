@@ -1,11 +1,225 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-12 17:18:39
- * @LastEditTime: 2021-01-12 21:00:50
+ * @LastEditTime: 2021-01-13 17:52:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\Ts\Ts笔记.md
 -->
+# 各种关键词汇总：
+
+## interface:接口定义类型；
+
+interface Add{
+    a:number;
+    fly();void;
+}
+
+## type :类型别名有时和接口很像，但是可以作用于原始值，联合类型，元组以及其它任何你需要手写的类型,类型别名不能被 extends和 implements
+
+ 类型别名不能出现在声明右侧的任何地方
+
+    type Yikes = Array<Yikes>; // error
+
+但是可以这样
+
+    type Tree<T> = {
+        value: T;
+        left: Tree<T>;
+        right: Tree<T>;
+    }
+    
+## typeof :可用于获取变量的类型 只能用于 number, string, boolean, symbol
+ 
+ typeof类型保护*只有两种形式能被识别：
+    typeof v === "typename"和 typeof v !== "typename"，
+    "typename"必须是 "number"， "string"， "boolean"或 "symbol"。
+
+    if (typeof padding === 'number') {
+            return Array(padding + 1).join('') + value
+        }
+
+## instanceof :右侧要求是一个构造函数，用于类。获取前者是不是这个类的类型；
+instanceof操作符是 JS 中的原生操作符，用来判断一个实例是不是某个构造函数创建的
+    
+    interface Padder {
+        getPaddingString(): string
+    }
+
+    class SpaceRepeatingPadder implements Padder {
+        constructor(private numSpaces: number) { }
+        getPaddingString() {
+            return Array(this.numSpaces + 1).join(" ");
+        }
+    }
+
+    if (padder instanceof SpaceRepeatingPadder) {
+        padder; // 类型细化为'SpaceRepeatingPadder'
+    }
+
+
+# implements 和 extends 一起使用：
+
+    interface Alarm {
+        alert(): void;
+    }
+
+    class Door {
+    }
+    //先继承Door 再 实现Alarm；
+    
+    //实现的Alarm 不影响 继承的 Door；只影响 SecurityDoor
+
+    class SecurityDoor extends Door implements Alarm {
+        alert() {
+            console.log('SecurityDoor alert');
+        }
+    }
+
+    class Car implements Alarm {
+        alert() {
+            console.log('Car alert');
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+# implements ：类实现（implements）接口
+
+    interface Alarm {
+        // 定义一个公用的方法，具体的实现在实现的类里面去实现
+        warning():void;
+    }
+    class Door implements Alarm {
+        warning() {
+            console.log('门报警器');
+        }
+    }
+# extends ：接口继承的关键词，也是函数继承的关键词
+
+接口的继承：
+
+    interface Shape {
+     color: string;
+    }
+    interface Square extends Shape {
+        sideLength: number;
+    }
+
+接口 继承 基类：
+
+    class Animal {
+        //基类可以直接当类型使用
+
+        //function printPoint(p: Animal) {}
+        
+        name: string;
+        // move: (x: string, y: number) => string;
+        move() {
+            console.log(123);
+        }
+    }
+    interface Dog extends Animal {
+        eat(): void;
+    }
+
+## 为什么 TypeScript 会支持接口继承类呢？
+
+实际上，当我们在声明 class Animal 时，除了会创建一个名为 Animal 的类之外，同时也创建了一个名为 Animal 的类型（实例的类型）。
+
+        class Point {
+            x: number;
+            y: number;
+            constructor(x: number, y: number) {
+                this.x = x;
+                this.y = y;
+            }
+        }
+
+        interface PointInstanceType {
+            x: number;
+            y: number;
+        }
+
+        function printPoint(p: PointInstanceType) {
+            console.log(p.x, p.y);
+        }
+
+        printPoint(new Point(1, 2));
+
+新声明的 PointInstanceType 类型，与声明 class Point 时创建的 Point 类型是等价的。
+
+## 声明 Point 类时创建的 Point 类型只包含其中的实例属性和实例方法
+
+值得注意的是，PointInstanceType 相比于 Point，缺少了 constructor 方法，这是因为声明 Point 类时创建的 Point 类型是不包含构造函数的。另外，除了构造函数是不包含的，静态属性或静态方法也是不包含的（实例的类型当然不应该包括构造函数、静态属性或静态方法）。
+    
+## 注意：
+接口可以继承自一个类，从而像声明了所有类中存在的成员，并且private和protected成员也会被继承，这意味着：只有类自己或子类能够实现该接口，例子如：
+
+        class A {
+            protected propA: string
+        }
+        interface I extends A {
+            method(): void
+        }
+
+        // 下面这种做法会报错
+        class C implements A {
+            // 因为propA是类A的保护成员，只有自身和子类可实现
+            // 但类C不是A的子类
+            protected propA: string
+            method() {}
+        }
+
+        // 下面这种做法则是允许的
+        class C extends A implements A {
+            protected propA: string
+            method() {}
+        }
+        
+## keyof ：可以用于获取某种类型的所有键，其返回类型是联合类型。
+
+    interface Person {
+        name: string;
+        age: number;
+        location: string;
+    }
+
+    type K1 = keyof Person; // "name" | "age" | "location"
+    type K2 = keyof Person[];  // number | "length" | "push" | "concat" | ...
+    type K3 = keyof { [x: string]: Person };  // string | number
+
+
+
+## in ：可以遍历枚举类型，遍历 Keys
+
+
+    type Keys = 'a' | 'b' | 'c';
+    
+    type Objooo = {
+
+        [T in Keys]: string;
+
+    }
+    // 包装一个类型的属性
+    type Proxy<T> = {
+        get(): T
+        set(value: T): void
+    }
+    type Proxify<T> = {
+
+        [P in keyof T]: Proxy<T[P]>
+        
+    }
+
+
 
 
 #  TypeScript 编译
@@ -208,8 +422,7 @@ namespace 关键字编译后的 JavaScript 代码，与我们早些时候看到�
 
 ## webpack 实现代码分割的方式有两种：
 
-使用 import() （首选，ECMAScript 的提案）和 require.ensure() （最后考虑，webpack 具体实现）。因此，我们期望 TypeScript 的输出是保留 import() 语句，而不是将其转化为其他任何代码。
-
+使用 import() （首选，ECMAScript 的提案）和 require.ensure() 
 
         import(/* webpackChunkName: "momentjs" */ 'moment')
             .then(moment => {
@@ -226,3 +439,180 @@ namespace 关键字编译后的 JavaScript 代码，与我们早些时候看到�
 ##重要的提示
 
 tsconfig.json使用 "module": "esnext" 选项：TypeScript 保留 import() 语句，该语句用于 Webpack Code Splitting。
+
+# 数组定义：arr: number[]; arr: Array<number> ; arr: Array<[any]> ;arr: [number, object, []]
+
+    let a: number[] = [123, 4324, 123];
+    console.log(a);
+
+    let arr: Array<number> = [123, 132]
+    interface Numberarr {
+        [index: number]: string
+    }
+    let arr2: Array<[any]> = [['1']]
+    console.log(arr2)
+
+
+
+    let are: [number, object, []] = [123, {}, []]
+
+    function sun(a: number, b: number, c: number): number {
+        return a + b + c
+
+        // IArguments 是arguments的专用接口
+        // 常见的类数组都有自己的接口定义，如 IArguments, NodeList, HTMLCollection 等
+        
+        let arg: IArguments = arguments
+    }
+
+    const um: number = sun(1, 2, 3)
+    console.log(um)
+
+#  IArguments 是arguments的专用接口
+
+常见的类数组都有自己的接口定义，如 IArguments, NodeList, HTMLCollection 等.
+
+# any：所有类型都能被赋值给它，它也能被赋值给其他任何类型
+
+# unknown 类型：
+// unknown 类型也被认为是 top type ，但它更安全。
+// 与 any 一样，所有类型都可以分配给unknown。
+
+let uncertain: unknown = 'Hello'!;
+uncertain = 12;
+uncertain = { hello: () => 'Hello!' };
+
+// 我们只能将 unknown 类型的变量赋值给 any 和 unknown。
+let notSure: any = uncertain;
+
+
+# null 和 undefined
+在类型系统中，JavaScript 中的 null 和 undefined 字面量和其他被标注了 any 类型的变量一样，都能被赋值给任意类型的变量，如下例子所示：
+
+    // strictNullChecks: false
+
+    let num: number;
+    let str: string;
+
+    // 这些类型能被赋予
+    num = null;
+    str = undefined;
+
+
+
+# 泛型约束
+
+在函数内部使用泛型变量的时候，由于事先不知道它是哪种类型，所以不能随意的操作它的属性或方法：
+
+    function loggingIdentity<T>(arg: T): T {
+        console.log(arg.length);
+        return arg;
+    }
+
+    // index.ts(2,19): error TS2339: Property 'length' does not exist on type 'T'.
+    //泛型 T 不一定包含属性 length，所以编译的时候报错了
+
+
+## 对泛型进行约束
+
+    interface Lengthwise {
+        length: number;
+    }
+
+    function loggingIdentity<T extends Lengthwise>(arg: T): T {
+        console.log(arg.length);
+        return arg;
+    }
+
+## 多个类型参数之间也可以互相约束：
+
+    function copyFields<T extends U, U>(target: T, source: U): T {
+        for (let id in source) {
+            target[id] = (<T>source)[id];
+        }
+        return target;
+    }
+
+    let x = { a: 1, b: 2, c: 3, d: 4 };
+
+    copyFields(x, { b: 10, d: 20 });
+
+
+## 泛型接口：
+
+    interface CreateArrayFunc<T> {
+        (length: number, value: T): Array<T>;
+    }
+
+    let createArray: CreateArrayFunc<any>;
+    createArray = function<T>(length: number, value: T): Array<T> {
+        let result: T[] = [];
+        for (let i = 0; i < length; i++) {
+            result[i] = value;
+        }
+        return result;
+    }
+
+    createArray(3, 'x'); // ['x', 'x', 'x']
+
+## 泛型类
+
+    class Animal<T>{
+        zeroValue: T;
+        add: (x: T, y: T) => T;
+    }
+
+    let myGenericNumber = new GenericNumber<number>();
+
+## 泛型参数的默认类型
+
+    <T=string>
+
+# 接口的合并
+
+    interface Alarm {
+        price: number;
+    }
+    interface Alarm {
+        weight: number;
+    }
+
+相当于：
+
+    interface Alarm {
+        price: number;
+        weight: number;
+    }
+## 合并的属性的类型必须是唯一的,类型不一致，会报错
+
+# 接口中方法的合并，与函数的合并一样
+
+    interface Alarm {
+        price: number;
+        alert(s: string): string;
+    }
+    interface Alarm {
+        weight: number;
+        alert(s: string, n: number): string;
+    }
+
+相当于：
+
+    interface Alarm {
+        price: number;
+        weight: number;
+        alert(s: string): string;
+        alert(s: string, n: number): string;
+    }
+
+相当于函数重构：
+
+    function reverse(x: number): number;
+    function reverse(x: string): string;
+    function reverse(x: number | string): number | string {
+        if (typeof x === 'number') {
+            return Number(x.toString().split('').reverse().join(''));
+        } else if (typeof x === 'string') {
+            return x.split('').reverse().join('');
+        }
+    }

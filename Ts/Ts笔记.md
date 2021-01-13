@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-12 17:18:39
- * @LastEditTime: 2021-01-12 20:59:48
+ * @LastEditTime: 2021-01-13 10:48:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\Ts\Ts笔记.md
@@ -350,3 +350,110 @@ webpack 实现代码分割的方式有两种：使用 import() （首选，ECMAS
 ##重要的提示
 
 使用 "module": "esnext" 选项：TypeScript 保留 import() 语句，该语句用于 Webpack Code Splitting。
+
+
+# TypeScript 类型系统
+
+
+# 基本注解
+
+如前文所提及，类型注解使用 :TypeAnnotation 语法。在类型声明空间中可用的任何内容都可以用作类型注解。
+
+在下面这个例子中，使用了变量、函数参数以及函数返回值的类型注解：
+
+    const num: number = 123;
+    function identity(num: number): number {
+    return num;
+    }
+    
+# 原始类型
+
+JavaScript 原始类型也同样适应于 TypeScript 的类型系统，因此 string、number、boolean 也可以被用作类型注解：
+
+    let num: number;
+    let str: string;
+    let bool: boolean;
+
+    num = 123;
+    num = 123.456;
+    num = '123'; // Error
+
+    str = '123';
+    str = 123; // Error
+
+    bool = true;
+    bool = false;
+    bool = 'false'; // Error
+    
+# 数组
+TypeScript 为数组提供了专用的类型语法，因此你可以很轻易的注解数组。它使用后缀 []， 接着你可以根据需要补充任何有效的类型注解（如：:boolean[]）。它能让你安全的使用任何有关数组的操作，而且它也能防止一些类似于赋值错误类型给成员的行为。如下所示：
+
+    let boolArray: boolean[];
+
+    boolArray = [true, false];
+    console.log(boolArray[0]); // true
+    console.log(boolArray.length); // 2
+
+    boolArray[1] = true;
+    boolArray = [false, false];
+
+    boolArray[0] = 'false'; // Error
+    boolArray = 'false'; // Error
+    boolArray = [true, 'false']; // Error
+
+# 接口:接口是 TypeScript 的一个核心知识，它能合并众多类型声明至一个类型声明：
+
+    interface Name {
+    first: string;
+    second: string;
+    }
+
+    let name: Name;
+    name = {
+    first: 'John',
+    second: 'Doe'
+    };
+
+# 内联类型注解: 与创建一个接口不同，你可以使用内联注解语法注解任何内容：:{ /*Structure*/ }
+
+    let name: {
+    first: string;
+    second: string;
+    };
+
+    name = {
+    first: 'John',
+    second: 'Doe'
+    };
+
+# 特殊类型
+除了被提到的一些原始类型，在 TypeScript 中，还存在一些特殊的类型，它们是 any、 null、 undefined 以及 void。
+
+
+# any：所有类型都能被赋值给它，它也能被赋值给其他任何类型
+
+# unknown 类型：
+// unknown 类型也被认为是 top type ，但它更安全。
+// 与 any 一样，所有类型都可以分配给unknown。
+
+let uncertain: unknown = 'Hello'!;
+uncertain = 12;
+uncertain = { hello: () => 'Hello!' };
+
+// 我们只能将 unknown 类型的变量赋值给 any 和 unknown。
+let notSure: any = uncertain;
+
+
+# null 和 undefined
+在类型系统中，JavaScript 中的 null 和 undefined 字面量和其他被标注了 any 类型的变量一样，都能被赋值给任意类型的变量，如下例子所示：
+
+    // strictNullChecks: false
+
+    let num: number;
+    let str: string;
+
+    // 这些类型能被赋予
+    num = null;
+    str = undefined;
+
+# void：使用 :void 来表示一个函数没有一个返回值

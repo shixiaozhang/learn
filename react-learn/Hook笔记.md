@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-24 17:14:31
- * @LastEditTime: 2020-12-29 11:23:16
+ * @LastEditTime: 2021-01-13 15:45:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\react-learn\Hook笔记.md
@@ -17,7 +17,7 @@
 
 ## Hook 使用规则
 
-只能在函数最外层调用 Hook。不要在循环、条件判断或者子函数中调用。
+只能在函数最外层调用 Hook。d不要在循环、条件判断或者子函数中调用。
 只能在 React 的函数组件中调用 Hook。不要在其他 JavaScript 函数中调用。（还有一个地方可以调用 Hook —— 就是自定义的 Hook 中，我们稍后会学习到。）
 
 ## useState 浅比较
