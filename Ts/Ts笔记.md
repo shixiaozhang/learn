@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-12 17:18:39
- * @LastEditTime: 2021-01-13 10:48:23
+ * @LastEditTime: 2021-01-14 16:22:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\Ts\Ts笔记.md
@@ -457,3 +457,30 @@ let notSure: any = uncertain;
     str = undefined;
 
 # void：使用 :void 来表示一个函数没有一个返回值
+
+
+# 枚举enum
+
+    enum Tristate {
+    False,
+    True,
+    Unknown
+    }
+
+其被编译成 JavaScript 后如下所示：
+
+    var Tristate;
+    (function(Tristate) {
+    Tristate[(Tristate['False'] = 0)] = 'False';
+    Tristate[(Tristate['True'] = 1)] = 'True';
+    Tristate[(Tristate['Unknown'] = 2)] = 'Unknown';
+    })(Tristate || (Tristate = {}));
+
+    console.log(Tristate['False'] = 0)// ==> 0
+
+注意，JavaScript 赋值运算符返回的值是被赋予的值（在此例子中是 0），因此下一次 JavaScript 运行时执行的代码是 Tristate[0] = 'False'。
+所以会得出：
+
+    Tristate[0]='False';
+    Tristate['False'] = 0
+    
