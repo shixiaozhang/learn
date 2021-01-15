@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-12 17:18:39
- * @LastEditTime: 2021-01-13 17:52:21
+ * @LastEditTime: 2021-01-15 17:06:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\Ts\Ts笔记.md
@@ -15,7 +15,7 @@ interface Add{
     fly();void;
 }
 
-## type :类型别名有时和接口很像，但是可以作用于原始值，联合类型，元组以及其它任何你需要手写的类型,类型别名不能被 extends和 implements
+## type :类型别名有时和接口很像，但是可以作用于原始值，联合类型，元组以及其它任何你需要手写的类型,类型别名不能被 extends(继承)和 implements(实现)
 
  类型别名不能出现在声明右侧的任何地方
 
@@ -616,3 +616,39 @@ let notSure: any = uncertain;
             return x.split('').reverse().join('');
         }
     }
+
+
+
+# 箭头函数：
+
+它仅仅只能作为简单的箭头函数，你无法使用重载。如果想使用重载，你必须使用完整的 { (someArgs): someReturn } 的语法
+
+        let jiantou=(val:number)=>val.toString();
+
+        // 编译: var jiantou = function (val) { return val.toString(); };
+
+
+        const simple: (foo: number) => string = foo => foo.toString();
+
+        //编译: var simple = function (foo) { return foo.toString(); };
+
+解释：simple: 后面到 =foo 之前的 (foo: number) => string 这部分是对simple的类型注释；
+相当于
+
+    type sm=(foo: number) => string;
+
+    const simple2:sm  = foo => foo.toString();
+
+    //编译: var simple2 = function (foo) { return foo.toString(); };
+
+# 可实例化
+
+可实例化仅仅是可调用的一种特殊情况，它使用 new 作为前缀。它意味着你需要使用 new 关键字去调用它：
+
+    interface CallMeWithNewToGetString {
+    new (): string;
+    }
+
+    // 使用
+    declare const Foo: CallMeWithNewToGetString;
+    const bar = new Foo(); // bar 被推断为 string 类型

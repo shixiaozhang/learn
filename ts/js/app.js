@@ -205,8 +205,7 @@ var Child = /** @class */ (function (_super) {
         return _this;
     }
     Child.prototype.run = function () {
-        console.log(this.name, this.age);
-        // console.log(this.sex,'111')// private属性 无法访问
+        console.log(this.name, this.age); // console.log(this.sex,'111')// private属性 无法访问
     };
     Child.prototype.duotai = function () {
         console.log('Child的多态');
@@ -737,3 +736,353 @@ class 类{
     5、类装饰器2
     6、类装饰器1
 */
+// typescript中的as 类型断言
+/**
+ * 类型断言：告诉ts这个变量的类型是什么
+ *      1、(<type>result)
+ *      2、(result as type)
+ */
+/**
+ * 高级类型:
+ *
+ *          交叉类型: Person & Serializable & Loggable
+ *                    同时是 Person 和 Serializable 和 Loggable
+ *                    就是说这个类型的对象同时拥有了这三种类型的成员
+ *
+ */
+function extend(first, second) {
+    var result = {};
+    for (var id in first) {
+        result[id] = first[id];
+    }
+    for (var id in second) {
+        result[id] = second[id];
+    }
+    return result;
+}
+var PersonA = /** @class */ (function () {
+    function PersonA(name) {
+        this.name = name;
+    }
+    return PersonA;
+}());
+var ConsoleLogger = /** @class */ (function () {
+    function ConsoleLogger() {
+    }
+    ConsoleLogger.prototype.log = function () {
+        console.log('log');
+    };
+    return ConsoleLogger;
+}());
+var jim = extend(new PersonA("Jim"), new ConsoleLogger());
+var jimName = jim.name;
+jim.log();
+var method;
+method = 'PUT'; // OK
+function createElement(tagName) {
+}
+function getName(n) {
+    if (typeof n === 'string') {
+        return n;
+    }
+    else {
+        return n();
+    }
+}
+var people;
+function printEmployee(emp) {
+    console.log("name" + emp.name);
+    if ('privileges' in emp) {
+        console.log('privileges');
+    }
+    if ('start' in emp) {
+        console.log('start');
+    }
+}
+//2、 typeof 关键词
+/**
+ *
+ * typeof类型保护*只有两种形式能被识别：
+ * typeof v === "typename"和 typeof v !== "typename"，
+ *  "typename"必须是 "number"， "string"， "boolean"或 "symbol"。
+ * 但是TypeScript并不会阻止你与其它字符串比较，
+ * 语言不会把那些表达式识别为类型保护。
+ *
+ */
+function padLeft(value, padding) {
+    if (typeof padding === 'number') {
+        return Array(padding + 1).join('') + value;
+    }
+    if (typeof padding === 'string') {
+        return padding + value;
+    }
+    throw new Error('Expected string or number ,got xxxx');
+}
+var SpaceRepeatingPadder = /** @class */ (function () {
+    function SpaceRepeatingPadder(numSpaces) {
+        this.numSpaces = numSpaces;
+    }
+    SpaceRepeatingPadder.prototype.getPaddingString = function () {
+        return Array(this.numSpaces + 1).join(" ");
+    };
+    return SpaceRepeatingPadder;
+}());
+var StringPadder = /** @class */ (function () {
+    function StringPadder(value) {
+        this.value = value;
+    }
+    StringPadder.prototype.getPaddingString = function () {
+        return this.value;
+    };
+    return StringPadder;
+}());
+function getRandomPadder() {
+    return Math.random() < 0.5 ?
+        new SpaceRepeatingPadder(4) :
+        new StringPadder("  ");
+}
+// 类型为SpaceRepeatingPadder | StringPadder
+var padder = getRandomPadder();
+if (padder instanceof SpaceRepeatingPadder) {
+    padder; // 类型细化为'SpaceRepeatingPadder'
+}
+if (padder instanceof StringPadder) {
+    padder; // 类型细化为'StringPadder'
+}
+//4、 用户自定义的类型保护
+/**
+    pet is Fish就是类型谓词。 谓词为 parameterName is Type这种形式，
+    parameterName必须是来自于当前函数签名里的一个参数名。
+    每当使用一些变量调用 isFish时，TypeScript会将变量缩减为那个具体的类型，
+    只要这个类型与变量的原始类型是兼容的。
+ */
+function isFish(pet) {
+    return pet.swim !== undefined;
+}
+function fixed(name) {
+    function postfix(epithet) {
+        //identifier!从 identifier的类型里去除了 null和 undefined
+        return name.charAt(0) + '.  the ' + epithet; // ok
+    }
+    name = name || "Bob";
+    return postfix("great");
+}
+// 辨识联合
+function area(s) {
+    switch (s.kind) {
+        case "square": return s.size * s.size;
+        case "rectangle": return s.height * s.width;
+        case "circle": return Math.PI * Math.pow(s.radius, 2);
+        // 进行完整性检查
+        default: return assertNever(s); // error here if there are missing cases
+    }
+}
+// 进行完整性检查
+function assertNever(x) {
+    throw new Error("Unexpected object: " + x);
+}
+var personProps; // 'name' | 'age' | 'location'
+//   索引类型
+// js
+/**
+        function prop(obj, key) {
+        return obj[key];
+        }
+ */
+// ts
+function prop(obj, key) {
+    return obj[key];
+}
+function F1(s) {
+    return { a: 1, b: s };
+}
+var C = /** @class */ (function () {
+    function C() {
+        this.x = 0;
+        this.y = 0;
+    }
+    return C;
+}());
+// type T23 = InstanceType<string>;  // Error
+// type T24 = InstanceType<Function>;  // Error
+// 解构数组
+var inputs = [1, 2];
+var firsts = inputs[0], seconds = inputs[1];
+console.log(firsts, seconds);
+//做为函数参数
+function fa(_a) {
+    var first = _a[0], second = _a[1];
+    console.log(first);
+    console.log(second);
+}
+fa([firsts, seconds]);
+// 对象解构重命名
+var o = {
+    as: "foo",
+    b: 12,
+    c: "bar",
+    d: undefined
+};
+var newName = o.as, newName2 = o.b;
+console.log(newName); //foo
+// 指定它的类型
+var as = o.as, b = o.b;
+// 解构属性缺失-设置默值
+var c = o.c, _a = o.d, d = _a === void 0 ? 1001 : _a;
+console.log(d); //1001
+function CCFn(_a) {
+    var a = _a.a, b = _a.b;
+}
+function createClock(ctor, hour, minute) {
+    return new ctor(hour, minute);
+}
+var DigitalClock = /** @class */ (function () {
+    function DigitalClock(h, m) {
+    }
+    DigitalClock.prototype.tick = function () {
+        console.log("beep beep");
+    };
+    return DigitalClock;
+}());
+var AnalogClock = /** @class */ (function () {
+    function AnalogClock(h, m) {
+    }
+    AnalogClock.prototype.tick = function () {
+        console.log("tick tock");
+    };
+    return AnalogClock;
+}());
+var digital = createClock(DigitalClock, 12, 17);
+var analog = createClock(AnalogClock, 7, 32);
+var square = {
+    color: 'blue',
+    sideLength: 10
+};
+// 写法2
+var squares = {};
+squares.color = "blue";
+squares.sideLength = 10;
+var squaress = {};
+squaress.color = "blue";
+squaress.sideLength = 10;
+squaress.penWidth = 5.0;
+function getCounter() {
+    var counter = function (start) { };
+    counter.interval = 123;
+    counter.reset = function () { };
+    return counter;
+}
+var csss = getCounter();
+csss(10);
+csss.reset();
+csss.interval = 5.0;
+// 接口继承类
+/**
+ *  当接口继承了一个类类型时，它会继承类的成员但不包括其实现。
+ *  就好像接口声明了所有类中存在的成员，但并没有提供具体实现一样。
+ *  接口同样会继承到类的private和protected成员。
+ *  这意味着当你创建了一个接口继承了一个拥有私有或受保护的成员的类时，
+ *  这个接口类型只能被这个类或其子类所实现（implement）
+ */
+var Control = /** @class */ (function () {
+    function Control() {
+    }
+    return Control;
+}());
+var Button = /** @class */ (function (_super) {
+    __extends(Button, _super);
+    function Button() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Button.prototype.select = function () { };
+    return Button;
+}(Control));
+var TextBox = /** @class */ (function (_super) {
+    __extends(TextBox, _super);
+    function TextBox() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    TextBox.prototype.select = function () { };
+    return TextBox;
+}(Control));
+// // 错误：“Image”类型缺少“state”属性。
+// class Image implements SelectableControl {
+//     select() { }
+// }
+function identity(arg) {
+    return arg;
+}
+var myIdentity = identity;
+// 这个相当于
+var XX = 10;
+// <U>(arg: U)=>U 这部分相当于number 只是一个函数类型定义
+var myAddIdentity = function (x, y) { return x + y; };
+// 也是可以的。
+myIdentity(123);
+// 访问arg的length属性。但是无法证明arg有。length属性
+function loggingIdentity(arg) {
+    // console.log(arg.length);  // Error: T doesn't have .length
+    return arg;
+}
+// 1、
+function loggingIdentity1(arg) {
+    console.log(arg.length); // Error: T doesn't have .length
+    return arg;
+}
+function loggingIdentity2(arg) {
+    console.log(arg.length); // Error: T doesn't have .length
+    return arg;
+}
+loggingIdentity2({ length: 10, value: 3 });
+function getPropertys(obj, key) {
+    return obj[key];
+}
+// 在泛型里使用类类型
+// 引用构造函数的类类型
+function create(c) {
+    return new c();
+}
+// 使用原型属性推断并约束构造函数与类实例的关系
+var BeeKeeper = /** @class */ (function () {
+    function BeeKeeper() {
+        this.hasMask = true;
+    }
+    return BeeKeeper;
+}());
+var ZooKeeper = /** @class */ (function () {
+    function ZooKeeper() {
+        this.nametag = '1111';
+    }
+    return ZooKeeper;
+}());
+var Animal = /** @class */ (function () {
+    function Animal() {
+    }
+    return Animal;
+}());
+var Bee = /** @class */ (function (_super) {
+    __extends(Bee, _super);
+    function Bee() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return Bee;
+}(Animal));
+var Lion = /** @class */ (function (_super) {
+    __extends(Lion, _super);
+    function Lion() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return Lion;
+}(Animal));
+function createrInstance(c) {
+    return new c();
+}
+createrInstance(Lion).keeper.nametag; // 1111
+createrInstance(Bee).keeper.hasMask; // true
+// unknown 类型也被认为是 top type ，但它更安全。
+// 与 any 一样，所有类型都可以分配给unknown。
+var uncertain = 'Hello';
+uncertain = 12;
+uncertain = { hello: function () { return 'Hello!'; } };
+// 我们只能将 unknown 类型的变量赋值给 any 和 unknown。
+var notSure = uncertain;

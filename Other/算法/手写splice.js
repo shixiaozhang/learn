@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-14 10:44:19
- * @LastEditTime: 2021-01-14 17:29:18
+ * @LastEditTime: 2021-01-15 11:05:48
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\Other\算法\手写splice.js
@@ -22,7 +22,7 @@ Array.prototype._splice = function (start, delCont, ...item) {
     start = Math.abs(start);//取绝对值防止下标大于数组总长
 
     if (start > arr.length - 1 || !delCont || delCont < 0) return [];//排除意外情况
-    
+
     for (let index = 0; index < arr.length; index++) { //删除数组，同时保存删除的部分
         if (Number(start) <= index && delCont > 0) {
             delCont--;
@@ -33,7 +33,7 @@ Array.prototype._splice = function (start, delCont, ...item) {
 
         if (index < Number(start)) {
             Front[index] = arr[index]
-           
+
         }
         if (Number(saveCont + start) <= index) {
             after[afterInd] = arr[index]
@@ -68,12 +68,12 @@ console.log(arr);
 // console.log(arr.splice(-1, 1, '2', '2'));
 console.log(arr);
 
-var x=1;
-function func(x,y=function(){x=2}){
-   var x=3
-   var y=function(){x=4}
+var x = 1;
+function func(x, y = function () { x = 2 }) {
+    var x = 3
+    var y = function () { x = 4 }
     y();
-    console.log(x,'1');
+    console.log(x, '1');
 }
 func(5)
-console.log(x,'2');
+console.log(x, '2');

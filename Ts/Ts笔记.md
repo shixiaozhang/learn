@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-12 17:18:39
- * @LastEditTime: 2021-01-14 16:22:45
+ * @LastEditTime: 2021-01-15 17:05:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\Ts\Ts笔记.md
@@ -483,4 +483,134 @@ let notSure: any = uncertain;
 
     Tristate[0]='False';
     Tristate['False'] = 0
+
+# 函数
+
+## 参数注解
+你可以注解函数参数，就像你可以注解其他变量一样:
+
+    // variable annotation
+    let sampleVariable: { bar: number };
+
+    // function parameter annotation
+    function foo(sampleParameter: { bar: number }) {}
+
+ ##  重载  
+
+只需多次声明函数头。最后一个函数头是在函数体内实际处于活动状态但不可用于外部。
+
+        // 重载
+        function padding(all: number);
+        function padding(topAndBottom: number, leftAndRight: number);
+        function padding(top: number, right: number, bottom: number, left: number);
+        function padding(a: number, b?: number, c?: number, d?: number) {
+            if (b === undefined && c === undefined && d === undefined) {
+                b = c = d = a;
+            } else if (c === undefined && d === undefined) {
+                c = a;
+                d = b;
+            }
+            return {
+                top: a,
+                right: b,
+                bottom: c,
+                left: d
+            };
+        }
+ 这里前三个函数头可有效调用 padding:
+
+        padding(1); // Okay: all
+        padding(1, 1); // Okay: topAndBottom, leftAndRight
+        padding(1, 1, 1, 1); // Okay: top, right, bottom, left
+        //-
+        padding(1, 1, 1); // Error: Not a part of the available overloads
+
+# 函数声明的时候重载
+
+在没有提供函数实现的情况下，有两种声明函数类型的方式:
+
+    type LongHand = {
+    (a: number): number;
+    };
+
+    type ShortHand = (a: number) => number;
     
+上面代码中的两个例子完全相同。但是，当你想使用函数重载时，只能用第一种方式:
+
+    type LongHandAllowsOverloadDeclarations = {
+        (a: number): number;
+        (a: string): string;
+    };
+
+
+## 一个实际的例子
+当然，像这样一个可被调用的类型注解，你也可以根据实际来传递任何参数、可选参数以及 rest 参数，这有一个稍微复杂的例子：
+
+    interface Complex {
+    (foo: string, bar?: number, ...others: boolean[]): number;
+    }
+    一个接口可提供多种调用签名，用以特殊的函数重载：
+
+    interface Overloaded {
+    (foo: string): string;
+    (foo: number): number;
+    }
+
+    // 实现接口的一个例子：
+    function stringOrNumber(foo: number): number;
+    function stringOrNumber(foo: string): string;
+    function stringOrNumber(foo: any): any {
+    if (typeof foo === 'number') {
+        return foo * foo;
+    } else if (typeof foo === 'string') {
+        return `hello ${foo}`;
+    }
+    }
+
+    const overloaded: Overloaded = stringOrNumber;
+
+    // 使用
+    const str = overloaded(''); // str 被推断为 'string'
+    const num = overloaded(123); // num 被推断为 'number'
+
+
+    这也可以用于内联注解中：
+
+    let overloaded: {
+        (foo: string): string;
+        (foo: number): number;
+    };
+
+# 箭头函数：
+
+        let jiantou=(val:number)=>val.toString();
+
+        // 编译: var jiantou = function (val) { return val.toString(); };
+
+
+
+        const simple: (foo: number) => string = foo => foo.toString();
+
+        //编译: var simple = function (foo) { return foo.toString(); };
+
+解释：simple: 后面到 =foo 之前的 (foo: number) => string 这部分是对simple的类型注释；
+相当于
+
+    type sm=(foo: number) => string;
+
+    const simple2:sm  = foo => foo.toString();
+
+    //编译: var simple2 = function (foo) { return foo.toString(); };
+
+
+# 可实例化
+
+可实例化仅仅是可调用的一种特殊情况，它使用 new 作为前缀。它意味着你需要使用 new 关键字去调用它：
+
+    interface CallMeWithNewToGetString {
+    new (): string;
+    }
+
+    // 使用
+    declare const Foo: CallMeWithNewToGetString;
+    const bar = new Foo(); // bar 被推断为 string 类型
