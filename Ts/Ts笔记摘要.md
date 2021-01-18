@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-12 17:18:39
- * @LastEditTime: 2021-01-15 17:06:10
+ * @LastEditTime: 2021-01-18 17:59:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\Ts\Ts笔记.md
@@ -40,6 +40,7 @@ interface Add{
         }
 
 ## instanceof :右侧要求是一个构造函数，用于类。获取前者是不是这个类的类型；
+
 instanceof操作符是 JS 中的原生操作符，用来判断一个实例是不是某个构造函数创建的
     
     interface Padder {
@@ -652,3 +653,589 @@ let notSure: any = uncertain;
     // 使用
     declare const Foo: CallMeWithNewToGetString;
     const bar = new Foo(); // bar 被推断为 string 类型
+
+
+# 设计模式：方便通用
+考虑如下函数：
+
+    declare function parse<T>(name: string): T;
+
+在这种情况下，泛型 T 只在一个地方被使用了，它并没有在成员之间提供约束 T。这相当于一个如下的类型断言：
+
+    declare function parse(name: string): any;
+
+    const something = parse('something') as TypeOfSomething;
+    
+仅使用一次的泛型并不比一个类型断言来的安全。它们都给你使用 API 提供了便利。
+
+另一个明显的例子是，一个用于加载 json 返回值函数，它返回你任何传入类型的 Promise：
+
+    const getJSON = <T>(config: { url: string; headers?: { [key: string]: string } }): Promise<T> => {
+        const fetchConfig = {
+            method: 'GET',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            ...(config.headers || {})
+        };
+        return fetch(config.url, fetchConfig).then<T>(response => response.json());
+    };
+
+请注意，你仍然需要明显的注解任何你需要的类型，但是 getJSON<T> 的签名 config => Promise<T> 能够减少你一些关键的步骤（你不需要注解 loadUsers 的返回类型，因为它能够被推出来）：
+
+    type LoadUserResponse = {
+        user: {
+            name: string;
+            email: string;
+        }[];
+    };
+
+    function loaderUser() {
+        return getJSON<LoadUserResponse>({ url: 'https://example.com/users' });
+    }
+
+与此类似：使用 Promise<T> 作为一个函数的返回值比一些如：Promise<any> 的备选方案要好很多。
+
+# 配合 axios 使用
+通常情况下，我们会把后端返回数据格式单独放入一个 interface 里：
+
+    // 请求接口数据
+    export interface ResponseData<T = any> {
+        /**
+        * 状态码
+        * @type { number }
+        */
+        code: number;
+
+        /**
+        * 数据
+        * @type { T }
+        */
+        result: T;
+
+        /**
+        * 消息
+        * @type { string }
+        */
+        message: string;
+    }
+当我们把 API 单独抽离成单个模块时：
+
+    // 在 axios.ts 文件中对 axios 进行了处理，例如添加通用配置、拦截器等
+    import Ax from './axios';
+
+    import { ResponseData } from './interface.ts';
+
+    export function getUser<T>() {
+    return Ax.get<ResponseData<T>>('/somepath')
+        .then(res => res.data)
+        .catch(err => console.error(err));
+    }
+接着我们写入返回的数据类型 User，这可以让 TypeScript 顺利推断出我们想要的类型：
+
+    interface User {
+        name: string;
+        age: number;
+    }
+
+    async function test() {
+        // user 被推断出为
+        // {
+        //  code: number,
+        //  result: { name: string, age: number },
+        //  message: string
+        // }
+        const user = await getUser<User>();
+    }
+
+
+# 函数返回类型
+
+返回类型能被 return 语句推断，如下所示，推断函数返回为一个数字：
+
+    function add(a: number, b: number) {
+        return a + b;
+    }
+    
+这是一个从底部流出类型的例子。
+
+# 赋值
+
+函数参数类型/返回值也能通过赋值来推断。如下所示，foo 的类型是 Adder，他能让 foo 的参数 a、b 是 number 类型。
+
+    type Adder = (a: number, b: number) => number;
+
+    let foo: Adder = (a, b) => a + b;
+
+这个事实可以用下面的代码来证明，TypeScript 会发出正如你期望发出的错误警告：
+
+    type Adder = (a: number, b: number) => number;
+
+    let foo: Adder = (a, b) => {
+        a = 'hello'; // Error：不能把 'string' 类型赋值给 'number' 类型
+        return a + b;
+    };
+
+这是一个从左向右流动类型的示例。
+
+如果你创建一个函数，并且函数参数为一个回调函数，相同的赋值规则也适用于它。从 argument 至 parameter 只是变量赋值的另一种形式。
+
+    type Adder = (a: number, b: number) => number;
+
+    function iTakeAnAdder(adder: Adder) {
+        return adder(1, 2);
+    }
+
+    function iTakeAnAdder(adder: Adder) {
+        return adder('1', 2);// Error: 不能把 'string' 类型赋值给 'number' 类型
+    }
+
+    iTakeAnAdder((a, b) => {
+        
+        a = 'hello'; // Error: 不能把 'string' 类型赋值给 'number' 类型
+        return a + b;
+    });
+
+
+# 结构化： 可以少不可以多（参数对象类型情况下）
+
+TypeScript 对象是一种结构类型，这意味着只要结构匹配，名称也就无关紧要了：
+
+    interface Point {
+        x: number;
+        y: number;
+    }
+
+    class Point2D {
+        constructor(public x: number, public y: number) {}
+    }
+
+    let p: Point;
+
+    // ok, 因为是结构化的类型
+    p = new Point2D(1, 2);
+
+    这允许你动态创建对象（就好像你在 vanilla JS 中使用一样），并且它如果能被推断，该对象仍然具有安全性。
+
+    interface Point2D {
+        x: number;
+        y: number;
+    }
+
+    interface Point3D {
+        x: number;
+        y: number;
+        z: number;
+    }
+
+    const point2D: Point2D = { x: 0, y: 10 };
+    const point3D: Point3D = { x: 0, y: 10, z: 20 };
+
+    function iTakePoint2D(point: Point2D) {
+         /* do something */
+    }
+
+    iTakePoint2D(point2D); // ok, 完全匹配
+    iTakePoint2D(point3D); // 额外的信息，没关系
+    iTakePoint2D({ x: 0 }); // Error: 没有 'y'
+
+
+# 对类型兼容性来说，变体是一个利于理解和重要的概念。
+
+对一个简单类型 Base 和 Child 来说，如果 Child 是 Base 的子类，Child 的实例能被赋值给 Base 类型的变量。
+就是多的能赋值给少的；就想类的继承，子类必须有父类的元素，而且可以多出一些东西；
+
+## 这是多态性。
+
+    interface Point2D {
+        x: number;
+        y: number;
+    }
+
+    interface Point3D {
+        x: number;
+        y: number;
+        z: number;
+    }
+
+    const point2D: Point2D = { x: 0, y: 10 };
+    const point3D: Point3D = { x: 0, y: 10, z: 20 };
+    function iTakePoint2D(point: Point2D) {
+    /* do something */
+    }
+
+# 返回类型: 可以多不可以少
+
+协变（Covariant）：返回类型必须包含足够的数据。
+
+    interface Point2D {
+        x: number;
+        y: number;
+    }
+    interface Point3D {
+        x: number;
+        y: number;
+        z: number;
+    }
+
+    let iMakePoint2D = (): Point2D => ({ x: 0, y: 0 });
+    let iMakePoint3D = (): Point3D => ({ x: 0, y: 0, z: 0 });
+
+    iMakePoint2D = iMakePoint3D;
+    iMakePoint3D = iMakePoint2D; // ERROR: Point2D 不能赋值给 Point3D
+    
+# 参数数量：: 可以少不可以多（具体参数自变量情况下）
+
+更少的参数数量是好的（如：函数能够选择性的忽略一些多余的参数），但是你得保证有足够的参数被使用了：
+
+const iTakeSomethingAndPassItAnErr = (x: (err: Error, data: any) => void) => {
+  /* 做一些其他的 */
+};
+
+iTakeSomethingAndPassItAnErr(() => null); // ok
+iTakeSomethingAndPassItAnErr(err => null); // ok
+iTakeSomethingAndPassItAnErr((err, data) => null); // ok
+
+// Error: 参数类型 `(err: any, data: any, more: any) => null` 不能赋值给参数类型 `(err: Error, data: any) => void`
+iTakeSomethingAndPassItAnErr((err, data, more) => null);
+
+# 可选的和 rest 参数
+
+可选的（预先确定的）和 Rest 参数（任何数量的参数）都是兼容的：
+
+    let foo = (x: number, y: number) => {};
+    let bar = (x?: number, y?: number) => {};
+    let bas = (...args: number[]) => {};
+
+    foo = bar = bas;
+    bas = bar = foo;
+
+
+
+# 总结：函数参数多少问题：
+
+
+## 例子
+
+    interface Point2D {
+        x: number;
+        y: number;
+    }
+
+    interface Point3D {
+        x: number;
+        y: number;
+        z: number;
+    }
+
+    const point2D: Point2D = { x: 0, y: 10 };
+    const point3D: Point3D = { x: 0, y: 10, z: 20 };
+     //参数总数是一个，所以这份参数对象传入的内容，就是比较类型定义的问题；
+     //ts中的类型和 class类，相似； 3D 相当于 2D 的子类，子类用于父类的所有参数，而且可以扩展自定义参数，所以3D可以赋值给，类型定义为2D 的变量；
+      
+    function iTakePoint2D(point: Point2D) {
+        /* do something */
+    }
+
+    iTakePoint2D(point2D); // ok, 完全匹配
+    iTakePoint2D(point3D); // 额外的信息，没关系
+
+
+    //这个就是完全的ts ，参数传递问题：参数的数量 不可以少 也 不可以多；
+
+    //在js中参数的数量 可以多 但是 不可以少；
+    
+    function iTakePointD(x: number,y: number,z: number,) {
+        /* do something */
+    }
+
+
+   
+
+    // iTakePointD(0, 10 ); // err 缺少信息
+
+    iTakePointD( 0,  10, 20  ); // ok, 完全匹配
+
+## 函数参数总数：不可以多也不可以少；
+## 函数返回值： 可以多但是不可以少；
+
+## 函数的某个参数如果定义的类型接口： 这个参数对象，可以接受他的子类；（就是可以多不可以少参数）
+
+
+
+# 枚举
+
+枚举与数字类型相互兼容
+
+    enum Status {
+        Ready,
+        Waiting
+    }
+
+    let status = Status.Ready;
+    let num = 0;
+
+    status = num;
+    num = status;
+
+来自于不同枚举的枚举变量，被认为是不兼容的：
+
+    enum Status {
+        Ready,
+        Waiting
+    }
+    enum Color {
+        Red,
+        Blue,
+        Green
+    }
+
+    let status = Status.Ready;
+    let color = Color.Red;
+
+    status = color; // Error
+
+# 类的比较：除去 私有的和受保护的 其他的东西只比较 公共的属性 和方法 ；不会比较构造函数
+
+仅仅只有实例成员和方法会相比较，构造函数和静态成员不会被检查。
+
+    class Animal {
+        feet: number;
+        constructor(name: string, numFeet: number) {}
+    }
+
+    class Size {
+        feet: number;
+        constructor(meters: number) {}
+    }
+
+    let a: Animal;
+    let s: Size;
+
+    a = s; // OK
+    s = a; // OK
+
+私有的和受保护的成员必须来自于相同的类。
+
+    class Animal {
+        protected feet: number;
+    }
+
+    class Cat extends Animal {}
+
+    let animal: Animal;
+    
+    let cat: Cat;
+
+    animal = cat; // ok
+    cat = animal; // ok
+
+    class Size {
+        protected feet: number;
+    }
+
+    let size: Size;
+
+    animal = size; // ERROR
+    size = animal; // ERROR
+
+# 泛型的比较
+
+TypeScript 类型系统基于变量的结构，仅当类型参数在被一个成员使用时，才会影响兼容性。如下例子中，T 对兼容性没有影响：
+
+    interface Empty<T> {}
+
+    let x: Empty<number>;
+    let y: Empty<string>;
+
+    x = y; // ok
+
+当 T 被成员使用时，它将在实例化泛型后影响兼容性：
+
+    interface Empty<T> {
+    data: T;
+    }
+
+    let x: Empty<number>;
+    let y: Empty<string>;
+
+    x = y; // Error
+    
+如果尚未实例化泛型参数，则在检查兼容性之前将其替换为 any：
+
+    let identity = function<T>(x: T): T {
+        // ...
+    };
+
+    let reverse = function<U>(y: U): U {
+        // ...
+    };
+
+    identity = reverse; // ok, 因为 `(x: any) => any` 匹配 `(y: any) => any`
+
+类中的泛型兼容性与前文所提及一致：
+
+        class List<T> {
+            add(val: T) {}
+        }
+
+        class Animal {
+            name: string;
+        }
+        class Cat extends Animal {
+            meow() {
+                // ..
+            }
+        }
+
+        const animals = new List<Animal>();
+        animals.add(new Animal()); // ok
+        animals.add(new Cat()); // ok
+
+        const cats = new List<Cat>();
+        cats.add(new Animal()); // Error
+        cats.add(new Cat()); // ok
+
+# 脚注：不变性（Invariance）（没看懂干嘛的）
+我们说过，不变性可能是唯一一个听起来合理的选项，这里有一个关于 contra 和 co 的变体，被认为对数组是不安全的。
+
+    class Animal {
+        constructor(public name: string) {}
+    }
+    class Cat extends Animal {
+        meow() {
+            console.log('cat');
+        }
+    }
+
+    let animal = new Animal('animal');
+    let cat = new Cat('cat');
+
+    // 多态
+    // Animal <= Cat
+
+    animal = cat; // ok
+    cat = animal; // ERROR: cat 继承于 animal
+
+    // 演示每个数组形式
+    let animalArr: Animal[] = [animal];
+    let catArr: Cat[] = [cat];
+
+    // 明显的坏处，逆变
+    // Animal <= Cat
+    // Animal[] >= Cat[]
+    catArr = animalArr; // ok, 如有有逆变
+    catArr[0].meow(); // 允许，但是会在运行时报错
+
+    // 另外一个坏处，协变
+    // Animal <= Cat
+    // Animal[] <= Cat[]
+    animalArr = catArr; // ok，协变
+
+    animalArr.push(new Animal('another animal')); // 仅仅是 push 一个 animal 至 carArr 里
+    catArr.forEach(c => c.meow()); // 允许，但是会在运行时报错。
+
+
+# Never
+
+一个从来不会有返回值的函数（如：如果函数内含有 while(true) {}）；
+一个总是会抛出错误的函数（如：function foo() { throw new Error('Not Implemented') }，foo 的返回类型是 never）；
+
+    let foo: never = 123; // Error: number 类型不能赋值给 never 类型
+
+    // ok, 作为函数返回类型的 never
+    let bar: never = (() => {
+    throw new Error('Throw my hands in the air like I just dont care');
+    })();
+    
+## 用例：详细的检查
+
+    function foo(x: string | number): boolean {
+        if (typeof x === 'string') {
+            return true;
+        } else if (typeof x === 'number') {
+            return false;
+        }
+
+        // 如果不是一个 never 类型，这会报错：
+        // - 不是所有条件都有返回值 （严格模式下）
+        // - 或者检查到无法访问的代码
+        // 但是由于 TypeScript 理解 `fail` 函数返回为 `never` 类型
+        // 它可以让你调用它，因为你可能会在运行时用它来做安全或者详细的检查。
+        
+        return fail('Unexhaustive');
+    }
+
+    function fail(message: string): never {
+        throw new Error(message);
+    }
+
+# 辨析联合类型 ： 或 typeof 、 instanceof 、 in（字面量）代替
+
+当类中含有字面量成员时，我们可以用该类的属性来辨析联合类型。
+
+作为一个例子，考虑 Square 和 Rectangle 的联合类型 Shape。Square 和 Rectangle有共同成员 kind，因此 kind 存在于 Shape 中。
+
+    interface Square {
+        kind: 'square';
+        size: number;
+    }
+
+    interface Rectangle {
+        kind: 'rectangle';
+        width: number;
+        height: number;
+    }
+
+    type Shape = Square | Rectangle;
+
+如果你使用类型保护风格的检查（==、===、!=、!==）或者使用具有判断性的属性（在这里是 kind），TypeScript 将会认为你会使用的对象类型一定是拥有特殊字面量的，并且它会为你自动把类型范围变小
+
+    function area(s: Shape) {
+        if (s.kind === 'square') {
+            // 现在 TypeScript 知道 s 的类型是 Square
+            // 所以你现在能安全使用它
+            return s.size * s.size;
+        } else {
+            // 不是一个 square ？因此 TypeScript 将会推算出 s 一定是 Rectangle
+            return s.width * s.height;
+        }
+    }
+
+ // 如果你能让 TypeScript 给你一个错误，这是不是很棒？
+你可以通过一个简单的向下思想，来确保块中的类型被推断为与 never 类型兼容的类型。例如，你可以添加一个更详细的检查来捕获错误：
+
+        function area(s: Shape) {
+            if (s.kind === 'square') {
+                return s.size * s.size;
+            } else if (s.kind === 'rectangle') {
+                return s.width * s.height;
+            } else {
+                const _exhaustiveCheck: never = s;
+            }
+        }
+    
+
+# Switch
+
+TIP
+你可以通过 switch 来实现以上例子。
+
+    function area(s: Shape) {
+        switch (s.kind) {
+            case 'square':
+            
+                return s.size * s.size;
+
+            case 'rectangle':
+
+                return s.width * s.height;
+
+            case 'circle':
+
+                return Math.PI * s.radius ** 2;
+                
+            default:
+
+                const _exhaustiveCheck: never = s;
+        }
+    }

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-12 17:18:39
- * @LastEditTime: 2021-01-15 17:05:53
+ * @LastEditTime: 2021-01-18 16:06:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\Ts\Ts笔记.md
@@ -560,11 +560,11 @@ let notSure: any = uncertain;
     function stringOrNumber(foo: number): number;
     function stringOrNumber(foo: string): string;
     function stringOrNumber(foo: any): any {
-    if (typeof foo === 'number') {
-        return foo * foo;
-    } else if (typeof foo === 'string') {
-        return `hello ${foo}`;
-    }
+        if (typeof foo === 'number') {
+            return foo * foo;
+        } else if (typeof foo === 'string') {
+            return `hello ${foo}`;
+        }
     }
 
     const overloaded: Overloaded = stringOrNumber;
@@ -608,9 +608,98 @@ let notSure: any = uncertain;
 可实例化仅仅是可调用的一种特殊情况，它使用 new 作为前缀。它意味着你需要使用 new 关键字去调用它：
 
     interface CallMeWithNewToGetString {
-    new (): string;
+        new (): string;
     }
 
     // 使用
     declare const Foo: CallMeWithNewToGetString;
     const bar = new Foo(); // bar 被推断为 string 类型
+
+
+# readonly
+
+TypeScript 类型系统允许你在一个接口里使用 readonly 来标记属性。它能让你以一种更安全的方式工作（不可预期的改变是很糟糕的）：
+
+        function foo(config: { readonly bar: number, readonly bas: number }) {
+        // ..
+        }
+
+        const config = { bar: 123, bas: 123 };
+        foo(config);
+
+        // 现在你能够确保 'config' 不能够被改变了
+
+当然，你也可以在 interface 和 type 里使用 readonly：
+
+        type Foo = {
+            readonly bar: number;
+            readonly bas: number;
+        };
+
+        // 初始化
+        const foo: Foo = { bar: 123, bas: 456 };
+
+        // 不能被改变
+        foo.bar = 456; // Error: foo.bar 为仅读属性
+
+你也能指定一个类的属性为只读，然后在声明时或者构造函数中初始化它们，如下所示：
+
+        class Foo {
+            readonly bar = 1; // OK
+            readonly baz: string;
+            constructor() {
+                this.baz = 'hello'; // OK
+            }
+        }
+# Readonly
+
+这有一个 Readonly 的映射类型，它接收一个泛型 T，用来把它的所有属性标记为只读类型：
+
+        type Foo = {
+            bar: number;
+            bas: number;
+        };
+
+        type FooReadonly = Readonly<Foo>;
+
+        const foo: Foo = { bar: 123, bas: 456 };
+        const fooReadonly: FooReadonly = { bar: 123, bas: 456 };
+
+        foo.bar = 456; // ok
+        fooReadonly.bar = 456; // Error: bar 属性只读
+
+# 绝对的不可变
+你甚至可以把索引签名标记为只读：
+
+        interface Foo {
+            readonly [x: number]: number;
+        }
+
+        // 使用
+
+        const foo: Foo = { 0: 123, 2: 345 };
+        console.log(foo[0]); // ok（读取）
+        foo[0] = 456; // Error: 属性只读
+
+如果你想以不变的方式使用原生 JavaScript 数组，可以使用 TypeScript 提供的 ReadonlyArray<T> 接口：
+
+        let foo: ReadonlyArray<number> = [1, 2, 3];
+        console.log(foo[0]); // ok
+        foo.push(4); // Error: ReadonlyArray 上不存在 `push`，因为他会改变数组
+        foo = foo.concat(4); // ok, 创建了一个复制
+
+readonly 能确保“我”不能修改属性，但是当你把这个属性交给其他并没有这种保证的使用者（允许出于类型兼容性的原因），他们能改变它。当然，如果 iMutateFoo 明确的表示，他们的参数不可修改，那么编译器会发出错误警告：
+
+        interface Foo {
+            readonly bar: number;
+        }
+
+        let foo: Foo = {
+            bar: 123
+        };
+
+        function iTakeFoo(foo: Foo) {
+            foo.bar = 456; // Error: bar 属性只读
+        }
+
+        iTakeFoo(foo);
