@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-06 14:34:26
- * @LastEditTime: 2021-01-08 21:39:35
+ * @LastEditTime: 2021-01-19 15:34:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\WebpackDome\Webpack笔记.md
@@ -282,8 +282,10 @@ webpack-merge做了两件事：它允许连接数组并合并对象，而不是�
         //插件的配置
         plugins: [
             new htmlWebpackPlugin({
-            template: './src/index.html'
-            })
+                template:path.join(__dirname,'./src/index.html'),//模板html文件地址
+                filename:'index.html',//打包后的文件名
+                favicon: path.resolve('src/logo.png')//引入的favicon图片地址
+            }),
         ]
     }
 
