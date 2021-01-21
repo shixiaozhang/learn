@@ -1,0 +1,44 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\Administrator\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add electron-squirrel-startup
+
+PATH: 
+  C:\Users\Administrator\AppData\Roaming\npm-cache\_npx\13220;D:\learn\learn\my-electron-app\node_modules\.bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;D:\anaconda\Lib;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files\TortoiseSVN\bin;D:\Microsoft VS Code\bin;C:\Program Files\Bandizip\;C:\Users\Administrator\AppData\Roaming\npm
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  12.19.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: ENOENT: no such file or directory, copyfile 'C:\Users\Administrator\AppData\Local\Yarn\Cache\v6\npm-ms-2.1.2-d09d1f357b443f493382a8eb3ccd183872ae6009-integrity\node_modules\ms\package.json' -> 'D:\learn\learn\my-electron-app\node_modules\@electron\get\node_modules\ms\package.json'
+
+npm manifest: 
+  {
+    "name": "my-electron-app",
+    "version": "1.0.0",
+    "description": "My Electron app",
+    "main": "main.js",
+    "scripts": {
+      "start": "electron-forge start",
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "package": "electron-forge package",
+      "make": "electron-forge make"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+      "electron": "^11.2.0"
+    },
+    "dependencies": {}
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
