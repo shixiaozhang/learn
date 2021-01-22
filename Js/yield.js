@@ -1,7 +1,7 @@
 
 // /**
 //  * yield 用法和解释：
-//  *  （感觉不如promise和async ... await;)
+//  *  
 //  * 
 //  * 
 //  * 
@@ -37,19 +37,6 @@
 //     console.log(products);
 // });
 
-// /**
-//  * Iterator 迭代器
-//  */
-// var lang = { name: 'JavaScript', birthYear: 1995 };
-// var it = Iterator(lang);
-// var pair = it.next(); 
-// console.log(pair); // ["name", "JavaScript"]
-// pair = it.next(); 
-// console.log(pair); // ["birthYear", 1995]
-// pair = it.next(); // A StopIteration exception is thrown
-
-
-// /**
 //  * Generator 生成器
 //  */
 
@@ -125,20 +112,53 @@
 // > "hello"
 // > "world"
 // > "bye"
-function *gen() {
-    yield 'hello';
-    yield 'world';
-    return true;
-}
+// function *gen() {
+//     yield 'hello';
+//     yield 'world';
+//     yield
+//     return true;
+// }
 
-console.log(toString (gen()));
+// console.log(toString (gen()));
 function *gen() {
-    yield 'hello';
+    console.log('start');
+     yield 'hello';
     yield 'world';
     return true;
+   
 }
 
 var it = gen();
 var ret = it.next() 
-var ret2 = it.next() 
-console.log(ret,ret2);
+// var ret2 = it.next() 
+// var ret3 = it.next() 
+console.log(ret);
+// console.log(ret2);
+// console.log(ret3);
+
+
+
+function *gen2(v) {
+    console.log(v);
+    console.log(yield);
+    console.log(yield);
+    console.log(yield 1);
+   
+}
+var it2 = gen2('123');
+var ret2 = it2.next(222) //这个值没穿进去，因为第一次调用,之前没有yield；生成器函数只有在next调用时才会运行；不调用不会运行
+var ret22 = it2.next(333) 
+var ret32 = it2.next(555)
+var ret42 = it2.next(666)
+// 这样可以打印出 123  333 555 666
+console.log(ret2,ret22,ret32,ret42);//但是yield的返回值还是空
+
+// { value: undefined, done: false } { value: undefined, done: false } { value: 1, done: false } { value: undefined, done: true }
+
+//next() 中的值会传给上一个yield
+// yield 本身的值；和yield 后通过next 获取的是两个不同概念；
+
+// console.log(yield 'aa');
+// yield 本身的值是 undefined；
+// next( ) 获取的值是 ’aa‘
+// 本次next 之后的下一次 next（val） 传入的val 可以作为 本次yield 本身值 也就是 console.log(yield 'aa')打印的值

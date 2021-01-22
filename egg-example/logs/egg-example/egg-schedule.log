@@ -1,0 +1,6 @@
+2021-01-22 23:13:34,408 INFO 14604 [Timer] C:\Users\DaFu\Desktop\work\learn\egg-example\node_modules\_egg-multipart@2.10.3@egg-multipart\app\schedule\clean_tmpdir.js next time will execute after 18985593ms at 2021-01-23 04:30:00.001
+2021-01-22 23:13:34,408 INFO 14604 [Timer] C:\Users\DaFu\Desktop\work\learn\egg-example\node_modules\_egg-logrotator@3.1.0@egg-logrotator\app\schedule\clean_log.js next time will execute after 2785592ms at 2021-01-23 00:00:00.000
+2021-01-22 23:13:34,409 INFO 14604 [Timer] C:\Users\DaFu\Desktop\work\learn\egg-example\node_modules\_egg-logrotator@3.1.0@egg-logrotator\app\schedule\rotate_by_file.js next time will execute after 2786592ms at 2021-01-23 00:00:01.001
+2021-01-22 23:13:34,190 INFO 14140 [egg-schedule]: register schedule C:\Users\DaFu\Desktop\work\learn\egg-example\node_modules\_egg-multipart@2.10.3@egg-multipart\app\schedule\clean_tmpdir.js
+2021-01-22 23:13:34,190 INFO 14140 [egg-schedule]: register schedule C:\Users\DaFu\Desktop\work\learn\egg-example\node_modules\_egg-logrotator@3.1.0@egg-logrotator\app\schedule\clean_log.js
+2021-01-22 23:13:34,190 INFO 14140 [egg-schedule]: register schedule C:\Users\DaFu\Desktop\work\learn\egg-example\node_modules\_egg-logrotator@3.1.0@egg-logrotator\app\schedule\rotate_by_file.js

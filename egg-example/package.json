@@ -1,0 +1,15 @@
+{
+  "name": "egg-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "egg-bin dev"
+  },
+  "dependencies": {
+    "egg": "^2.29.1"
+  },
+  "devDependencies": {
+    "egg-bin": "^4.15.0"
+  }
+}
