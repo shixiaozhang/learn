@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-08 15:14:19
- * @LastEditTime: 2021-01-11 11:07:16
+ * @LastEditTime: 2021-01-22 15:48:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit 
  * @FilePath: \learn\WebpackDome\webpack-react\webpack\webpack.base.js
@@ -70,7 +70,7 @@ module.exports = {
             },
             {
                 //匹配图片、
-                test: /\.(jpg|png|gif)$/,
+                test: /\.(png)|(jpg)|(gif)|(woff)|(svg)|(eot)|(ttf)$/,
                 loader: 'url-loader',
                 //图片限制：小于8k，base64处理减少请求数量，但是会使体积更大
                 options: {
