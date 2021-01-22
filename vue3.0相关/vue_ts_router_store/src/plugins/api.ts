@@ -1,3 +1,4 @@
+
 import https  from './http';
 
 export const Logins={
@@ -5,3 +6,5 @@ export const Logins={
         return  https.get('http://192.168.3.115:5002/department_hot',params)
       }
 }
+
+export const Search=(data:any)=>https.post('/search',data)
