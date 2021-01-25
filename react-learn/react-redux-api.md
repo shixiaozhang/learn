@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-30 21:05:51
- * @LastEditTime: 2021-01-04 14:33:44
+ * @LastEditTime: 2021-01-25 21:37:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\react-learn\react-redux-api.md
@@ -226,6 +226,7 @@ mapStateToProps 函数接收整个 Redux store 的 state 作为 props，然后�
     export default connect(mapStateToProps, mapDispatchToProps)(TodoApp)
     
 ### 注入 todos 并把 todoActionCreators 与 counterActionCreators 一同作为 actions 属性注入到组件中
+   
     import * as todoActionCreators from './todoActionCreators'
     import * as counterActionCreators from './counterActionCreators'
     import { bindActionCreators } from 'redux'
@@ -258,6 +259,7 @@ mapStateToProps 函数接收整个 Redux store 的 state 作为 props，然后�
     export default connect(mapStateToProps, mapDispatchToProps)(TodoApp)
 
 ### 根据组件的 props 注入特定用户的 todos
+  
     import * as actionCreators from './actionCreators'
 
     function mapStateToProps(state, ownProps) {

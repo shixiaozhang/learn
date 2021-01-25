@@ -16,12 +16,13 @@
 
 ##    1、 两种路由模式：
 ###      1- BrowserRouter：不带#； 需后台配合
-                                                nginx  添加：try_files $uri /index.html
-                                                node  // 在你应用 JavaScript 文件中包含了一个 script 标签
-                                                        // 的 index.html 中处理任何一个 route
-                                                        app.get('*', function (request, response){
-                                                        response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
-                                                         })
+        nginx  添加：try_files $uri /index.html
+        node  // 在你应用 JavaScript 文件中包含了一个 script 标签
+                // 的 index.html 中处理任何一个 route
+                
+                app.get('*', function (request, response){
+                response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+                    })
 
 ####         相关属性：
 

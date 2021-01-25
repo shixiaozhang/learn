@@ -575,7 +575,7 @@ context 对象接受一个名为 displayName 的 property，类型为字符串�
                 <div>
                   <input type="text" ref={this.setTextInputRef} />
                   // 或者写成
-                  <input type="text" ref={ele => this.eleInput = ele}> // ele 即指向当前input元素
+                  <input type="text" ref={ele => this.textInput = ele}> // ele 即指向当前input元素
                   <button onClick={e => this.handleSubmit(e)}>提交</button>
                 </div>
               );

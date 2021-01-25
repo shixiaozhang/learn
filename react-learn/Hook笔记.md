@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-24 17:14:31
- * @LastEditTime: 2021-01-13 15:45:08
+ * @LastEditTime: 2021-01-25 22:02:33
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\react-learn\Hook笔记.md
@@ -17,7 +17,7 @@
 
 ## Hook 使用规则
 
-只能在函数最外层调用 Hook。d不要在循环、条件判断或者子函数中调用。
+只能在函数最外层调用 Hook。不要在循环、条件判断或者子函数中调用。
 只能在 React 的函数组件中调用 Hook。不要在其他 JavaScript 函数中调用。（还有一个地方可以调用 Hook —— 就是自定义的 Hook 中，我们稍后会学习到。）
 
 ## useState 浅比较
@@ -45,7 +45,9 @@
 但是 React 会等待浏览器完成画面渲染之后才会延迟调用 useEffect；并且每次渲染都会调用所有的effect；
 
 ###  使用：
-
+    useEffect(() => {
+        document.title = `You clicked ${count} times`;
+        });
 
 ### 无需清清除的Effect 
 
@@ -82,14 +84,8 @@ React 会在组件卸载的时候执行清除操作。正如之前学到的，ef
 
 
 ### 为什么每次更新的时候都要运行 Effect？
+
 在 class 中prop的值发生改变，但是我们是在componentDidMount读取的prop无法，再运行componentDidMount更新；在class里面通过componentDidUpdate 解决，所以在effect中，effect需要每次更新都会运行；
-
-
-
-
-
-
-
 
 
 你可能认为需要单独的 effect 来执行清除操作。但由于添加和删除订阅的代码的紧密性，所以 useEffect 的设计是在同一个地方执行。如果你的 effect 返回一个函数，React 将会在执行清除操作时调用它
@@ -443,6 +439,7 @@ useRef 返回一个可变的 ref 对象，其 .current 属性被初始化为传�
 这是因为它创建的是一个普通 Javascript 对象。而 useRef() 和自建一个 {current: ...} 对象的唯一区别是，useRef 会在每次渲染时返回同一个 ref 对象
 
 ###  callback ref 
+
 当 ref 对象内容发生变化时，useRef 并不会通知你。变更 .current 属性不会引发组件重新渲染。如果想要在 React 绑定或解绑 DOM 节点的 ref 时运行某些代码，则需要使用回调 ref 来实现。
 
 getBoundingClientRect用于获取某个元素相对于视窗的位置集合。集合中有top, right, bottom, left等属性。
@@ -498,9 +495,11 @@ useImperativeHandle 可以让你在使用 ref 时自定义暴露给父组件的�
         
          <FancyInput ref={Ref} />
 
-        渲染 <FancyInput ref={inputRef} /> 的父组件可以调用 inputRef.current.focus()。
+       //解释：
+        父组件可以调用 fancyInputRef.current.focus()。
+        useImperativeHandle 的cb返回的值就是父组件 ref current的值，可以是任何类型的值
 
-        const attRef = useRef(0);
+        const attRef = useRef(0);//ref可以当变量使用,改变不会重新渲染
         {attRef.current}//0
 
 

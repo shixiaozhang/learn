@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-23 16:42:38
- * @LastEditTime: 2020-12-24 16:51:51
+ * @LastEditTime: 2021-01-25 21:04:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\react-learn\reactApi.md
@@ -48,12 +48,13 @@
 
 * static getDerivedStateFromError()
 * componentDidCatch()
+  
 ### 其他 APIs
 
 #### 组件还提供了一些额外的 API：
 
 * setState()
-* forceUpdate()
+* forceUpdate() 
 
 ### class 属性
 
