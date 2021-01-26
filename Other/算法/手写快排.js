@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-21 10:48:12
- * @LastEditTime: 2021-01-21 12:20:30
+ * @LastEditTime: 2021-01-26 20:43:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\Other\算法\手写快排.js
@@ -47,6 +47,6 @@ function quickSort(arr) {
     // return [...quickSort(left),pivot,...quickSort(right)]
 
 
-}
+} 
 
 console.log(quickSort(arr));
