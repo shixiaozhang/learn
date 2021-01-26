@@ -1,5 +1,5 @@
-// 节流：一个是请求了等会，一个是等会请求
-
+// 节流：如果短时间内大量触发同一事件，那么在函数执行一次之后，该函数在指定的时间期限内不再工作，直至过了这段时间才重新生效。
+// 一定时间内只执行一次
 // 时间戳：等会请求
 var throttle = function(func, delay) {            
     　　var prev = Date.now();            
@@ -28,23 +28,40 @@ var throttle = function(func, delay) {
                     func.apply(context, args);                        
                     timer = null;                    
                 }, delay);                
-            }            
+            }
         }        
     }        
+    
+    function throttle(fn,delay){
+        let valid = true
+        return function() {
+           if(!valid){
+               //休息时间 暂不接客
+               return false 
+           }
+           // 工作时间，执行函数并且在间隔期内把状态位设为无效
+            valid = false
+            setTimeout(() => {
+                fn()
+                valid = true;
+            }, delay)
+        }
+    }
+
     function handle() {            
         console.log(Math.random());        
     }        
     window.addEventListener('scroll', throttle(handle, 1000));
 
-
-    // 防抖
+// 防抖的含义就是让某个时间期限（如上面的1000毫秒）内，事件处理函数只执行一次。
+// 持续触发不执行，不触发的一段时间之后再执行
 
 
 // 防抖：请求了等会
 function debounce(fn, wait) {    
     var timeout = null;    
     return function() {        
-        if(timeout !== null)   clearTimeout(timeout);        
+        if(timeout !== null)   clearTimeout(timeout);    
         timeout = setTimeout(fn, wait);    
     }
 }

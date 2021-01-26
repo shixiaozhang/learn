@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2020-12-31 16:01:43
- * @LastEditTime: 2020-12-31 16:44:18
+ * @LastEditTime: 2021-01-26 16:34:18
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \async\src\reducers\t.js
  */
 // import { compose } from'redux'
-function compose(...funcs) {
+function compose(...funcs) {//? 中间件嵌套函数
   if (funcs.length === 0) {
     returnarg => arg
   }
