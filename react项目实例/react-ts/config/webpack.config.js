@@ -58,8 +58,8 @@ const swSrc = paths.swSrc;
 // style files regexes
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
-const sassRegex = /\.(scss|sass|less)$/;
-const sassModuleRegex = /\.module\.(scss|sass|less)$/;
+const sassRegex = /\.(less)$/;
+const sassModuleRegex = /\.module\.(less)$/;
 
 const hasJsxRuntime = (() => {
   if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
@@ -506,7 +506,7 @@ module.exports = function (webpackEnv) {
                     ? shouldUseSourceMap
                     : isEnvDevelopment,
                 },
-                'sass-loader',
+                
                 'less-loader'
               ),
               // Don't consider CSS imports dead code even if the
@@ -529,7 +529,7 @@ module.exports = function (webpackEnv) {
                     getLocalIdent: getCSSModuleLocalIdent,
                   },
                 },
-                'sass-loader',
+                
                 'less-loader'
               ),
             },
