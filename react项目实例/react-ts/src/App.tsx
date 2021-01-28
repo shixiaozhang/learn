@@ -2,6 +2,12 @@ import React from 'react';
 import './App.less';
 import './tet.less'
 import logo from './logo.svg'
+
+import Other from './components/other'
+
+
+
+
 function App() {
   return (
     <div className="App">
@@ -19,8 +25,21 @@ function App() {
           Learn React
         </a>
       </header>
+
+
+      <Other {...{
+        message: 'string',
+        count: 0,
+        disabled: false,
+        names: ['1111'],
+        status: "waiting"
+      }} />
     </div>
   );
 }
+
+
+
+
 
 export default App;
