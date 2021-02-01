@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-12 17:18:39
- * @LastEditTime: 2021-01-18 17:59:20
+ * @LastEditTime: 2021-02-01 14:51:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\Ts\Ts笔记.md
@@ -1239,3 +1239,27 @@ TIP
                 const _exhaustiveCheck: never = s;
         }
     }
+
+
+
+
+利用内置类型 Partial，这个类型用于把另一个类型的字段全部转为可选。
+
+        function filterUsers(persons: Person[],     criteria: Partial<User>): User[] {}
+
+
+
+# 子类型 父类型
+        interface Animal {
+             age: number
+        }
+
+        interface Dog extends Animal {
+            bark(): void
+        }
+
+在这个例子中，Animal 是 Dog 的父类，Dog是Animal的子类型，子类型的属性比父类型更多，更具体。
+
+## 在类型系统中，属性更多的类型是子类型。
+## 在集合论中，属性更少的集合是子集。
+

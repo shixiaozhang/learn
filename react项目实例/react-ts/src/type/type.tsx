@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2021-01-28 10:29:27
- * @LastEditTime: 2021-01-29 16:45:21
+ * @LastEditTime: 2021-02-01 17:55:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\react项目实例\react-ts\src\type\type.tsx
  */
 import { type } from 'os';
-import React from 'react'
+import React, { useRef } from 'react'
 // 基础类型
 export type BasicProps = {
     message: string;
@@ -325,3 +325,74 @@ export function userLoading() {
 
 // ? 所以需要标注好实例类型，也就是父组件通过 ref 可以拿到什么样类型的值。
 
+type PropsF={};
+export type RefF=HTMLButtonElement;
+export const FancyButton=React.forwardRef<RefF,PropsF>((props,ref)=>(
+    <button ref={ref} className='MyClassName'>
+        {props.children}
+
+    </button>
+))
+
+// ?由于这个例子里直接把 ref 转发给 button 了，所以直接把类型标注为 HTMLButtonElement 即可。
+
+// ?父组件这样调用，就可以拿到正确类型：
+export const App3=()=>{
+    const ref=React.useRef<HTMLButtonElement>(null)
+    return(
+        <FancyButton ref={ref} />
+    )
+}
+
+
+// type Parent = 'a' | 'b' | 'c'
+// type Son = 'a' | 'b'
+
+// let parent: Parent
+// let son: Son='a'
+// son = parent // ❌error! parent 有可能是 'c'
+// parent = son // ✅ok
+
+type val1 = { a: number,b: number }
+type val4 = { a: number }
+let val3={ a: 1}
+let val2 = { a: 1, b: 2, c: 3 }
+
+function f(val:val1){}
+function f2<T extends val4>(val:T){}
+// f(val3)//err
+// f(val2)
+// f2(val3)
+// f2(val2)
+type MakeFunction<T> = (arg: T) => void
+
+
+interface Animal {
+    age: number
+  }
+  
+  interface Dog extends Animal {
+    bark(): void
+  }
+let visitAnimal = (animal: Animal) => {
+    animal.age
+  }
+  
+  let visitDog = (dog: Dog) => {
+    dog.age
+    dog.bark()
+  }
+  let visitDog2:MakeFunction<Dog>= (dog:Dog) => {
+    dog.age
+    dog.bark()
+  }
+  
+  let animal = { age: 5 }
+
+  function process<T extends string | null>(
+    text: T
+  ): T extends string ? T : null {
+
+    return  typeof text === 'string' ? text : null
+  }
+  process('qwe')
