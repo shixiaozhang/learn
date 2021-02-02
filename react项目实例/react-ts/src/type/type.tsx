@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-28 10:29:27
- * @LastEditTime: 2021-02-01 17:55:02
+ * @LastEditTime: 2021-02-02 15:12:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\react项目实例\react-ts\src\type\type.tsx
@@ -389,10 +389,10 @@ let visitAnimal = (animal: Animal) => {
   
   let animal = { age: 5 }
 
-  function process<T extends string | null>(
-    text: T
-  ): T extends string ? T : null {
+//   function process<T extends string | null>(
+//     text: T
+//   ): T extends string ? T : null {
 
-    return  typeof text === 'string' ? text : null
-  }
-  process('qwe')
+//     return  typeof text === 'string' ? text : null
+//   }
+//   process('qwe')
