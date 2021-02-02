@@ -10,28 +10,7 @@
 
 'use strict';
 
-function normalizeCodeLocInfo(str) {
-  return (
-    str &&
-    str.replace(/\n +(?:at|in) ([\S]+)[^\n]*/g, function(m, name) {
-      return '\n    in ' + name + ' (at **)';
-    })
-  );
-}
-
-// TODO (enableSchedulingProfilerComponentStacks) Clean this up once the feature flag has been removed.
-function toggleComponentStacks(mark) {
-  let expectedMark = mark;
-  gate(({enableSchedulingProfilerComponentStacks}) => {
-    if (!enableSchedulingProfilerComponentStacks) {
-      const index = mark.indexOf('\n    ');
-      if (index >= 0) {
-        expectedMark = mark.substr(0, index);
-      }
-    }
-  });
-  return expectedMark;
-}
+import ReactVersion from 'shared/ReactVersion';
 
 describe('SchedulingProfiler', () => {
   let React;
@@ -39,20 +18,55 @@ describe('SchedulingProfiler', () => {
   let ReactNoop;
   let Scheduler;
 
+  let clearedMarks;
+  let featureDetectionMarkName = null;
   let marks;
 
   function createUserTimingPolyfill() {
+    featureDetectionMarkName = null;
+
+    clearedMarks = [];
+    marks = [];
+
     // This is not a true polyfill, but it gives us enough to capture marks.
     // Reference: https://developer.mozilla.org/en-US/docs/Web/API/User_Timing_API
     return {
-      mark(markName) {
+      clearMarks(markName) {
+        clearedMarks.push(markName);
+        marks = marks.filter(mark => mark !== markName);
+      },
+      mark(markName, markOptions) {
+        if (featureDetectionMarkName === null) {
+          featureDetectionMarkName = markName;
+        }
         marks.push(markName);
+        if (markOptions != null) {
+          // This is triggers the feature detection.
+          markOptions.startTime++;
+        }
       },
     };
   }
 
+  function clearPendingMarks() {
+    clearedMarks.splice(0);
+  }
+
+  function expectMarksToContain(expectedMarks) {
+    expect(clearedMarks).toContain(expectedMarks);
+  }
+
+  function expectMarksToEqual(expectedMarks) {
+    expect(
+      clearedMarks[0] === featureDetectionMarkName
+        ? clearedMarks.slice(1)
+        : clearedMarks,
+    ).toEqual(expectedMarks);
+  }
+
   beforeEach(() => {
     jest.resetModules();
+
     global.performance = createUserTimingPolyfill();
 
     React = require('react');
@@ -62,25 +76,32 @@ describe('SchedulingProfiler', () => {
     ReactNoop = require('react-noop-renderer');
 
     Scheduler = require('scheduler');
-
-    marks = [];
   });
 
   afterEach(() => {
+    // Verify all logged marks also get cleared.
+    expect(marks).toHaveLength(0);
+
     delete global.performance;
   });
 
   // @gate !enableSchedulingProfiler
   it('should not mark if enableSchedulingProfiler is false', () => {
     ReactTestRenderer.create(<div />);
-    expect(marks).toEqual([]);
+    expectMarksToEqual([]);
+  });
+
+  // @gate enableSchedulingProfiler
+  it('should log React version on initialization', () => {
+    expectMarksToEqual([`--react-init-${ReactVersion}`]);
   });
 
   // @gate enableSchedulingProfiler
   it('should mark sync render without suspends or state updates', () => {
     ReactTestRenderer.create(<div />);
 
-    expect(marks).toEqual([
+    expectMarksToEqual([
+      `--react-init-${ReactVersion}`,
       '--schedule-render-1',
       '--render-start-1',
       '--render-stop',
@@ -95,13 +116,16 @@ describe('SchedulingProfiler', () => {
   it('should mark concurrent render without suspends or state updates', () => {
     ReactTestRenderer.create(<div />, {unstable_isConcurrent: true});
 
-    expect(marks).toEqual(['--schedule-render-512']);
+    expectMarksToEqual([
+      `--react-init-${ReactVersion}`,
+      '--schedule-render-512',
+    ]);
 
-    marks.splice(0);
+    clearPendingMarks();
 
     expect(Scheduler).toFlushUntilNextPaint([]);
 
-    expect(marks).toEqual([
+    expectMarksToEqual([
       '--render-start-512',
       '--render-stop',
       '--commit-start-512',
@@ -127,7 +151,8 @@ describe('SchedulingProfiler', () => {
     // Do one step of work.
     expect(ReactNoop.flushNextYield()).toEqual(['Foo']);
 
-    expect(marks).toEqual([
+    expectMarksToEqual([
+      `--react-init-${ReactVersion}`,
       '--schedule-render-512',
       '--render-start-512',
       '--render-yield',
@@ -147,12 +172,11 @@ describe('SchedulingProfiler', () => {
       </React.Suspense>,
     );
 
-    expect(marks).toEqual([
+    expectMarksToEqual([
+      `--react-init-${ReactVersion}`,
       '--schedule-render-1',
       '--render-start-1',
-      toggleComponentStacks(
-        '--suspense-suspend-0-Example-\n    at Example\n    at Suspense',
-      ),
+      '--suspense-suspend-0-Example',
       '--render-stop',
       '--commit-start-1',
       '--layout-effects-start-1',
@@ -160,14 +184,10 @@ describe('SchedulingProfiler', () => {
       '--commit-stop',
     ]);
 
-    marks.splice(0);
+    clearPendingMarks();
 
     await fakeSuspensePromise;
-    expect(marks).toEqual([
-      toggleComponentStacks(
-        '--suspense-resolved-0-Example-\n    at Example\n    at Suspense',
-      ),
-    ]);
+    expectMarksToEqual(['--suspense-resolved-0-Example']);
   });
 
   // @gate enableSchedulingProfiler
@@ -183,12 +203,11 @@ describe('SchedulingProfiler', () => {
       </React.Suspense>,
     );
 
-    expect(marks).toEqual([
+    expectMarksToEqual([
+      `--react-init-${ReactVersion}`,
       '--schedule-render-1',
       '--render-start-1',
-      toggleComponentStacks(
-        '--suspense-suspend-0-Example-\n    at Example\n    at Suspense',
-      ),
+      '--suspense-suspend-0-Example',
       '--render-stop',
       '--commit-start-1',
       '--layout-effects-start-1',
@@ -196,14 +215,10 @@ describe('SchedulingProfiler', () => {
       '--commit-stop',
     ]);
 
-    marks.splice(0);
+    clearPendingMarks();
 
     await expect(fakeSuspensePromise).rejects.toThrow();
-    expect(marks).toEqual([
-      toggleComponentStacks(
-        '--suspense-rejected-0-Example-\n    at Example\n    at Suspense',
-      ),
-    ]);
+    expectMarksToEqual(['--suspense-rejected-0-Example']);
   });
 
   // @gate enableSchedulingProfiler
@@ -220,17 +235,18 @@ describe('SchedulingProfiler', () => {
       {unstable_isConcurrent: true},
     );
 
-    expect(marks).toEqual(['--schedule-render-512']);
+    expectMarksToEqual([
+      `--react-init-${ReactVersion}`,
+      '--schedule-render-512',
+    ]);
 
-    marks.splice(0);
+    clearPendingMarks();
 
     expect(Scheduler).toFlushUntilNextPaint([]);
 
-    expect(marks).toEqual([
+    expectMarksToEqual([
       '--render-start-512',
-      toggleComponentStacks(
-        '--suspense-suspend-0-Example-\n    at Example\n    at Suspense',
-      ),
+      '--suspense-suspend-0-Example',
       '--render-stop',
       '--commit-start-512',
       '--layout-effects-start-512',
@@ -238,14 +254,10 @@ describe('SchedulingProfiler', () => {
       '--commit-stop',
     ]);
 
-    marks.splice(0);
+    clearPendingMarks();
 
     await fakeSuspensePromise;
-    expect(marks).toEqual([
-      toggleComponentStacks(
-        '--suspense-resolved-0-Example-\n    at Example\n    at Suspense',
-      ),
-    ]);
+    expectMarksToEqual(['--suspense-resolved-0-Example']);
   });
 
   // @gate enableSchedulingProfiler
@@ -262,17 +274,18 @@ describe('SchedulingProfiler', () => {
       {unstable_isConcurrent: true},
     );
 
-    expect(marks).toEqual(['--schedule-render-512']);
+    expectMarksToEqual([
+      `--react-init-${ReactVersion}`,
+      '--schedule-render-512',
+    ]);
 
-    marks.splice(0);
+    clearPendingMarks();
 
     expect(Scheduler).toFlushUntilNextPaint([]);
 
-    expect(marks).toEqual([
+    expectMarksToEqual([
       '--render-start-512',
-      toggleComponentStacks(
-        '--suspense-suspend-0-Example-\n    at Example\n    at Suspense',
-      ),
+      '--suspense-suspend-0-Example',
       '--render-stop',
       '--commit-start-512',
       '--layout-effects-start-512',
@@ -280,14 +293,10 @@ describe('SchedulingProfiler', () => {
       '--commit-stop',
     ]);
 
-    marks.splice(0);
+    clearPendingMarks();
 
     await expect(fakeSuspensePromise).rejects.toThrow();
-    expect(marks).toEqual([
-      toggleComponentStacks(
-        '--suspense-rejected-0-Example-\n    at Example\n    at Suspense',
-      ),
-    ]);
+    expectMarksToEqual(['--suspense-rejected-0-Example']);
   });
 
   // @gate enableSchedulingProfiler
@@ -304,20 +313,21 @@ describe('SchedulingProfiler', () => {
 
     ReactTestRenderer.create(<Example />, {unstable_isConcurrent: true});
 
-    expect(marks).toEqual(['--schedule-render-512']);
+    expectMarksToEqual([
+      `--react-init-${ReactVersion}`,
+      '--schedule-render-512',
+    ]);
 
-    marks.splice(0);
+    clearPendingMarks();
 
     expect(Scheduler).toFlushUntilNextPaint([]);
 
-    expect(marks.map(normalizeCodeLocInfo)).toEqual([
+    expectMarksToEqual([
       '--render-start-512',
       '--render-stop',
       '--commit-start-512',
       '--layout-effects-start-512',
-      toggleComponentStacks(
-        '--schedule-state-update-1-Example-\n    in Example (at **)',
-      ),
+      '--schedule-state-update-1-Example',
       '--layout-effects-stop',
       '--render-start-1',
       '--render-stop',
@@ -340,20 +350,21 @@ describe('SchedulingProfiler', () => {
 
     ReactTestRenderer.create(<Example />, {unstable_isConcurrent: true});
 
-    expect(marks).toEqual(['--schedule-render-512']);
+    expectMarksToEqual([
+      `--react-init-${ReactVersion}`,
+      '--schedule-render-512',
+    ]);
 
-    marks.splice(0);
+    clearPendingMarks();
 
     expect(Scheduler).toFlushUntilNextPaint([]);
 
-    expect(marks.map(normalizeCodeLocInfo)).toEqual([
+    expectMarksToEqual([
       '--render-start-512',
       '--render-stop',
       '--commit-start-512',
       '--layout-effects-start-512',
-      toggleComponentStacks(
-        '--schedule-forced-update-1-Example-\n    in Example (at **)',
-      ),
+      '--schedule-forced-update-1-Example',
       '--layout-effects-stop',
       '--render-start-1',
       '--render-stop',
@@ -377,9 +388,12 @@ describe('SchedulingProfiler', () => {
 
     ReactTestRenderer.create(<Example />, {unstable_isConcurrent: true});
 
-    expect(marks).toEqual(['--schedule-render-512']);
+    expectMarksToEqual([
+      `--react-init-${ReactVersion}`,
+      '--schedule-render-512',
+    ]);
 
-    marks.splice(0);
+    clearPendingMarks();
 
     expect(() => {
       expect(Scheduler).toFlushUntilNextPaint([]);
@@ -387,16 +401,8 @@ describe('SchedulingProfiler', () => {
 
     gate(({old}) =>
       old
-        ? expect(marks.map(normalizeCodeLocInfo)).toContain(
-            toggleComponentStacks(
-              '--schedule-state-update-1024-Example-\n    in Example (at **)',
-            ),
-          )
-        : expect(marks.map(normalizeCodeLocInfo)).toContain(
-            toggleComponentStacks(
-              '--schedule-state-update-512-Example-\n    in Example (at **)',
-            ),
-          ),
+        ? expectMarksToContain('--schedule-state-update-1024-Example')
+        : expectMarksToContain('--schedule-state-update-512-Example'),
     );
   });
 
@@ -414,9 +420,12 @@ describe('SchedulingProfiler', () => {
 
     ReactTestRenderer.create(<Example />, {unstable_isConcurrent: true});
 
-    expect(marks).toEqual(['--schedule-render-512']);
+    expectMarksToEqual([
+      `--react-init-${ReactVersion}`,
+      '--schedule-render-512',
+    ]);
 
-    marks.splice(0);
+    clearPendingMarks();
 
     expect(() => {
       expect(Scheduler).toFlushUntilNextPaint([]);
@@ -424,16 +433,8 @@ describe('SchedulingProfiler', () => {
 
     gate(({old}) =>
       old
-        ? expect(marks.map(normalizeCodeLocInfo)).toContain(
-            toggleComponentStacks(
-              '--schedule-forced-update-1024-Example-\n    in Example (at **)',
-            ),
-          )
-        : expect(marks.map(normalizeCodeLocInfo)).toContain(
-            toggleComponentStacks(
-              '--schedule-forced-update-512-Example-\n    in Example (at **)',
-            ),
-          ),
+        ? expectMarksToContain('--schedule-forced-update-1024-Example')
+        : expectMarksToContain('--schedule-forced-update-512-Example'),
     );
   });
 
@@ -449,20 +450,21 @@ describe('SchedulingProfiler', () => {
 
     ReactTestRenderer.create(<Example />, {unstable_isConcurrent: true});
 
-    expect(marks).toEqual(['--schedule-render-512']);
+    expectMarksToEqual([
+      `--react-init-${ReactVersion}`,
+      '--schedule-render-512',
+    ]);
 
-    marks.splice(0);
+    clearPendingMarks();
 
     expect(Scheduler).toFlushUntilNextPaint([]);
 
-    expect(marks.map(normalizeCodeLocInfo)).toEqual([
+    expectMarksToEqual([
       '--render-start-512',
       '--render-stop',
       '--commit-start-512',
       '--layout-effects-start-512',
-      toggleComponentStacks(
-        '--schedule-state-update-1-Example-\n    in Example (at **)',
-      ),
+      '--schedule-state-update-1-Example',
       '--layout-effects-stop',
       '--render-start-1',
       '--render-stop',
@@ -482,11 +484,12 @@ describe('SchedulingProfiler', () => {
       return didMount;
     }
 
-    ReactTestRenderer.act(() => {
+    ReactTestRenderer.unstable_concurrentAct(() => {
       ReactTestRenderer.create(<Example />, {unstable_isConcurrent: true});
     });
 
-    expect(marks.map(normalizeCodeLocInfo)).toEqual([
+    expectMarksToEqual([
+      `--react-init-${ReactVersion}`,
       '--schedule-render-512',
       '--render-start-512',
       '--render-stop',
@@ -495,9 +498,7 @@ describe('SchedulingProfiler', () => {
       '--layout-effects-stop',
       '--commit-stop',
       '--passive-effects-start-512',
-      toggleComponentStacks(
-        '--schedule-state-update-1024-Example-\n    in Example (at **)',
-      ),
+      '--schedule-state-update-1024-Example',
       '--passive-effects-stop',
       '--render-start-1024',
       '--render-stop',
@@ -516,22 +517,14 @@ describe('SchedulingProfiler', () => {
       return didRender;
     }
 
-    ReactTestRenderer.act(() => {
+    ReactTestRenderer.unstable_concurrentAct(() => {
       ReactTestRenderer.create(<Example />, {unstable_isConcurrent: true});
     });
 
     gate(({old}) =>
       old
-        ? expect(marks.map(normalizeCodeLocInfo)).toContain(
-            toggleComponentStacks(
-              '--schedule-state-update-1024-Example-\n    in Example (at **)',
-            ),
-          )
-        : expect(marks.map(normalizeCodeLocInfo)).toContain(
-            toggleComponentStacks(
-              '--schedule-state-update-512-Example-\n    in Example (at **)',
-            ),
-          ),
+        ? expectMarksToContain('--schedule-state-update-1024-Example')
+        : expectMarksToContain('--schedule-state-update-512-Example'),
     );
   });
 });

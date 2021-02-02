@@ -16,7 +16,7 @@
 
 import type {Fiber} from 'react-reconciler/src/ReactInternalTypes';
 import type {UpdateQueue} from 'react-reconciler/src/ReactUpdateQueue';
-import type {ReactNodeList} from 'shared/ReactTypes';
+import type {ReactNodeList, Thenable} from 'shared/ReactTypes';
 import type {RootTag} from 'react-reconciler/src/ReactRootTags';
 
 import * as Scheduler from 'scheduler/unstable_mock';
@@ -26,6 +26,10 @@ import {
   BlockingRoot,
   LegacyRoot,
 } from 'react-reconciler/src/ReactRootTags';
+
+import ReactSharedInternals from 'shared/ReactSharedInternals';
+import enqueueTask from 'shared/enqueueTask';
+const {IsSomeRendererActing} = ReactSharedInternals;
 
 type Container = {
   rootID: string,
@@ -271,6 +275,7 @@ function createReactNoop(reconciler: Function, useMutation: boolean) {
       props: Props,
       rootContainerInstance: Container,
       hostContext: HostContext,
+      internalInstanceHandle: Object,
     ): Instance {
       if (type === 'errorInCompletePhase') {
         throw new Error('Error in host config.');
@@ -294,6 +299,10 @@ function createReactNoop(reconciler: Function, useMutation: boolean) {
       });
       Object.defineProperty(inst, 'context', {
         value: inst.context,
+        enumerable: false,
+      });
+      Object.defineProperty(inst, 'fiber', {
+        value: internalInstanceHandle,
         enumerable: false,
       });
       return inst;
@@ -362,6 +371,19 @@ function createReactNoop(reconciler: Function, useMutation: boolean) {
     scheduleTimeout: setTimeout,
     cancelTimeout: clearTimeout,
     noTimeout: -1,
+    queueMicrotask:
+      typeof queueMicrotask === 'function'
+        ? queueMicrotask
+        : typeof Promise !== 'undefined'
+        ? callback =>
+            Promise.resolve(null)
+              .then(callback)
+              .catch(error => {
+                setTimeout(() => {
+                  throw error;
+                });
+              })
+        : setTimeout,
 
     prepareForCommit(): null | Object {
       return null;
@@ -374,14 +396,6 @@ function createReactNoop(reconciler: Function, useMutation: boolean) {
     isPrimaryRenderer: true,
     warnsIfNotActing: true,
     supportsHydration: false,
-
-    DEPRECATED_mountResponderInstance(): void {
-      // NO-OP
-    },
-
-    DEPRECATED_unmountResponderInstance(): void {
-      // NO-OP
-    },
 
     getFundamentalComponentInstance(fundamentalInstance): Instance {
       const {impl, props, state} = fundamentalInstance;
@@ -966,7 +980,7 @@ function createReactNoop(reconciler: Function, useMutation: boolean) {
 
     flushPassiveEffects: NoopRenderer.flushPassiveEffects,
 
-    act: NoopRenderer.act,
+    act: noopAct,
 
     // Logs the current state of the tree.
     dumpTree(rootID: string = DEFAULT_ROOT_ID) {
@@ -1080,6 +1094,121 @@ function createReactNoop(reconciler: Function, useMutation: boolean) {
       return roots.get(rootID);
     },
   };
+
+  // This version of `act` is only used by our tests. Unlike the public version
+  // of `act`, it's designed to work identically in both production and
+  // development. It may have slightly different behavior from the public
+  // version, too, since our constraints in our test suite are not the same as
+  // those of developers using React — we're testing React itself, as opposed to
+  // building an app with React.
+
+  const {batchedUpdates, IsThisRendererActing} = NoopRenderer;
+  let actingUpdatesScopeDepth = 0;
+
+  function noopAct(scope: () => Thenable<mixed> | void) {
+    if (Scheduler.unstable_flushAllWithoutAsserting === undefined) {
+      throw Error(
+        'This version of `act` requires a special mock build of Scheduler.',
+      );
+    }
+    if (setTimeout._isMockFunction !== true) {
+      throw Error(
+        "This version of `act` requires Jest's timer mocks " +
+          '(i.e. jest.useFakeTimers).',
+      );
+    }
+
+    const previousActingUpdatesScopeDepth = actingUpdatesScopeDepth;
+    const previousIsSomeRendererActing = IsSomeRendererActing.current;
+    const previousIsThisRendererActing = IsThisRendererActing.current;
+    IsSomeRendererActing.current = true;
+    IsThisRendererActing.current = true;
+    actingUpdatesScopeDepth++;
+
+    const unwind = () => {
+      actingUpdatesScopeDepth--;
+      IsSomeRendererActing.current = previousIsSomeRendererActing;
+      IsThisRendererActing.current = previousIsThisRendererActing;
+
+      if (__DEV__) {
+        if (actingUpdatesScopeDepth > previousActingUpdatesScopeDepth) {
+          // if it's _less than_ previousActingUpdatesScopeDepth, then we can
+          // assume the 'other' one has warned
+          console.error(
+            'You seem to have overlapping act() calls, this is not supported. ' +
+              'Be sure to await previous act() calls before making a new one. ',
+          );
+        }
+      }
+    };
+
+    // TODO: This would be way simpler if 1) we required a promise to be
+    // returned and 2) we could use async/await. Since it's only our used in
+    // our test suite, we should be able to.
+    try {
+      const thenable = batchedUpdates(scope);
+      if (
+        typeof thenable === 'object' &&
+        thenable !== null &&
+        typeof thenable.then === 'function'
+      ) {
+        return {
+          then(resolve: () => void, reject: (error: mixed) => void) {
+            thenable.then(
+              () => {
+                flushActWork(
+                  () => {
+                    unwind();
+                    resolve();
+                  },
+                  error => {
+                    unwind();
+                    reject(error);
+                  },
+                );
+              },
+              error => {
+                unwind();
+                reject(error);
+              },
+            );
+          },
+        };
+      } else {
+        try {
+          // TODO: Let's not support non-async scopes at all in our tests. Need to
+          // migrate existing tests.
+          let didFlushWork;
+          do {
+            didFlushWork = Scheduler.unstable_flushAllWithoutAsserting();
+          } while (didFlushWork);
+        } finally {
+          unwind();
+        }
+      }
+    } catch (error) {
+      unwind();
+      throw error;
+    }
+  }
+
+  function flushActWork(resolve, reject) {
+    // Flush suspended fallbacks
+    // $FlowFixMe: Flow doesn't know about global Jest object
+    jest.runOnlyPendingTimers();
+    enqueueTask(() => {
+      try {
+        const didFlushWork = Scheduler.unstable_flushAllWithoutAsserting();
+        if (didFlushWork) {
+          flushActWork(resolve, reject);
+        } else {
+          resolve();
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
 
   return ReactNoop;
 }
