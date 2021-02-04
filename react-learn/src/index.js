@@ -1,34 +1,41 @@
 /*
  * @Author: your name
- * @Date: 2021-01-05 20:59:23
- * @LastEditTime: 2021-01-05 21:09:45
+ * @Date: 2020-12-14 14:16:53
+ * @LastEditTime: 2021-02-04 10:23:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \learn\react-learn\src\reduxAsync\index.js
+ * @FilePath: \learn\react-learn\src\index.js
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore, applyMiddleware } from 'redux'
+
 import { Provider } from 'react-redux'
-import thunk from 'redux-thunk'
-import { reducers } from './reduxAsync/reducers/index'
-import App from './reduxAsync/containers/App'
+import store from './redux/reducers'
+// import App from './redux/components/App'
+
+import './index.css';
+
+// import Bdd from './context'
+// import Refffff from './refs'
+// import MouseTracker from './render'
+// import Api from './reactApi'
+// import Example from './Hook'
+// import All from './Hook2'
+import Routers from './Routers'
+
+ReactDOM.render(
+  <Provider store={store}>
+    <Routers />
+  </Provider>
+  , document.getElementById('root')
+);
 
 
-const middleware=[thunk]
-
-const store=createStore(reducers,applyMiddleware(...middleware))
-
-store.subscribe(()=>{
-    console.log(store.getState());
-  })
-  
 
 
 
-  ReactDOM.render(
-      <Provider store={store}>
-          <App></App>
-      </Provider>,
-      document.getElementById('root')
-  )
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// reportWebVitals();

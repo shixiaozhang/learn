@@ -17,6 +17,7 @@
 ##    1、 两种路由模式：
 ###      1- BrowserRouter：不带#； 需后台配合
         nginx  添加：try_files $uri /index.html
+
         node  // 在你应用 JavaScript 文件中包含了一个 script 标签
                 // 的 index.html 中处理任何一个 route
                 
@@ -61,7 +62,8 @@
 
 ####            basename="/calendar" 所有位置的基本URL。格式正确的基本名称应以斜杠开头，但不能以斜杠结尾。
                     <HashRouter basename="/calendar"/>
-                    <Link to="/today"/> // renders <a href="#/calendar/today">
+                    <Link to="/today" /> 
+                    // renders <a href="#/calendar/today">
 
 ####   其他属性与BrowserRouter相同
 
@@ -90,6 +92,9 @@
 
 ###   Redirect （重定向）  NavLink（特殊版本<Link>，它将在与当前URL匹配时将样式属性添加到呈现的元素）  与Link用法类似
 
+    if (token) {
+        return <Redirect to="/dashboard" />;
+    }
 
 
 
@@ -100,23 +105,24 @@
 
 
             const routes = [
-               {
-                    path: "/sandwiches",
-                    component: Sandwiches
-                },
-                {
-                    path: "/tacos",
-                    component: Tacos,
-                    routes: [
                     {
-                        path: "/tacos/bus",
-                        component: Bus
+                        path: "/sandwiches",
+                        component: Sandwiches
                     },
                     {
-                        path: "/tacos/cart",
-                        component: Cart
+                        path: "/tacos",
+                        component: Tacos,
+                        routes: [
+                            {
+                                path: "/tacos/bus",
+                                component: Bus
+                            },
+                            {
+                                path: "/tacos/cart",
+                                component: Cart
+                            }
+                        ]
                     }
-                    ]
                 ]
 --------
             <Router>
@@ -599,12 +605,14 @@
 
 
 ###   withRouter
+高阶组件中的withRouter, 作用是将一个组件包裹进Route里面, 然后react-router的三个对象history, location, match就会被放进这个组件的props属性中.
 
         import React from "react";
         import PropTypes from "prop-types";
         import { withRouter } from "react-router";
 
-        // A simple component that shows the pathname of the current location
+        
+
         class ShowTheLocation extends React.Component {
             static propTypes = {
                 match: PropTypes.object.isRequired,
@@ -619,8 +627,7 @@
             }
         }
 
-        // Create a new component that is "connected" (to borrow redux
-        // terminology) to the router.
+
         const ShowTheLocationWithRouter = withRouter(ShowTheLocation);
 
 

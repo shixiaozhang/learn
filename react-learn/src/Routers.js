@@ -46,7 +46,7 @@ function R1() {
     
     return (
         <>
-            <h1>r1</h1>
+            <h1>R1</h1>
 
             <ul>
                 <li>
@@ -74,9 +74,9 @@ function Topic() {
     // of the URL indicates a placeholder that we can
     // get from `useParams()`.
     let { topicId } = useParams();
-    if (topicId == 'A') {
+    if (topicId === 'A') {
         return <A />
-    } else if (topicId == 'B') {
+    } else if (topicId === 'B') {
         return <B />
     } else {
         return <C />
