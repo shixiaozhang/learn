@@ -149,7 +149,7 @@
                     <Route
                     path={route.path}
                     render={props => (
-                        // pass the sub-routes down to keep nesting
+
                         <route.component {...props} routes={route.routes} />
                     )}
                     />
@@ -269,18 +269,18 @@
 
 
         <Route path="/users/:id">
-        <User />
+             <User />
         </Route>
 
         exact为true，仅当路径location.pathname 完全匹配时才匹配
         <Route exact path="/one">
-        <About />
+            <About />
         </Route>
 
         strict: bool
         当使用时true，带有path斜杠的只会与location.pathname带有斜杠的匹配。当中有其他网址段时，此选项无效location.pathname。
         <Route strict path="/one/">
-        <About />
+            <About />
         </Route>
 
         路径	location.pathname
@@ -417,7 +417,7 @@
                 const Home=React.createClass({
                     // route 会被放到 Home 和它子组件及孙子组件的 context 中，
                     // 这样在层级树中 Home 及其所有子组件都可以拿到 route。
-                    mixins;[RouteContext],
+                    mixins:[RouteContext],
 
                     render(){
                         return <NestedForm>
@@ -606,6 +606,13 @@
 
 ###   withRouter
 高阶组件中的withRouter, 作用是将一个组件包裹进Route里面, 然后react-router的三个对象history, location, match就会被放进这个组件的props属性中.
+
+withRouter的作用就是, 如果我们某个东西不是一个Router, 但是我们要依靠它去跳转一个页面, 比如点击页面的logo, 返回首页, 这时候就可以使用withRouter来做.
+在这个例子中, 我将span使用withRouter作为一个可点击跳转的Link
+
+
+
+
 
         import React from "react";
         import PropTypes from "prop-types";
