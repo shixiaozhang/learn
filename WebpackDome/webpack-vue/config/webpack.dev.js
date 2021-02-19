@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-11 10:15:11
- * @LastEditTime: 2021-01-11 10:56:01
+ * @LastEditTime: 2021-02-19 16:19:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\WebpackDome\webpack-vue\config\webpack.dev.js
@@ -16,6 +16,6 @@ module.exports=merge(base,{
         contentBase:path.join(__dirname,'./dist'),
         inline:true,
         hot:true,
-        port:8888
+        port:8800
     }
 })

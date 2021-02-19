@@ -1,21 +1,21 @@
 /*
  * @Author: your name
  * @Date: 2021-01-11 10:14:49
- * @LastEditTime: 2021-01-11 15:14:55
+ * @LastEditTime: 2021-02-19 16:50:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\WebpackDome\webpack-vue\config\webpack.base.js
  */
 const path=require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const htmlWebpackPlugin = require('html-webpack-plugin')
+const htmlWebpackPlugin=require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports={
     entry:'/src/main.js',
     output:{
         path:path.join(__dirname,'../dist'),
-        filename:'[name].[chunkhash].js'
+        filename:'[name].js'
     },
     resolve:{
         alias:{
@@ -32,13 +32,14 @@ module.exports={
             },
             {
                 test: /\.js?$/,
-                loader: 'babel-loader'
+                loader: 'babel-loader',
+                exclude:/node_modules/
 
             },
             {
                 test: /\.(c|le)ss$/,
                 use: [
-                    'vue-style-loader',
+                    'style-loader',
                     'css-loader',
                     'postcss-loader',
                     'less-loader'
@@ -63,13 +64,13 @@ module.exports={
     plugins:[
         new CleanWebpackPlugin(),
          // 请确保引入这个插件！
+         new VueLoaderPlugin(),
        
-        new htmlWebpackPlugin({
+         new htmlWebpackPlugin({
             template: path.join(__dirname,'../src/index.html'),
             filename: 'index.html'
         }),
 
-        new VueLoaderPlugin(),
         
     ]
 }
