@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-12 17:18:39
- * @LastEditTime: 2021-02-01 14:51:02
+ * @LastEditTime: 2021-02-22 17:45:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\Ts\Ts笔记.md
@@ -341,7 +341,7 @@ const someOtherVar = 123;
     type Colors = keyof typeof COLORS 
     let color: Colors;
     color = 'red' // Ok
-    color = 'blue' // Ok
+    color = 'b  lue' // Ok
 
     // Type '"yellow"' is not assignable to type '"red" | "blue"'.
     color = 'yellow' // Error
