@@ -1,0 +1,66 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-03-24 10:35:27
+ * @LastEditTime: 2021-03-24 13:42:26
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \test\index.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input id="input" name="username" type="text" />
+
+    <button onclick="submit()">提交</button>
+
+</body>
+
+</html>
+<script>
+
+    let input = document.getElementById('input')
+
+    console.dir(input);
+    function submit() {
+        console.log(111);
+        //get
+        fetch('http://localhost:3000')
+            .then(res => {
+                console.log(res.headers.get('X-List-Version'));
+                return res.json()
+            }).then(res => console.log(res))
+        //post
+        fetch('http://localhost:3000/form', {
+            // mode:'no-cors'
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-App-Version': 'v0.1' },
+            credentials: 'include',//带cookie
+            body: JSON.stringify({ data: 'post' }),
+
+        })
+            .then(res => res.json()).then(res => console.log(res))
+
+
+        //patch
+        fetch('http://localhost:3000/form', {
+            // mode:'no-cors'
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'X-App-Version': 'v0.2' },
+            credentials: 'include',//带cookie
+            body: JSON.stringify({ data: 'patch' }),
+
+        })
+            .then(res => res.json()).then(res => console.log(res))
+    }
+
+
+
+</script>
