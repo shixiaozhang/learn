@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <title>Data Processing Platform</title>
+  <link href="//at.alicdn.com/t/font_1485776_nklk6c21yzk.css" rel="stylesheet">
+  <!-- 引入样式 -->
+  <% for(var css of htmlWebpackPlugin.options.cdn.css) { %>
+  <link rel="stylesheet" href="<%=css%>">
+  <% } %>
+
+  
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but dpp doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+  </noscript>
+  <!-- 引入JS -->
+  <% for(var js of htmlWebpackPlugin.options.cdn.js) { %>
+  <script src="<%=js%>"></script>
+  <% } %>
+
+  <div id="appLoading">
+    <div id="loader-wrapper">
+    </div>
+  </div>
+
+  <div id="app" style="display: none;"></div>
+
+  <!-- built files will be auto injected -->
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+@import './element-ui.scss';
+@import './new-layout.scss';
+@import "./variables.scss";
+
+body {
+  min-width: 1265px !important;
+  overflow: auto;
+  padding: 0;
+  margin: 0;
+  background-color: #f6f6f6;
+}
+
+a {
+  text-decoration: none;
+}
+
+//bg
+.bg-white {
+  background-color: $white;
+}
+.bg-dark {
+  background-color: $bg-dark;
+}
+.bg-container {
+  background-color: $bg-container !important;
+}
+.bg-gray-200 {
+  background-color: $gray-200-text!important;
+}
+//pd
+.px-20{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.pt-20{
+  padding-top: 20px;
+}
+.pd-20{
+  padding: 20px;
+}
+
+//mr
+
+.mx-20{
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.mt-20{
+  margin-top: 20px;
+}
+
+//align
+
+.align-center{
+  text-align: center;
+}
+
+.align-right{
+  text-align: right;
+}

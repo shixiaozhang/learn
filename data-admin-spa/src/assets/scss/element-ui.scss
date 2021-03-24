@@ -1,0 +1,135 @@
+// 覆盖一些element-ui样式
+.el-menu--horizontal {
+  display: flex;
+  border: none;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+}
+
+.el-menu--horizontal > div > .el-menu-item,
+.el-menu--horizontal > div > .el-submenu > .el-submenu__title {
+  height: 53px !important;
+  line-height: 53px !important;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+  }
+}
+
+.el-menu--popup {
+  padding: 0 !important;
+}
+
+.el-menu-item {
+  &:hover {
+    color: #fadb14 !important; // background-color: #0967C5 !important;
+  }
+}
+
+.el-menu--horizontal > div > .el-submenu .el-submenu__icon-arrow {
+  position: static;
+  vertical-align: middle;
+  margin-left: 8px;
+  margin-top: -3px;
+  color: #ffffff !important;
+}
+
+/*start athena page */
+.popover-over-ellipsis-table {
+  .sql-popover {
+    .el-popover__reference {
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden !important;
+      width: 80%;
+      text-overflow: ellipsis !important;
+    }
+  }
+  .el-popover__reference.el-button--text {
+    margin: 0 10px;
+  }
+}
+
+.CodeMirror {
+  height: 100% !important;
+  width: 100%;
+  border: 1px solid #ebeef5;
+  font-size: 14px;
+}
+
+.CodeMirror-scroll {
+  height: auto;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.CodeMirror-hints {
+  z-index: 1000000 !important;
+}
+
+.form-code-mirror {
+  .CodeMirror pre,
+  .CodeMirror-linenumber,
+  .CodeMirror-gutter-elt {
+    line-height: 20px;
+  }
+}
+
+.jsoneditor-outer {
+  padding-bottom: 20px !important;
+}
+
+.jsoneditor-validation-errors-container {
+  display: none;
+}
+
+.jsoneditor-text {
+  border: 1px solid #ebeef5 !important;
+  margin-bottom: 20px !important;
+}
+
+.el-table__body {
+  // 使表格兼容safari，不错位
+  width: 100%;
+  table-layout: fixed !important;
+}
+.el-table__header-wrapper {
+  text-transform: uppercase;
+}
+
+.el-divider--horizontal {
+  margin: 20px 0;
+}
+
+.el-button--small {
+  font-size: 14px;
+}
+
+.el-button--small,
+.el-button--small.is-round {
+  padding: 9px 17px;
+}
+.el-tabs__item:focus.is-active.is-focus:not(:active) {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+
+/* json editor */
+div.jsoneditor {
+  border: 0px !important;
+}
+
+.cm-s-idea span.cm-bracket{
+  color: red !important;
+}
+
+div.jsoneditor-menu {
+  display: none;
+}
+
+.search-input {
+  .el-input__inner {
+    height: 48px;
+    border-color: #b3bac5;
+  }
+}
