@@ -34,11 +34,17 @@ export function toggleObserving (value: boolean) {
  * object's property keys into getter/setters that
  * collect dependencies and dispatch updates.
  */
+
+/**
+ * Observer类会通过递归的方式把一个对象的所有属性都转化成可观测对象
+ */
 export class Observer {
   value: any;
   dep: Dep;
   vmCount: number; // number of vms that have this object as root $data
-
+  
+  // 给value新增一个__ob__属性，值为该value的Observer实例
+  // 相当于为value打上标记，表示它已经被转化成响应式了，避免重复操作
   constructor (value: any) {
     this.value = value
     this.dep = new Dep()
