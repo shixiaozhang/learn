@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="body">
+        <div class="box">
+            <div class="p">21343242342342342342342342342112312312312312332131413132</div>
+        </div>
+    </div>
+</body>
+
+</html>
+<style>
+    .body {
+        width: 300px;
+        height: 500px;
+        display: flex; /* 关键外盒子要是flex才能随着内容显示省略号； */
+        
+    }
+
+    .box {
+        min-width: 0;   /* 必写的关键； */
+        height: 50px;
+        background: pink;
+    }
+
+    .p {
+        max-width: 100%; /*  省略号的实现  */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
