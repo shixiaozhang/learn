@@ -286,3 +286,12 @@
 2021-01-23 17:25:47,901 INFO 8244 [egg-schedule]: register schedule D:\learn\learn\egg-example\node_modules\_egg-multipart@2.10.3@egg-multipart\app\schedule\clean_tmpdir.js
 2021-01-23 17:25:47,901 INFO 8244 [egg-schedule]: register schedule D:\learn\learn\egg-example\node_modules\_egg-logrotator@3.1.0@egg-logrotator\app\schedule\clean_log.js
 2021-01-23 17:25:47,901 INFO 8244 [egg-schedule]: register schedule D:\learn\learn\egg-example\node_modules\_egg-logrotator@3.1.0@egg-logrotator\app\schedule\rotate_by_file.js
+2021-04-20 16:11:47,710 INFO 11380 [Timer] D:\learn\egg-example\node_modules\egg-multipart\app\schedule\clean_tmpdir.js next time will execute after 44292293ms at 2021-04-21 04:30:00.003
+2021-04-20 16:11:47,710 INFO 11380 [Timer] D:\learn\egg-example\node_modules\egg-logrotator\app\schedule\clean_log.js next time will execute after 28092290ms at 2021-04-21 00:00:00.000
+2021-04-20 16:11:47,710 INFO 11380 [Timer] D:\learn\egg-example\node_modules\egg-logrotator\app\schedule\rotate_by_file.js next time will execute after 28093290ms at 2021-04-21 00:00:01.000
+2021-04-20 16:11:47,580 INFO 12180 [egg-schedule]: register schedule D:\learn\egg-example\node_modules\egg-multipart\app\schedule\clean_tmpdir.js
+2021-04-20 16:11:47,581 INFO 12180 [egg-schedule]: register schedule D:\learn\egg-example\node_modules\egg-logrotator\app\schedule\clean_log.js
+2021-04-20 16:11:47,581 INFO 12180 [egg-schedule]: register schedule D:\learn\egg-example\node_modules\egg-logrotator\app\schedule\rotate_by_file.js
+2021-04-20 16:11:48,627 INFO 19164 [egg-schedule]: register schedule D:\learn\egg-example\node_modules\egg-multipart\app\schedule\clean_tmpdir.js
+2021-04-20 16:11:48,627 INFO 19164 [egg-schedule]: register schedule D:\learn\egg-example\node_modules\egg-logrotator\app\schedule\clean_log.js
+2021-04-20 16:11:48,627 INFO 19164 [egg-schedule]: register schedule D:\learn\egg-example\node_modules\egg-logrotator\app\schedule\rotate_by_file.js
