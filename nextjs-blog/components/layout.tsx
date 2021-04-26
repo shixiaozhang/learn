@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-25 15:16:32
- * @LastEditTime: 2021-04-25 16:46:44
+ * @LastEditTime: 2021-04-26 18:04:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \nextjs-blog\components\layout.js
@@ -14,8 +14,12 @@ import Link from 'next/link'
 const name = 'Your Name'
 export const siteTitle = 'Next.js Sample Website'
 
+type layParams={
+  children:React.ReactNode
+  home?:boolean
+}
 
-export default function Layout({ children, home }) {
+export default function Layout({ children, home }:layParams) {
     return (
       <div className={styles.container}>
         <Head>

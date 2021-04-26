@@ -4,9 +4,19 @@ import { useState } from 'react'
 import Layout, { siteTitle } from '../components/layout'
 import utilStyles from '../styles/utils.module.css'
 import { getSortedPostsData } from '../lib/posts'
+import Date from '../components/date'
+import { GetStaticProps } from 'next'
+
+interface HomeProps {
+  allPostsData: {
+    date: string
+    title: string
+    id: string
+  }[]
+}
 
 
-export default function Home({ allPostsData }) {
+export default function Home({ allPostsData }:HomeProps) {
   const [home, setHome] = useState(true)
   return (
     <div className="container">
@@ -28,6 +38,12 @@ export default function Home({ allPostsData }) {
         <p className="description">
           Get started by editing <Link href='/authors/me'>authors/me.js</Link>
         </p>
+        <p className="description">
+          Get started by editing <Link href="/posts/[id]" as="/posts/ssg-ssr">
+            <a>...</a>
+          </Link>
+        </p>
+
       </main>
       <h1>---------------------------------------------------------</h1>
       <Layout home={home}>
@@ -47,11 +63,13 @@ export default function Home({ allPostsData }) {
           <ul className={utilStyles.list}>
             {allPostsData.map(({ id, date, title }) => (
               <li className={utilStyles.listItem} key={id}>
-                {title}
+                <Link href="/posts/[id]" as={`/posts/${id}`}>
+                  <a>{title}</a>
+                </Link>
                 <br />
-                {id}
-                <br />
-                {date}
+                <small className={utilStyles.lightText}>
+                  <Date dateString={date} />
+                </small>
               </li>
             ))}
           </ul>
@@ -63,7 +81,7 @@ export default function Home({ allPostsData }) {
   )
 }
 
-export async function getStaticProps() {
+export  const getStaticProps: GetStaticProps = async () => {
   const allPostsData = getSortedPostsData()
   return {
     props: {
