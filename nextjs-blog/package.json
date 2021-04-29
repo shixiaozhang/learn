@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "start:koa": "npm run serve",
+    "serve": "node  server.js",
+    "build-ts": "tsc:build -tsconfig.json "
   },
   "dependencies": {
     "koa": "^2.13.1",
@@ -15,10 +18,16 @@
     "react-dom": "17.0.1"
   },
   "devDependencies": {
-    "@types/koa-bunyan-logger": "^2.1.3",
-    "@types/node": "^14.14.41",
-    "@types/react": "^17.0.3",
-    "koa-bunyan-logger": "^2.1.0",
+    "@types/date-fns": "^2.6.0",
+    "@types/koa": "^2.13.1",
+    "@types/koa-router": "^7.4.2",
+    "@types/next": "^9.0.0",
+    "@types/node": "^14.14.43",
+    "@types/react": "^17.0.4",
+    "gray-matter": "^4.0.3",
+    "remark": "^13.0.0",
+    "remark-html": "^13.0.1",
+    "tslint": "^6.1.3",
     "typescript": "^4.2.4"
   }
 }

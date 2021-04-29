@@ -1,12 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2021-04-25 15:16:32
- * @LastEditTime: 2021-04-26 18:04:49
+ * @LastEditTime: 2021-04-28 10:59:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \nextjs-blog\components\layout.js
  */
 import Head from 'next/head'
+import React from 'react'
 import styles from './layout.module.css'
 import utilStyles from '../styles/utils.module.css'
 import Link from 'next/link'
@@ -15,7 +16,7 @@ const name = 'Your Name'
 export const siteTitle = 'Next.js Sample Website'
 
 type layParams={
-  children:React.ReactNode
+  children?:React.ReactNode
   home?:boolean
 }
 
