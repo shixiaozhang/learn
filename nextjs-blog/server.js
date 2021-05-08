@@ -44,28 +44,35 @@ const handler = nextApp.getRequestHandler();
 nextApp.prepare().then(() => {
   const server = new Koa();
   const router = new Router();
-  server.use(async (ctx, next) => {
+  // server.use(async (ctx, next) => {
+  //   await handler(ctx.req, ctx.res)
+  //   ctx.respond = false
+  //   await next();
+
+  // })
+  router.get("/", async ctx => {
+    console.log('aboutabout');
     await handler(ctx.req, ctx.res)
-    // ctx.respond = false
-    await next();
-  })
+  });
 
   router.get("/news", async ctx => {
     console.log('aboutabout');
+ 
     ctx.body = "哈哈哈"
   });
 
 
-  // router.get("*", async ctx => {
-  //   await handle(ctx.req, ctx.res);
-  //   ctx.respond = false;
-  // });
+  router.get("*", async ctx => {
+    await handle(ctx.req, ctx.res);
+    ctx.respond = false;
+  });
 
   server.use(async (ctx, next) => {
     ctx.res.statusCode = 200;
-    await next();
   });
+
   server.use(router.routes());
+
   server.listen(5000, () => {
     console.log('server is running at http://localhost:5000')
   })
