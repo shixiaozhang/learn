@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "html-webpack-plugin": "^4.3.0",
+    "webpack": "^5.11.1",
+    "webpack-cli": "^4.7.0"
+  },
+  "dependencies": {
+    "terser-webpack-plugin": "^5.1.2"
+  }
+}

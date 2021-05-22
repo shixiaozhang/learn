@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-22 22:33:02
- * @LastEditTime: 2021-04-22 22:33:21
+ * @LastEditTime: 2021-05-22 11:16:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\tree-shaking的优化.md
@@ -30,7 +30,7 @@ if(false) {             // 不会执行的代码，删除
 tree shaking 是基于 ES6 模块机制，意味着如果你引用不同的文件就需要遵循 ES6 的模块规范。
 webpack 在编译阶段会去除那些只读不写或者是不会被执行的代码。
 使用方法
-想使用 sideEffects，你的 webpack 的版本号要大于等于 4。那具体应该怎么用呢，如果你在写一个第三方的 npm 模块，sideEffects 支持下面两种写法：
+想使用  ，你的 webpack 的版本号要大于等于 4。那具体应该怎么用呢，如果你在写一个第三方的 npm 模块，sideEffects 支持下面两种写法：
 
 // package.json
 {
