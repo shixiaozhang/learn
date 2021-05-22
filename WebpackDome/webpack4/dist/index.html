@@ -1,12 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-</head>
-<body>
-    
-<script src="bundle.js"></script></body>
-</html>
+Html Webpack Plugin:
+<pre>
+  TypeError: The 'compilation' argument must be an instance of Compilation
+  
+  - JavascriptModulesPlugin.js:125 getCompilationHooks
+    [webpack4]/[webpack]/lib/javascript/JavascriptModulesPlugin.js:125:10
+  
+  - CommonJsChunkFormatPlugin.js:43 
+    [webpack4]/[webpack]/lib/javascript/CommonJsChunkFormatPlugin.js:43:19
+  
+  
+  - Hook.js:14 Hook.CALL_DELEGATE [as _call]
+    [npm]/[webpack]/[_tapable@2.2.0@tapable]/lib/Hook.js:14:14
+  
+  - Compiler.js:1030 Compiler.newCompilation
+    [npm]/[webpack]/lib/Compiler.js:1030:30
+  
+  - Compiler.js:1073 
+    [npm]/[webpack]/lib/Compiler.js:1073:29
+  
+  
+  - Hook.js:18 Hook.CALL_ASYNC_DELEGATE [as _callAsync]
+    [npm]/[webpack]/[_tapable@2.2.0@tapable]/lib/Hook.js:18:14
+  
+  - Compiler.js:1068 Compiler.compile
+    [npm]/[webpack]/lib/Compiler.js:1068:28
+  
+  - Compiler.js:520 Compiler.runAsChild
+    [npm]/[webpack]/lib/Compiler.js:520:8
+  
+</pre><script src="bundle.js"></script>
