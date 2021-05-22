@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-06 14:34:26
- * @LastEditTime: 2021-04-21 19:08:59
+ * @LastEditTime: 2021-05-22 11:43:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\WebpackDome\Webpack笔记.md
@@ -579,7 +579,7 @@ new HtmlWebpackExternalsPlugin(
 > parserOptions：解析器的一些设置，比如我需要支持es6的相关语法就需要如上的配置
 > plugins:解析器插件，主要是对解析器的拓展。
 > env：环境配置，主要针对一些环境变量，比如浏览器环境的window，node环境的glob等可以不定义就使用。
-> extends:继承一些默认的eslint配置，这里使用的是recommended,还有像airbnb和ivweb这些比较库，个人建议，如果你的团队小于10人可以考虑ivweb 、10人以上可以考虑recommended自己在根据公司的风格拓展，airbnb个人认为没多大必要。
+> extends:继承一些  默认的eslint配置，这里使用的是recommended,还有像airbnb和ivweb这些比较库，个人建议，如果你的团队小于10人可以考虑ivweb 、10人以上可以考虑recommended自己在根据公司的风格拓展，airbnb个人认为没多大必要。
 > rules：对规则的一些微调
 
 ## AMD/CJS/ESM以及页面引用就可以使用的高兼容库
