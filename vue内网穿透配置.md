@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-22 15:25:57
- * @LastEditTime: 2021-04-23 13:30:13
+ * @LastEditTime: 2021-05-24 16:27:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\vue内网穿透配置.md
@@ -18,3 +18,4 @@ module.exports = {
 最后一行添加：
 
   127.0.0.1  你的域名
+

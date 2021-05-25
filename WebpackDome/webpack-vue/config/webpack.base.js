@@ -1,39 +1,42 @@
 /*
  * @Author: your name
  * @Date: 2021-01-11 10:14:49
- * @LastEditTime: 2021-02-19 16:50:39
+ * @LastEditTime: 2021-05-17 14:52:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\WebpackDome\webpack-vue\config\webpack.base.js
  */
-const path=require('path')
+const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const htmlWebpackPlugin=require('html-webpack-plugin')
+const htmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
-module.exports={
-    entry:'/src/main.js',
-    output:{
-        path:path.join(__dirname,'../dist'),
-        filename:'[name].js'
+module.exports = {
+    entry: {
+        main: '/src/main.js',
+        test:'/test.js'
     },
-    resolve:{
-        alias:{
-            assets:path.join(__dirname,'./src/assets'),
+    output: {
+        path: path.join(__dirname, '../dist'),
+        filename: '[name].js'
+    },
+    resolve: {
+        alias: {
+            assets: path.join(__dirname, './src/assets'),
             'vue$': 'vue/dist/vue.esm.js',
         },
-        extensions:['.js','.vue','.json']
+        extensions: ['.js', '.vue', '.json']
     },
-    module:{
-        rules:[
+    module: {
+        rules: [
             {
-                test:/\.vue$/,
-                loader:'vue-loader'
+                test: /\.vue$/,
+                loader: 'vue-loader'
             },
             {
                 test: /\.js?$/,
                 loader: 'babel-loader',
-                exclude:/node_modules/
+                exclude: /node_modules/
 
             },
             {
@@ -61,16 +64,16 @@ module.exports={
             }
         ]
     },
-    plugins:[
+    plugins: [
         new CleanWebpackPlugin(),
-         // 请确保引入这个插件！
-         new VueLoaderPlugin(),
-       
-         new htmlWebpackPlugin({
-            template: path.join(__dirname,'../src/index.html'),
+        // 请确保引入这个插件！
+        new VueLoaderPlugin(),
+
+        new htmlWebpackPlugin({
+            template: path.join(__dirname, '../src/index.html'),
             filename: 'index.html'
         }),
 
-        
+
     ]
 }
