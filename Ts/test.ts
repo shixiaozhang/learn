@@ -148,3 +148,28 @@ enum Status {
   console.log(Status.Waiting);
   console.log(Status);
   num = statuss;
+
+
+
+//   class Point {
+//     x: number = 2
+//     y: number = 3
+//   }
+//   interface IShape {
+//     area(): number
+//   }
+//   type Perimeter = {
+//     perimeter(): number
+//   }
+//   type RectangleShape = (IShape | Perimeter) & Point
+  
+//   class Rectangle implements RectangleShape {
+//     // 类只能实现具有静态已知成员的对象类型或对象类型的交集。
+//     x = 2
+//     y = 3
+//     area() {
+//       return this.x + this.y
+//     }
+//   }
+//   interface ShapeOrPerimeter extends RectangleShape {}
+//   // 接口只能扩展使用静态已知成员的对象类型或对象类型的交集
