@@ -1,0 +1,38 @@
+<template>
+  <div>
+    登录页
+    <div>用户名：<input v-model="username" /></div>
+    <div>密码：<input v-model="password" /></div>
+    <div><button @click="login">登录</button></div>
+  </div>
+</template>
+
+<script>
+import { ref } from "@vue/reactivity";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+export default {
+  setup() {
+    const username = ref("");
+    const password = ref("");
+    const store = useStore();
+    const router = useRouter();
+    const login = () => {
+      if (username.value && password.value) {
+        store.commit("setToken", "123456");
+        router.push({
+          path: "/",
+        });
+      }
+    };
+    return {
+      username,
+      password,
+      login,
+    };
+  },
+};
+</script>
+
+<style>
+</style>

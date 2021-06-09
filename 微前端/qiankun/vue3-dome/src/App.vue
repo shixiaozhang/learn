@@ -1,30 +1,62 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div>
+    <div class="nav" v-if="token">
+      <div class="menu">
+        <router-link to="/">Parent Home</router-link>
+      </div>
+      <div class="menu">
+        <router-link to="/about">Parent About</router-link>
+      </div>
+    </div>
+    <div class="container">
+      <div class="header" v-if="token">Parent Header</div>
+      <div class="router-view">
+        <router-view />
+      </div>
+    </div>
   </div>
-  <router-view/>
 </template>
+<script>
+import { defineComponent, computed } from "vue";
+import { useStore } from "vuex";
+
+export default defineComponent({
+  setup() {
+    const store = useStore();
+    return {
+      token: computed(() => store.state.token),
+    };
+  },
+});
+</script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  display: flex;
+  width: 100%;
+  height: 100%;
 }
-
-#nav {
-  padding: 30px;
+.nav {
+  width: 300px;
+  height: 100%;
+  border-right: 2px solid red;
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.menu {
+  width: 100%;
+  background: gray;
+  margin-bottom: 10px;
+  height: 30px;
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.menu > a {
+  color: white;
+}
+.container {
+  flex: 1;
+}
+.header {
+  background: #ada5a5;
+  width: 100%;
+  height: 50px;
+  color: white;
 }
 </style>
