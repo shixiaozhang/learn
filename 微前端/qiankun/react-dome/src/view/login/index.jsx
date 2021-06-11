@@ -1,17 +1,28 @@
 import { useState } from "react"
-
-
+import { connect } from "react-redux";
+import { getToken } from '../../store/actions'
+import { Redirect, useHistory } from "react-router-dom";
 function Login(props) {
+    console.log(props);
+    const history = useHistory();
+    const { token, getToken } = props;
     const [username, setName] = useState('')
     const [password, setPass] = useState('')
-    function login() {
-        if (usernamez && password.value) {
-            // store.commit("setToken", "123456");
-            // router.push({
-            //   path: "/",
-            // });
-            console.log(props);
+    const login = () => {
+        if (username && password) {
+            getToken(username, password)
+                .then((data) => {
+                    alert("chenggongdenglu!")
+                    console.log(data);
+                    history.push("/home")
+                })
+                .catch((error) => {
+                    alert(error.msg)
+                });
         }
+    }
+    if (token) {
+        return <Redirect to="/home" />;
     }
     return (
         <div>
@@ -22,4 +33,5 @@ function Login(props) {
         </div >
     )
 }
-export default Login
+
+export default connect((state) => state.token, { getToken })(Login);

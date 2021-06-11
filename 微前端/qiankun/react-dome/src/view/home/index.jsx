@@ -1,1 +1,1 @@
-export default () => <h1 class="home">React Home Page</h1>
+export default function home() { return <h1 className="home">React Home Page</h1> }

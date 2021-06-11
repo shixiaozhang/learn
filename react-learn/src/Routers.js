@@ -47,7 +47,6 @@ function R1() {
     return (
         <>
             <h1>R1</h1>
-
             <ul>
                 <li>
                     <Link to={`${url}/A`}>Rendering with React</Link>

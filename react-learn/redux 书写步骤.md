@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-26 17:17:26
- * @LastEditTime: 2021-01-26 17:17:26
- * @LastEditors: your name
+ * @LastEditTime: 2021-06-11 10:29:07
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\react-learn\src\redux-async\containers\redux 书写步骤.md
 -->
@@ -28,6 +28,9 @@ export const selectSubreddit = subreddit => ({
 })
 
 2、定义 reducer：用于定义 传入 action 时要修改的 store的某部分；
+import { combineReducers } from 'redux'
+import { INVALIDATE_SUBREDDIT } from './actions'
+
    要用到api ：combineReducers({
                     xxx,
                     xxx,
