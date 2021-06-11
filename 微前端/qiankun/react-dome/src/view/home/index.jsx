@@ -1,0 +1,1 @@
+export default () => <h1 class="home">React Home Page</h1>

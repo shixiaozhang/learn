@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>Child home page</h1>
+    <h1>Vue2 home page</h1>
   </div>
 </template>
 
