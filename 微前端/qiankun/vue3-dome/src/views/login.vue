@@ -11,6 +11,8 @@
 import { ref } from "@vue/reactivity";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import { actions } from "@/micros";
+
 export default {
   setup() {
     const username = ref("");
@@ -20,6 +22,9 @@ export default {
     const login = () => {
       if (username.value && password.value) {
         store.commit("setToken", "123456");
+        actions.setGlobalState({
+          globalToken: "123456",
+        });
         router.push({
           path: "/",
         });

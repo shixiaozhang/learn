@@ -24,7 +24,8 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
+  mode: 'history',
   routes
 })
 
@@ -35,7 +36,7 @@ router.beforeEach((to, from, next) => {
     } else {
       next('/login')
     }
-  }else{
+  } else {
     next()
   }
 })

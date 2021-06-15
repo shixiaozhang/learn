@@ -7,11 +7,24 @@
       <div class="menu">
         <router-link to="/about">Parent About</router-link>
       </div>
+      <div class="menu">
+        <router-link to="/vue2-micro-app">Child Home</router-link>
+      </div>
+      <div class="menu">
+        <router-link to="/vue2-micro-app/about">Child About</router-link>
+      </div>
+      <div class="menu">
+        <router-link to="/react-micro-app">Child Home</router-link>
+      </div>
+      <div class="menu">
+        <router-link to="/react-micro-app/about">Child About</router-link>
+      </div>
     </div>
     <div class="container">
       <div class="header" v-if="token">Parent Header</div>
       <div class="router-view">
         <router-view />
+        <div id="micro-container"></div>
       </div>
     </div>
   </div>

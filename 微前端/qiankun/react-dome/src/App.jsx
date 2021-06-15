@@ -1,41 +1,44 @@
 import Home from './view/home';
 import About from './view/about';
+import Login from './view/login';
 import { connect } from 'react-redux'
-import { Route, Redirect, Link, Switch, useRouteMatch } from 'react-router-dom'
+import { BrowserRouter as Routers, Route, Redirect, Link, Switch, } from 'react-router-dom'
 
 import './style/App.css'
 
 
 function App(props) {
-  let { path, url } = useRouteMatch();
-  console.log(path, url);
   const { token } = props
-  if (!token) {
-    return <Redirect to="/login" />;
-  }
+
   return (
-    <>
-      <ul className="nav">
+    <Routers basename={window.__POWERED_BY_QIANKUN__ ? '/react-micro-app' : '/'}>
+      {
+        !token && <Redirect to="/login" />
+      }
+      {token && <ul className="nav">
         <li className="menu">
-          <Link to="/home">React Home</Link>
+          <Link to="/">React Home</Link>
         </li>
         <li className="menu">
-          <Link to={`${path}/about`}>React about</Link>
+          <Link to="/about">React about</Link>
         </li>
-        
-      </ul>
+
+      </ul>}
       <div className="container">
-        <div className="header" >Child Header</div>
+        {token && <div className="header"  >Child Header</div>}
         <div className="router-view">
           <Switch>
-            <Route path={path} exact component={Home} >
+            <Route path='/' exact component={Home} >
             </Route>
-            <Route path={`${path}/about`} component={About}>
+            <Route path='/about' component={About}>
+            </Route>
+            <Route path='/login' component={Login}>
             </Route>
           </Switch>
         </div>
       </div>
-    </>
+    </Routers>
+
   );
 }
 export default connect((state) => state.token)(App);

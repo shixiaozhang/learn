@@ -14,10 +14,6 @@ const routes = [
   },
   {
     path: '/',
-    redirect: '/home'
-  },
-  {
-    path: '/home',
     name: 'Home',
     component: Home
   },
@@ -32,9 +28,10 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  routes
-})
-
+  base: window.__POWERED_BY_QIANKUN__ ? '/vue2-micro-app/' : '/',
+  mode: 'history',
+  routes,
+});
 
 router.beforeEach((to, from, next) => {
   console.log("store", store.state.token)
