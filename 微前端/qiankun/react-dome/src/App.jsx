@@ -11,7 +11,7 @@ function App(props) {
   const { token } = props
 
   return (
-    <Routers basename={window.__POWERED_BY_QIANKUN__ ? '/react-micro-app' : '/'}>
+    <Routers basename={window.__POWERED_BY_QIANKUN__ ? '/react-micro-app' : ''}>
       {
         !token && <Redirect to="/login" />
       }
