@@ -19,13 +19,13 @@
 
 使用 scp 命令将本地的公钥文件 id_rsa.pub 复制到需要连接的Linux服务器：
 
-scp ~/.ssh/id_rsa.pub <用户名>@<ip地址>:/home/id_rsa.pub
-1
+scp ~/.ssh/id_rsa.pub <用户名>@<ip地址>:/home/id_rsa.pub //linux 上传文件的命令
+
 如果修改了ssh默认连接端口的话，需要加上端口信息：
 
 scp -P <端口号> ~/.ssh/id_rsa.pub <用户名>@<ip地址>:/home/id_rsa.pub
-1
-把公钥追加到服务器ssh认证文件中：
+
+## 把公钥追加到服务器ssh认证文件中：
 
 cat /home/id_rsa.pub >> ~/.ssh/authorized_keys
 
