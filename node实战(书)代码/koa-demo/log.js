@@ -4,6 +4,6 @@ module.exports = options => {
     }
     return async (ctx, next) => {
         console.log(options.format(ctx.url));
-        next()
+       await next()
     }
 }
