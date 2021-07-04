@@ -25,7 +25,7 @@ module.exports = {
 ## css 的⽂文件指纹设置
 
 ### 设置 MiniCssExtractPlugin 的 filename， 使⽤用 [contenthash]
-    MiniCssExtractPlugin:抽出css单独文件
+
 const MiniCssExtractPlugin=require('MiniCssExtractPlugin)
 module.exports = { 
     entry: {
