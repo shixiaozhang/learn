@@ -95,7 +95,7 @@ module.exports = {
 ## 安装
 
 cnpm i mini-css-extract-plugin  -D
-cnpm i optimize-css-assets-webpack-plugin  -D
+cnpm i optimize-css-assets-webpack-plugin cssnano  -D
 
 ## 使用
 ### 1、先增加MiniCssExtractPlugin.loader,与style-loader 互斥
@@ -110,7 +110,10 @@ cnpm i optimize-css-assets-webpack-plugin  -D
     new MiniCssExtractPlugin({
         filename: '[name]_[contenthash:8].css'
     })
-### 3、再调用 OptimizeCSSAssetsPlugin  引入css
+### 3、再调用 OptimizeCSSAssetsPlugin CSS 文件的压缩  
+
+**optimize-css-assets-webpack-plugin需要依赖 cssnano*
+
     new OptimizeCSSAssetsPlugin({
             assetNameRegExp: /\.css$/g,
             cssProcessor: require('cssnano')

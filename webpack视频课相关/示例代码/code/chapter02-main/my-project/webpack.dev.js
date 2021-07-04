@@ -3,7 +3,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const {CleanWebpackPlugin}=require('clean-webpack-plugin')
 module.exports = {
     entry: {
         index: './src/index.js',
@@ -53,12 +53,14 @@ module.exports = {
         ]
     },
     plugins: [
+        new CleanWebpackPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'src/index.html'),
             filename: 'index.html',
             chunks: ['index'],
             inject: true,
+            title:"我是ejs语法测试",
             minify: {
                 html5: true,
                 collapseWhitespace: true,
