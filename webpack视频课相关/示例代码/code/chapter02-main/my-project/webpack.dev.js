@@ -6,14 +6,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin}=require('clean-webpack-plugin')
 module.exports = {
     entry: {
-        index: './src/index.js',
-        search: './src/search.js'
+        index: './src/index/index.js',
+        search: './src/search/index.js'
     },
     output: {
         path: path.join(__dirname, 'dist'),
         filename: '[name].js'
     },
     mode: 'development',
+    devtool:'inline-source-map',
     module: {
         rules: [
             {
@@ -56,7 +57,7 @@ module.exports = {
         new CleanWebpackPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
-            template: path.join(__dirname, 'src/index.html'),
+            template: path.join(__dirname, 'src/index/index.html'),
             filename: 'index.html',
             chunks: ['index'],
             inject: true,
@@ -71,7 +72,7 @@ module.exports = {
             }
         }),
         new HtmlWebpackPlugin({
-            template: path.join(__dirname, 'src/search.html'),
+            template: path.join(__dirname, 'src/search/index.html'),
             filename: 'search.html',
             chunks: ['search'],
             inject: true,
