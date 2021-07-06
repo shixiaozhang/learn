@@ -1,18 +1,9 @@
-<!--
- * @Author: your name
- * @Date: 2021-04-22 22:33:02
- * @LastEditTime: 2021-07-06 22:15:47
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \learn\tree-shaking的优化.md
--->
-最近在给团队对 webpack 中的 sideEffects 字段用途进行微分享，于是乎，我最后就整理成一篇文章，希望帮助更多的人理解 sideEffects 的作用。
 
-sideEffects 是什么呢？我用一句话来概括就是：让 webpack 去除 tree shaking 带来副作用的代码。
+# sideEffects 是什么呢？我用一句话来概括就是：让 webpack 去除 tree shaking 带来副作用的代码。
 
-听起来有点绕口，让我们划出重点：tree shaking/用法/副作用
+## 听起来有点绕口，让我们划出重点：tree shaking/用法/副作用
 
-tree shaking
+# tree shaking
 tree shaking 是一种代码优化技术，它能够将无用的代码进行去除，下面举个简单的例子：
 
   // a.js
@@ -25,14 +16,18 @@ tree shaking 是一种代码优化技术，它能够将无用的代码进行去�
   if(false) {             // 不会执行的代码，删除
     console.log('去除我');  
   }
+
 可以从上面简单的例子看出：在 webpack 编译阶段 tree shaking 会将未被使用的代码删除，简单总结一下：
 
 tree shaking 是基于 ES6 模块机制，意味着如果你引用不同的文件就需要遵循 ES6 的模块规范。
 webpack 在编译阶段会去除那些只读不写或者是不会被执行的代码。
-使用方法
-想使用  ，你的 webpack 的版本号要大于等于 4。那具体应该怎么用呢，如果你在写一个第三方的 npm 模块，sideEffects 支持下面两种写法：
+
+### 使用方法
+
+想使用-你的 webpack 的版本号要大于等于 4。那具体应该怎么用呢，如果你在写一个第三方的 npm 模块，sideEffects 支持下面两种写法：
 
   // package.json
+
   {
       "sideEffects": false
   }
@@ -44,6 +39,7 @@ webpack 在编译阶段会去除那些只读不写或者是不会被执行的代
       "lib/**/style/*"
     ]
   }
+  
 如果你想要对你的业务代码生效，那你可以再 module.rules 里面添加，比如:
 
   module.exports = {
