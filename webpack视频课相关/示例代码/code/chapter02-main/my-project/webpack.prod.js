@@ -1,6 +1,7 @@
 'use strict';
 const glob = require('glob')
 const path = require('path');
+const webpack=require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -60,8 +61,8 @@ module.exports = {
         path: path.join(__dirname, 'dist'),
         filename: '[name]_[chunkhash:8].js'
     },
-    mode: 'production',
-    // mode: 'none',
+    // mode: 'production',
+    mode: 'none',
     module: {
         rules: [
             {
@@ -118,6 +119,8 @@ module.exports = {
         ]
     },
     plugins: [
+        //手动开启 Scope-Hoisting，优惠打包，减少闭包，优化内存；
+        new webpack.optimize.ModuleConcatenationPlugin(),
         new CleanWebpackPlugin(),
         //? 分包css
         new MiniCssExtractPlugin({
