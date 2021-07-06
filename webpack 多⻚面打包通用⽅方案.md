@@ -32,6 +32,7 @@ const setMPA = () => {
             new HtmlWebpackPlugin({
                 template: path.join(__dirname, `src/${pageName}/index.html`),
                 filename: `${pageName}.html`,
+                // chunks配置的东西就是我们 最终会引入到模版html中的js 
                 chunks: ['search'],
                 inject: true,
                 minify: {

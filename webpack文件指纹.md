@@ -1,13 +1,13 @@
 # 文件指纹如何⽣生成
 
-* Hash:和整个项⽬目的构建相关，只要项⽬目⽂文件有修改，整个项⽬目构建的 hash 值就会更更改 ---图片
-* Chunkhash:和 webpack 打包的 chunk 有关，不不同的 entry 会⽣生成不不同的 chunkhash 值，无法在dev环境热更新时无法使用  ---js
-* Contenthash:根据⽂文件内容来定义 hash ，⽂文件内容不不变，则 contenthash 不不变---css文件
+* Hash:和整个项⽬的构建相关，只要项⽬文件有修改，整个项目构建的 hash 值就会更改 ---图片、字体
+* Chunkhash:和 webpack 打包的 chunk 有关，不同的 entry 会⽣成不同的 chunkhash 值，无法在dev环境热更新时无法使用  ---js
+* Contenthash:根据⽂件内容来定义 hash ，⽂件内容不不变，则 contenthash 不变---css文件
 
 
-## JS 的⽂文件指纹设置
+## JS 的⽂件指纹设置
 
-### 设置 output 的 filename，使⽤用 [chunkhash]
+### 设置 output 的 filename，使⽤ [chunkhash]
 
 module.exports = { 
     entry: {
@@ -22,9 +22,9 @@ module.exports = {
 
 
 
-## css 的⽂文件指纹设置
+## css 的⽂件指纹设置
 
-### 设置 MiniCssExtractPlugin 的 filename， 使⽤用 [contenthash]
+### 设置 MiniCssExtractPlugin 的 filename， 使用 [contenthash]
 
 const MiniCssExtractPlugin=require('MiniCssExtractPlugin)
 module.exports = { 
@@ -44,7 +44,7 @@ module.exports = {
 
 
 
-## 图⽚片的⽂文件指纹设置
+## 图⽚片的文件指纹设置
 
 ### 设置 file-loader 的 name，使⽤用 [hash]
     MiniCssExtractPlugin:抽出css单独文件

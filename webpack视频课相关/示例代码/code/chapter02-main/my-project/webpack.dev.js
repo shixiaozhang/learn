@@ -54,8 +54,9 @@ module.exports = {
         ]
     },
     plugins: [
-        new CleanWebpackPlugin(),
+        // 热模块更新插件，不会刷新页面；
         new webpack.HotModuleReplacementPlugin(),
+        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'src/index/index.html'),
             filename: 'index.html',

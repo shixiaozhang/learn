@@ -6,6 +6,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HTMLInlineCSSWebpackPlugin = require("html-inline-css-webpack-plugin").default;
+const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin')//基础库分离
 const setMPA = () => {
     const entry = {}
     const htmlWebpackPlugins = []
@@ -15,17 +16,18 @@ const setMPA = () => {
     //     '/Users/Z/project/learn/webpack视频课相关/示例代码/code/chapter02-main/my-project/src/index/index.js',
     //     '/Users/Z/project/learn/webpack视频课相关/示例代码/code/chapter02-main/my-project/src/search/index.js'
     //   ] 
-    entryFiles.forEach(entryFile=>{
+    entryFiles.forEach(entryFile => {
         // 获取文件夹name
-        const match=entryFile.match(/src\/(.*)\/index\.js$/)
-        const pageName=match&&match[1]
+        const match = entryFile.match(/src\/(.*)\/index\.js$/)
+        const pageName = match && match[1]
         console.log(pageName);
-        entry[pageName]=entryFile
+        entry[pageName] = entryFile
         htmlWebpackPlugins.push(
             new HtmlWebpackPlugin({
                 template: path.join(__dirname, `src/${pageName}/index.html`),
                 filename: `${pageName}.html`,
-                chunks: ['search'],
+                // chunks: [pageName,'vendors'], 
+                chunks: [pageName,'vendors'],//添加 vendors，用来引入 我们分离出来的 公共包
                 inject: true,
                 minify: {
                     html5: true,
@@ -45,20 +47,21 @@ const setMPA = () => {
         htmlWebpackPlugins
     }
 }
-const {entry,htmlWebpackPlugins}=setMPA()
+const { entry, htmlWebpackPlugins } = setMPA()
 
 module.exports = {
     // entry: {
     //     index: './src/index/index.js',
     //     search: './src/search/index.js'
     // },
-     // 自动引入多个入口的 js
+    // 自动引入多个入口的 js
     entry,
     output: {
         path: path.join(__dirname, 'dist'),
         filename: '[name]_[chunkhash:8].js'
     },
     mode: 'production',
+    // mode: 'none',
     module: {
         rules: [
             {
@@ -116,13 +119,30 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(),
+        //? 分包css
         new MiniCssExtractPlugin({
             filename: '[name]_[contenthash:8].css'
         }),
+        //? 压缩css
         new OptimizeCSSAssetsPlugin({
             assetNameRegExp: /\.css$/g,
             cssProcessor: require('cssnano')
         }),
+        //?分离react之类的基础包 的方式之一：  
+        // new HtmlWebpackExternalsPlugin({
+        //     externals: [
+        //       {
+        //         module: 'react',
+        //         entry: 'https://unpkg.com/react@17/umd/react.production.min.js',//可以是本地文件，也可以是cdn
+        //         global: 'React'
+        //       },
+        //       {
+        //         module: 'react-dom',
+        //         entry: 'https://unpkg.com/react-dom@17/umd/react-dom.production.min.js',//可以是本地文件，也可以是cdn
+        //         global: 'ReactDOM'
+        //     },
+        //     ],
+        //   }),
         // 自动引入多个入口的模版html
         ...htmlWebpackPlugins,
         // new HtmlWebpackPlugin({
@@ -156,6 +176,55 @@ module.exports = {
 
         //? 这个是把css 注入到html style中，一般不用
         // new HTMLInlineCSSWebpackPlugin(),
+    ],
+    //? optimization.splitChunks 实现提取react和react-dom
+    // optimization: {
+    //     splitChunks: {
+    //         cacheGroups: {
+    //             commons: {
+    //                 test: /(react|react-dom)/,
+    //                 name: 'vendors',
+    //                 chunks: 'all',
+    //             },
 
-    ]
+    //         },
+    //     },
+    // },
+    // //? 分离页面的公共js文件：
+    // optimization: {
+    //     splitChunks: {
+    //         minSize:0,//引入文件的大小
+    //         cacheGroups: {
+    //             commons: {
+    //                 name: 'commons',
+    //                 chunks: 'all',
+    //                 minChunks: 3,//最少引用的次数
+    //             },
+
+    //         },
+    //     },
+    // },
+    // optimization: {
+    //     splitChunks: {
+    //       chunks: 'async',
+    //       minSize: 20000,
+    //       minRemainingSize: 0,
+    //       minChunks: 1,
+    //       maxAsyncRequests: 30,
+    //       maxInitialRequests: 30,
+    //       enforceSizeThreshold: 50000,
+    //       cacheGroups: {
+    //         defaultVendors: {
+    //           test: /[\\/]node_modules[\\/]/,
+    //           priority: -10,
+    //           reuseExistingChunk: true,
+    //         },
+    //         default: {
+    //           minChunks: 2,
+    //           priority: -20,
+    //           reuseExistingChunk: true,
+    //         },
+    //       },
+    //     },
+    //   },
 };
