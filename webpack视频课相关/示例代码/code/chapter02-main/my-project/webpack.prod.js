@@ -1,7 +1,7 @@
 'use strict';
 const glob = require('glob')
 const path = require('path');
-const webpack=require('webpack')
+const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -28,7 +28,7 @@ const setMPA = () => {
                 template: path.join(__dirname, `src/${pageName}/index.html`),
                 filename: `${pageName}.html`,
                 // chunks: [pageName,'vendors'], 
-                chunks: [pageName,'vendors'],//添加 vendors，用来引入 我们分离出来的 公共包
+                chunks: [pageName, 'vendors'],//添加 vendors，用来引入 我们分离出来的 公共包
                 inject: true,
                 minify: {
                     html5: true,
@@ -67,7 +67,10 @@ module.exports = {
         rules: [
             {
                 test: /.js$/,
-                use: 'babel-loader'
+                use: [
+                    'babel-loader',
+                    'eslint-loader'
+                ]
             },
             {
                 test: /.(le|c)ss$/,

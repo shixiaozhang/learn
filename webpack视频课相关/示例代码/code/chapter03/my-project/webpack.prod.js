@@ -18,6 +18,7 @@ const setMPA = () => {
     Object.keys(entryFiles)
         .map((index) => {
             const entryFile = entryFiles[index];
+
             // '/Users/cpselvis/my-project/src/index/index.js'
 
             const match = entryFile.match(/src\/(.*)\/index\.js/);
@@ -64,7 +65,7 @@ module.exports = {
                 test: /.js$/,
                 use: [
                     'babel-loader',
-                    // 'eslint-loader'
+                    'eslint-loader'
                 ]
             },
             {

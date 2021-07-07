@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-06 18:43:00
- * @LastEditTime: 2021-05-22 12:35:58
+ * @LastEditTime: 2021-07-07 22:24:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \learn\WebpackDome\webpack5\webpack.config.js
@@ -22,9 +22,9 @@ module.exports = {
     //输出的路径
     path: path.resolve(__dirname, "dist"),
     // 打包关健
-    library: 'swapPairs',//库的名字
+    library: 'swapPairs',//库的全局名字
     libraryExport: 'default',//优化使用体验
-    libraryTarget: 'umd'//通用支持设置
+    libraryTarget: 'umd'//通用支持设置，指定库的引入方式
   },
   optimization: {
     minimize: true,

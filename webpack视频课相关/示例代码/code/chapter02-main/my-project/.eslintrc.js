@@ -5,7 +5,7 @@ module.exports = {
         "browser": true,
         "node": true
     },
-    // "rules": {//自定义规则
-    //     "indent": ["error", 4]
-    // }
+    "rules": {//自定义规则
+        "indent": ["error", 4]
+    }
 };
