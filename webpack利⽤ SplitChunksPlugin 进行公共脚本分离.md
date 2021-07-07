@@ -1,7 +1,7 @@
 # 基础库分离
-## 利用 html-webpack- externals-plugin 插件实现
+## 利用 html-webpack-externals-plugin 插件实现
 
-cnpm i html-webpack- externals-plugin -D
+cnpm i html-webpack-externals-plugin -D
 
 ### 将 react、react-dom 基础 包通过 cdn 引⼊入，不打⼊ bundle 中-就是把例如react一样的包通过cnd引入，不把他编译到最终的包中；
 * webpack.config.js

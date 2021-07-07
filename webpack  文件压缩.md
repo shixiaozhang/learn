@@ -1,9 +1,9 @@
-# JS ⽂文件的压缩 
+# JS ⽂件的压缩 
 
 内置了 uglifyjs-webpack-plugin
 
 
-# CSS ⽂文件的压缩
+# CSS ⽂件的压缩
 安装使用 optimize-css-assets-webpack-plugin
 
 同时安装使用 **cssnano** 由于optimize-css-assets-webpack-plugin需要依赖cssnano
@@ -12,10 +12,9 @@
             assetNameRegExp: /\.css$/g,
             cssProcessor: require('cssnano')
     })
-# html ⽂文件的压缩
+# html ⽂件的压缩
+
 修改 html-webpack-plugin，设置压缩参数
-
-
 
  new HtmlWebpackPlugin({
             template: path.join(__dirname, 'src/index.html'),
@@ -69,7 +68,7 @@ this.options = _.extend({
   }, options);
 
 title: 生成的html文档的标题。配置该项，它并不会替换指定模板文件中的title元素的内容，除非html模板文件中使用了模板引擎语法来获取该配置项值，如下ejs模板语法形式：
-<title>{%= o.htmlWebpackPlugin.options.title %}</title>
+<title>{%= htmlWebpackPlugin.options.title %}</title>
 filename：输出文件的文件名称，默认为index.html，不配置就是该文件名；此外，还可以为输出文件指定目录位置（例如'html/index.html'）
 
 **关于filename补充两点：**
