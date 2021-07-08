@@ -88,6 +88,11 @@ https://eslint.bootcss.com/docs/user-guide/getting-started
 
     $ ./node_modules/.bin/eslint --init
 
+    //或
+
+    npm install eslint --save-dev // 安装 eslint 依赖
+    npx eslint --init // 初始化 eslint 配置
+
 之后，你可以在任何文件或目录上运行ESLint如下：  
 
     $ ./node_modules/.bin/eslint yourfile.js
