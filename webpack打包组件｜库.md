@@ -160,3 +160,16 @@ package.json 的 main 字段为 index.js
 
 # 发布到npm 上：
 
+添加：publish 钩子
+
+script：{
+    publish:'webpack'
+}
+
+
+登陆npm：
+npm login
+
+发布：
+
+npm run publish
