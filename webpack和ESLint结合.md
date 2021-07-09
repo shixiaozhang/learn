@@ -140,3 +140,46 @@ ESlint 被设计为完全可配置的，这意味着你可以关闭每一个规�
     Rules - 启用的规则及其各自的错误级别。
 
 所有这些选项让你可以细粒度地控制 ESLint 如何对待你的代码。
+
+
+
+# ESLint 代码修复符合规范和错误提示；
+# 使用 ESLint 规范构建脚本
+
+## 使用 eslint-config-airbnb-base 
+
+eslint --fix 可以自动处理空格
+
+ "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eslint":"eslint ./lib --fix"
+  },
+  
+## 配置：
+
+### 安装依赖：
+
+**cnpm i eslint babel-eslint eslint-config-airbnb-base -D**
+
+### 增加配置：
+
+    module.exports = {
+        "parser": "babel-eslint", 
+        "extends": "airbnb-base", 
+        "env": {
+            "browser": true,
+            "node": true 
+        }
+    };
+
+
+### 运行： yarn eslint 
+
+* 自动修复空格换行相关报错；
+* 提示其他的 语法错误
+
+
+### 禁用某一行的检查：
+
+//这行的检测会被跳过
+console.log('23123)//eslint-disable-line

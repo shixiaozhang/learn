@@ -14,3 +14,8 @@
 webpack配置中添加：
 
  devtool:'source-map',
+
+
+ # source map 类型：
+
+ ![img](allImg/source-map类型.png)
