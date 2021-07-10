@@ -5,11 +5,13 @@ const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-// duoyemin dabao
+
+const projectRoot = process.cwd();//获取cmd 命令行此时的目录
+
 const setMPA = () => {
   const entry = {};
   const htmlWebpackPlugins = [];
-  const entryFiles = glob.sync(path.join(__dirname, './src/*/index.js'));
+  const entryFiles = glob.sync(path.join(projectRoot, './src/*/index.js'));
   //   console.log(entryFiles);
   entryFiles.forEach((entryFile) => {
     // 获取文件夹name
@@ -19,7 +21,7 @@ const setMPA = () => {
     entry[pageName] = entryFile;
     htmlWebpackPlugins.push(
       new HtmlWebpackPlugin({
-        template: path.join(__dirname, `src/${pageName}/index.html`),
+        template: path.join(projectRoot, `src/${pageName}/index.html`),
         filename: `${pageName}.html`,
         // chunks: [pageName,'vendors'],
         chunks: [pageName, 'vendors'], // 添加 vendors，用来引入 我们分离出来的 公共包
@@ -32,8 +34,8 @@ const setMPA = () => {
           minifyJS: true,
           removeComments: false,
         },
-      }),
-    );
+      })
+    )
   });
   //   console.log(entry);
   return {

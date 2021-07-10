@@ -1,9 +1,8 @@
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const cssnano = require('cssnano');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');// 基础库分离
 const baseConfig = require('./webpack.base');
-
 const prodConfig = {
   mode: 'production',
   plugins: [

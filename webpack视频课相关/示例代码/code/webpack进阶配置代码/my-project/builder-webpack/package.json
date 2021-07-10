@@ -4,16 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "istanbul cover mocha",
     "eslint": "eslint ./lib --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "assert": "^2.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.0.0",
-    "eslint-config-airbnb-base": "^14.2.1"
+    "eslint-config-airbnb-base": "^14.2.1",
+    "glob-all": "^3.2.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^9.0.2",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {
     "@babel/core": "^7.4.4",
