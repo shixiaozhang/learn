@@ -1,0 +1,110 @@
+ ERROR  Failed to compile with 5 errors下午1:42:41
+
+ error  in ./common/index.js
+
+Module Error (from ./node_modules/_eslint-loader@4.0.2@eslint-loader/dist/cjs.js):
+
+/Users/Z/project/learn/webpack视频课相关/示例代码/code/webpack基础配置代码/my-project/common/index.js
+  1:1   error  Prefer default export                          import/prefer-default-export
+  1:25  error  Missing space before opening brace             space-before-blocks
+  2:23  error  Missing semicolon                              semi
+  3:2   error  Newline required at end of file but not found  eol-last
+
+✖ 4 problems (4 errors, 0 warnings)
+  3 errors and 0 warnings potentially fixable with the `--fix` option.
+
+
+ @ ./src/index/index.js 2:0-22
+
+ error  in ./src/index/helloworld.js
+
+Module Error (from ./node_modules/_eslint-loader@4.0.2@eslint-loader/dist/cjs.js):
+
+/Users/Z/project/learn/webpack视频课相关/示例代码/code/webpack基础配置代码/my-project/src/index/helloworld.js
+  1:1  error  Prefer default export                          import/prefer-default-export
+  3:2  error  Newline required at end of file but not found  eol-last
+
+✖ 2 problems (2 errors, 0 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+
+
+ @ ./src/index/index.js 1:0-42 3:12-22 4:15-25
+
+ error  in ./src/index/index.js
+
+Module Error (from ./node_modules/_eslint-loader@4.0.2@eslint-loader/dist/cjs.js):
+
+/Users/Z/project/learn/webpack视频课相关/示例代码/code/webpack基础配置代码/my-project/src/index/index.js
+  2:1   error    Expected 1 empty line after import statement not followed by another import  import/newline-after-import
+  3:1   warning  Unexpected console statement                                                 no-console
+  3:26  error    Missing semicolon                                                            semi
+  4:30  error    Newline required at end of file but not found                                eol-last
+
+✖ 4 problems (3 errors, 1 warning)
+  3 errors and 0 warnings potentially fixable with the `--fix` option.
+
+
+ error  in ./src/search/index.js
+
+Module Error (from ./node_modules/_eslint-loader@4.0.2@eslint-loader/dist/cjs.js):
+
+/Users/Z/project/learn/webpack视频课相关/示例代码/code/webpack基础配置代码/my-project/src/search/index.js
+   1:1   error  'use strict' is unnecessary inside of modules                                                              strict
+   3:1   error  'react' should be listed in the project's dependencies, not devDependencies                                import/no-extraneous-dependencies
+   3:17  error  'Component' is defined but never used                                                                      no-unused-vars
+   4:1   error  'react-dom' should be listed in the project's dependencies, not devDependencies                            import/no-extraneous-dependencies
+   6:35  error  Missing semicolon                                                                                          semi
+  10:1   error  More than 1 blank line not allowed                                                                         no-multiple-empty-lines
+  13:16  error  Missing semicolon                                                                                          semi
+  15:23  error  Missing trailing comma                                                                                     comma-dangle
+  16:10  error  Missing semicolon                                                                                          semi
+  18:5   error  Expected blank line between class members                                                                  lines-between-class-members
+  19:9   error  Expected exception block, space or tab after '//' in comment                                               spaced-comment
+  20:31  error  Expected parentheses around arrow function argument                                                        arrow-parens
+  22:35  error  Missing trailing comma                                                                                     comma-dangle
+  23:15  error  Missing semicolon                                                                                          semi
+  24:11  error  Missing semicolon                                                                                          semi
+  26:5   error  Expected blank line between class members                                                                  lines-between-class-members
+  27:25  error  Missing semicolon                                                                                          semi
+  28:36  error  Missing semicolon                                                                                          semi
+  29:16  error  Missing parentheses around multilines JSX                                                                  react/jsx-wrap-multilines
+  29:16  error  JSX not allowed in files with extension '.js'                                                              react/jsx-filename-extension
+  30:13  error  Expected indentation of 10 space characters but found 12                                                   react/jsx-indent
+  30:19  error  `  搜索文字的内容` must be placed on a new line                                                                   react/jsx-one-expression-per-line
+  30:28  error  `img` must be placed on a new line                                                                         react/jsx-one-expression-per-line
+  30:28  error  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images  jsx-a11y/alt-text
+  30:28  error  Visible, non-interactive elements with click handlers must have at least one keyboard listener             jsx-a11y/click-events-have-key-events
+  30:28  error  Non-interactive elements should not be assigned mouse or keyboard event listeners                          jsx-a11y/no-noninteractive-element-interactions
+  31:13  error  Expected indentation of 10 space characters but found 12                                                   react/jsx-indent
+  31:21  error  Empty components are self-closing                                                                          react/self-closing-comp
+  31:26  error  A space is forbidden before closing bracket                                                                react/jsx-tag-spacing
+  32:9   error  Expected closing tag to match indentation of opening                                                       react/jsx-closing-tag-location
+  37:5   error  Expected indentation of 2 space characters but found 4                                                     react/jsx-indent
+  38:36  error  Missing trailing comma                                                                                     comma-dangle
+  39:3   error  Newline required at end of file but not found                                                              eol-last
+
+✖ 33 problems (33 errors, 0 warnings)
+  26 errors and 0 warnings potentially fixable with the `--fix` option.
+
+
+ error  in ./src/search/text.js
+
+Module Error (from ./node_modules/_eslint-loader@4.0.2@eslint-loader/dist/cjs.js):
+
+/Users/Z/project/learn/webpack视频课相关/示例代码/code/webpack基础配置代码/my-project/src/search/text.js
+  1:1   error  'react' should be listed in the project's dependencies, not devDependencies  import/no-extraneous-dependencies
+  1:26  error  Missing semicolon                                                            semi
+  3:8   error  Expected space(s) after "default"                                            keyword-spacing
+  3:16  error  Missing space before =>                                                      arrow-spacing
+  3:19  error  Missing space after =>                                                       arrow-spacing
+  3:19  error  JSX not allowed in files with extension '.js'                                react/jsx-filename-extension
+  3:39  error  Newline required at end of file but not found                                eol-last
+  3:39  error  Missing semicolon                                                            semi
+
+✖ 8 problems (8 errors, 0 warnings)
+  6 errors and 0 warnings potentially fixable with the `--fix` option.
+
+
+ @ ./src/search/index.js 55:6-22
+
+build error

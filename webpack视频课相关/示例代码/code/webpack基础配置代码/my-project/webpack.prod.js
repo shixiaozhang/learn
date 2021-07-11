@@ -8,12 +8,24 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HTMLInlineCSSWebpackPlugin = require("html-inline-css-webpack-plugin").default;
 const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin')//基础库分离
-const FriendlyErrorsWebpackPlugin=require('friendly-errors-webpack-plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')  // ? 优化日志输出
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')//打包速度分析
+
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');//打包体积分析
+
+const TerserPlugin=require('terser-webpack-plugin'); //并行压缩
+const { DllReferencePlugin } = require('webpack'); //DLL 打包引入
+
+const HardSourceWebpackPlugin=require('hard-source-webpack-plugin') //开启模块缓存
+
+const smp = new SpeedMeasurePlugin()//初始化插件
+
+
 const setMPA = () => {
     const entry = {}
     const htmlWebpackPlugins = []
     const entryFiles = glob.sync(path.join(__dirname, "./src/*/index.js"))
-    console.log(entryFiles);
+    // console.log(entryFiles);
     // [
     //     '/Users/Z/project/learn/webpack视频课相关/示例代码/code/chapter02-main/my-project/src/index/index.js',
     //     '/Users/Z/project/learn/webpack视频课相关/示例代码/code/chapter02-main/my-project/src/search/index.js'
@@ -22,7 +34,7 @@ const setMPA = () => {
         // 获取文件夹name
         const match = entryFile.match(/src\/(.*)\/index\.js$/)
         const pageName = match && match[1]
-        console.log(pageName);
+        // console.log(pageName);
         entry[pageName] = entryFile
         htmlWebpackPlugins.push(
             new HtmlWebpackPlugin({
@@ -43,7 +55,7 @@ const setMPA = () => {
         )
 
     })
-    console.log(entry);
+    // console.log(entry);
     return {
         entry,
         htmlWebpackPlugins
@@ -51,7 +63,7 @@ const setMPA = () => {
 }
 const { entry, htmlWebpackPlugins } = setMPA()
 
-module.exports = {
+const config = {
     // entry: {
     //     index: './src/index/index.js',
     //     search: './src/search/index.js'
@@ -64,13 +76,36 @@ module.exports = {
     },
     mode: 'production',
     // mode: 'none',
+    resolve:{
+        alias:{//简短缩写，模块路径缩写；
+         'react':path.resolve(__dirname,'./node_modules/react/umd/react.production.min.js'),
+         'react-dom':path.resolve(__dirname,'./node_modules/react-dom/umd/react-dom.production.min.js'),
+        },
+        modules:[path.resolve(__dirname,'node_modules')],//限制搜索node_modules 文件的范围
+        extensions:['.js'],//模块后缀优先搜索类型
+        mainFields:['main']//寻找入口文件的时候，寻找package.json中的main字段
+    },
     module: {
         rules: [
             {
                 test: /.js$/,
-                use: [
-                    'babel-loader',
-                    'eslint-loader'
+                exclude:path.resolve('node_modules'),//剔除依赖目录
+                include:path.resolve('src'),
+                use: [{
+                    //? 开启多进程打包
+                    loader: 'thread-loader',
+                    options: {
+                        workers: 3,//?开启三个进程
+                    }
+                },
+                {
+                    loader:'babel-loader',
+                    // options: {
+                    //     //开启 babel-loader的缓存
+                    //     cacheDirectory: true
+                    // }
+                },
+                    // 'eslint-loader'
                 ]
             },
             {
@@ -99,14 +134,37 @@ module.exports = {
                 ]
             },
             {
-                test: /.(png|jpg|gif|jpeg)$/,
+                test: /.(gif|png|jpg|gif|jpeg)$/,
                 use: [
                     {
                         loader: 'file-loader',
                         options: {
                             name: '[name]_[hash:8].[ext]'
                         }
-                    }
+                    },
+                    {
+                        loader: 'image-webpack-loader',
+                            options: {
+                                mozjpeg: {
+                                    progressive: true,
+                                },
+                                // optipng.enabled: false will disable optipng
+                                optipng: {
+                                    enabled: false,
+                                },
+                                pngquant: {
+                                    quality: [0.65, 0.90],
+                                    speed: 4
+                                },
+                                gifsicle: {
+                                    interlaced: false,
+                                },
+                                // the webp option will enable WEBP
+                                webp: {
+                                    quality: 75
+                                }
+                            }
+                    },
                 ]
             },
             {
@@ -138,41 +196,56 @@ module.exports = {
         // ? 优化日志输出
         new FriendlyErrorsWebpackPlugin(),
 
+        // ? 打包体积分析
+        // new BundleAnalyzerPlugin(),
+
         // //? 抛出错误代码
-        function() {
+        function () {
             // 构建完成会自动触发done 这个hook；
             // webpack 4 ：this.hooks.done.tap(...)
             // webpack 3 ：this.plugin(...)
             this.hooks.done.tap('done', //监听 done hook‘
-                (stats) => { 
+                (stats) => {
                     //通过 stats.compilation.errors 获取错误对象；
                     if (stats.compilation.errors &&
-                    stats.compilation.errors.length && 
-                    process.argv.indexOf('- -watch') == -1){
+                        stats.compilation.errors.length &&
+                        process.argv.indexOf('- -watch') == -1) {
                         //打印错误
                         console.log('build error');
                         // 抛出错误状态码
-                        process.exit(1); 
+                        process.exit(1);
                     }
-                }) 
-        }, 
+                })
+        },
+        //? DllPluginreact之类的基础包 引入： 
+        //引入基础包 
+        new webpack.DllReferencePlugin({
+            manifest:require('./build/library/library.json')
+        }),
+          //引入业务包包 
+        new webpack.DllReferencePlugin({
+            manifest:require('./build/library/library_dom.json')
+        }),
 
+
+        //? 开启模块缓存
+        new HardSourceWebpackPlugin(),    
 
         //?分离react之类的基础包 的方式之一：  
         // new HtmlWebpackExternalsPlugin({
         //     externals: [
-        //       {
-        //         module: 'react',
-        //         entry: 'https://unpkg.com/react@17/umd/react.production.min.js',//可以是本地文件，也可以是cdn
-        //         global: 'React'
-        //       },
-        //       {
-        //         module: 'react-dom',
-        //         entry: 'https://unpkg.com/react-dom@17/umd/react-dom.production.min.js',//可以是本地文件，也可以是cdn
-        //         global: 'ReactDOM'
-        //     },
+        //         {
+        //             module: 'react',
+        //             entry: 'https://unpkg.com/react@17/umd/react.production.min.js',//可以是本地文件，也可以是cdn
+        //             global: 'React'
+        //         },
+        //         {
+        //             module: 'react-dom',
+        //             entry: 'https://unpkg.com/react-dom@17/umd/react-dom.production.min.js',//可以是本地文件，也可以是cdn
+        //             global: 'ReactDOM'
+        //         },
         //     ],
-        //   }),
+        // }),
         // 自动引入多个入口的模版html
         ...htmlWebpackPlugins,
         // new HtmlWebpackPlugin({
@@ -207,6 +280,7 @@ module.exports = {
         //? 这个是把css 注入到html style中，一般不用
         // new HTMLInlineCSSWebpackPlugin(),
     ],
+
     //? optimization.splitChunks 实现提取react和react-dom
     // optimization: {
     //     splitChunks: {
@@ -220,7 +294,17 @@ module.exports = {
     //         },
     //     },
     // },
-    // //? 分离页面的公共js文件：
+    //? 开启并行压缩
+    optimization: {
+        minimize: true,
+        minimizer: [
+          new TerserPlugin({
+            parallel: 4, //并行数量，值为： number ｜true ｜false
+            cache:true //开启缓存
+          }),
+        ],
+      },
+      // //? 分离页面的公共js文件：
     // optimization: {
     //     splitChunks: {
     //         minSize:0,//引入文件的大小
@@ -234,6 +318,7 @@ module.exports = {
     //         },
     //     },
     // },
+    // ? 详细参数案例：
     // optimization: {
     //     splitChunks: {
     //       chunks: 'async',
@@ -258,5 +343,7 @@ module.exports = {
     //     },
     //   },
 
-    stats:"errors-only",//日志输出的类型
+    // stats: "errors-only",//日志输出的类型
 };
+
+module.exports = smp.wrap(config)//包裹配置，进行速度分析

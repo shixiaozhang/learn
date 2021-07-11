@@ -1,10 +1,11 @@
 'use strict';
-
+// import 'babel-polyfill'
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import '../../common';
 import { a } from './tree-shaking'
 import logo from './images/logo.png';
+import bg from './images/bg.jpg';
 import './search.less';
 
 
@@ -27,6 +28,7 @@ class Search extends React.Component {
         const funA = a()
         const { Text } = this.state
         return <div className="search-text">
+            <img src={bg} alt="" />
             {funA}  搜索文字的内容<img src={logo} onClick={this.loadComponent.bind(this)} />
             {Text ? <Text ></Text> : ''}
         </div>;

@@ -156,6 +156,7 @@ export default {
 
 
 库模式打包
+
 库模式的介绍：点击这里https://links.jianshu.com/go?to=https%3A%2F%2Fcli.vuejs.org%2Fzh%2Fguide%2Fbuild-targets.html%23%25E5%25BA%2594%25E7%2594%25A8
 
 # package.json
@@ -233,7 +234,8 @@ babel.config.js
 *.map
 
 发布npm
-# 设置要发布的源，我发布的是通过verdaccio搭建的私库
+# 设置要发布的源---可以省略
+
 npm config set registry http://registry.npmjs.org
 # 登录
 npm login
