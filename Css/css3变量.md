@@ -43,3 +43,21 @@ js代码：
     var element = document.getElementById('jsDom');
     var curWidth = element.style.getPropertyValue("--my-varwidth");
     console.log(curWidth); //400px
+
+
+    
+
+
+// 设置变量
+document.body.style.setProperty('--primary', '#7F583F'); //局部
+document.documentElement.style.setProperty('--primary', '#7F583F'); //全局
+
+// 读取变量
+document.body.style.getPropertyValue('--primary').trim(); /局部
+document.documentElement.style.getPropertyValue('--primary').trim(); /全局
+getComputedStyle(document.documentElement).getPropertyValue('--time'); // 全局，如果是在css表中设置的需要这种方式获取
+// '#7F583F'
+
+// 删除变量
+document.body.style.removeProperty('--primary'); //局部
+document.documentElement.style.removeProperty('--primary'); //全局
