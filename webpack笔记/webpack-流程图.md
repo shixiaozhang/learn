@@ -54,3 +54,11 @@ Compiler 调用 Compilation 生命周期方法
 ·before-module/chunk-ids
 ·(after-)optimize-module/ chunk-ids
 ·before/after-hash
+
+
+## Chunk 生成算法
+
+1. webpack 先将 entry 中对应的 module 都生成一个新的 chunk 
+2. 遍历 module 的依赖列表，将依赖的 module 也加入到 chunk 中
+3. 如果一个依赖 module 是动态引入的模块，那么就会根据这个 module 创建一个 新的 chunk，继续遍历依赖
+4. 重复上面的过程，直至得到所有的 chunks
