@@ -1,6 +1,11 @@
 *node_modules/*
 node_modules/
 
+.DS_Store
+*/.DS_Stor
+
+
+
 vue3.0相关/vue_ts_router_store/node_modules
 node/node_modules
 react-learn/node_modules
@@ -14,3 +19,5 @@ WebpackDome/webpack6/node_modules
 WebpackDome/webpack简单版/node_modules
 WebpackDome/webpack-react/node_modules
 my-electron-app/out
+
+webpack视频课相关/webpack基础配置代码/.DS_Store
