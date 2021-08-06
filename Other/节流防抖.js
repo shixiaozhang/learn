@@ -52,7 +52,14 @@ var throttle = function(func, delay) {
         console.log(Math.random());        
     }        
     window.addEventListener('scroll', throttle(handle, 1000));
-
+// 小程序  节流
+const throttle = function(fn, context, delay, text) {
+    clearTimeout(fn.timeoutId);
+    fn.timeoutId = setTimeout(function () {
+      fn.call(context, text);
+    }, delay);
+  }
+  
 // 防抖的含义就是让某个时间期限（如上面的1000毫秒）内，事件处理函数只执行一次。
 // 持续触发不执行，不触发的一段时间之后再执行
 
