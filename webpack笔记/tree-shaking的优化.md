@@ -203,3 +203,14 @@ https://zhuanlan.zhihu.com/p/41795312
 你的Tree-Shaking并没什么卵用:https://zhuanlan.zhihu.com/p/40052192
 
 Webpack 中的 sideEffects 到底该怎么用？
+
+// package.json 
+{
+  "sideEffects": false / [], // 整个库是没有副作用的 / 指定文件是有副作用的
+}
+// webpack.config.js
+{
+  optimization: {
+    sideEffects: true / false, // 是否识别第三方库 package.json 中的 sideEffects 以剔除无用的模块。生产模式下默认开启，其他模式不开启。
+  }
+}
