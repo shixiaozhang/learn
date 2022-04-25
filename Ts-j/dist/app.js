@@ -1,179 +1,119 @@
+"use strict";
 // 基础类型
-let typeString: string = "123";
-
-let typeNumber: number = 123;
-
-let typeBool: boolean = false;
-
-let typeObject: object = {};
-
-let typeSymbol: symbol = Symbol("key");
-
-let typeUndefined: undefined = undefined;
-
-let typeNull: null = null;
-
-let tyoeBigint: bigint = 9007199254740991n || BigInt("1");
-
+let typeString = "123";
+let typeNumber = 123;
+let typeBool = false;
+let typeObject = {};
+let typeSymbol = Symbol("key");
+let typeUndefined = undefined;
+let typeNull = null;
+let tyoeBigint = 9007199254740991n || BigInt("1");
 // 包装类型
-let typeNumer2: Number = 123;
-
-let typebool2: Boolean = false;
-
-let typeString2: String = "123";
-
-let typeObject2: Object = {};
-
-let typeSymbol2: Symbol = Symbol("key");
-
-let typeArray: Array<string> = ["a"];
-
+let typeNumer2 = 123;
+let typebool2 = false;
+let typeString2 = "123";
+let typeObject2 = {};
+let typeSymbol2 = Symbol("key");
+let typeArray = ["a"];
 class typeClassType {
-  constructor() {}
+    constructor() { }
 }
-let typeClass: typeClassType = new typeClassType();
-
-type Tuple = [number, string];
-
-interface IPerson {
-  name: string;
-  age: number;
+let typeClass = new typeClassType();
+class Person {
 }
-
-class Person implements IPerson {
-  name!: string;
-  age!: number;
-}
-
-const obj: Person = {
-  name: "xiaozhang",
-  age: 12,
+const obj = {
+    name: "xiaozhang",
+    age: 12,
 };
-
-interface SayHello {
-  (name: string): string;
-}
-
-const func: SayHello = (name: string) => {
-  return `hello ${name}`;
+const func = (name) => {
+    return `hello ${name}`;
 };
-
-interface personContruction {
-  new (name: string, age: number): IPerson;
+function createPerson(ctr) {
+    return new ctr("xiaozhang", 18);
 }
-
-function createPerson(ctr: personContruction): IPerson {
-  return new ctr("xiaozhang", 18);
-}
-
-interface PersonObj {
-  [prop: string]: string | number;
-}
-const aObj: PersonObj = {};
-
+const aObj = {};
 aObj.name = "xiaozhan";
 aObj.age = 18;
-
-enum Transplier {
-  Bable = "bable",
-  Postcss = "postcss",
-  Terser = "terser",
-  Prettier = "prettier",
-  TypeScriptCompiler = "typesvriptcompiler",
-}
-
+var Transplier;
+(function (Transplier) {
+    Transplier["Bable"] = "bable";
+    Transplier["Postcss"] = "postcss";
+    Transplier["Terser"] = "terser";
+    Transplier["Prettier"] = "prettier";
+    Transplier["TypeScriptCompiler"] = "typesvriptcompiler";
+})(Transplier || (Transplier = {}));
 const terser = Transplier.Terser;
-
-type First<Tuple extends unknown[]> = Tuple extends [infer T, ...infer R]
-  ? T
-  : never;
-
-type res = First<[1, 2, 3]>;
-
-type MapType<T> = {
-  [Key in keyof T as `${Key & string}${Key & string}${Key & string}`]: [
+as `${Key & string}${Key & string}${Key & string}`;
+[
     T[Key],
     T[Key],
     T[Key]
-  ];
+];
+;
+let point = {
+    x: 1,
+    y: 1,
 };
-
-type res2 = MapType<[1, 2, 3]>;
-
-type lianhe = number | string | symbol;
-type lianhe2 = [number];
-
-type jiaocha = lianhe2 & number[];
-
-type PartialPointX = { x: number };
-type Point = PartialPointX & { y: number };
-
-let point: Point = {
-  x: 1,
-  y: 1,
-};
-
-// 获取promise 的 泛型
-type proA = Promise<string | number>;
-
-type GetV<T> = T extends Promise<infer value> ? value : never;
-
-type GetVexmp = GetV<proA>;
-
-// 获取元祖的第一个类型
-type GetFirst<arr extends unknown[]> = arr extends [infer first, ...unknown[]]
-  ? first
-  : never;
-
-type firstVal = GetFirst<[number, 2, string]>;
-
-// 获取元祖的最后一个类型
-type GetLast<arr extends unknown[]> = arr extends [...unknown[], infer last]
-  ? last
-  : never;
-
-type lastVal = GetLast<[number, 2, string]>;
-
-// 获取元祖类型的某一部分
-type PopArr<arr extends unknown> = arr extends []
-  ? []
-  : arr extends [...infer Rest, unknown]
-  ? Rest
-  : never;
-
-type propRest = PopArr<[number, string, boolean]>;
-type propRest2 = PopArr<[]>;
-
-// 获取开始的字符串类型
-type StartsWith<
-  Str extends string,
-  Pref extends string
-> = Str extends `${Pref}${string}` ? true : false;
-
-type StartsWithStr = StartsWith<"zhang ", "z">;
-
-// 替换某些字符串类型
-type ReplaceStr<
-  Str extends string,
-  From extends string,
-  To extends string
-> = Str extends `${infer Pref}${From}${infer End}` ? `${Pref}${To}${End}` : Str;
+`${Pref}${string}` ? true : false;
+`${infer;
+Pref;
+$;
+{
+    From;
+}
+$;
+{
+    infer;
+    End;
+}
+` ? `;
+$;
+{
+    Pref;
+}
+$;
+{
+    To;
+}
+$;
+{
+    End;
+}
+` : Str;
 
 type ReplaceStrStr = ReplaceStr<"zhangzhangzhang ?", "?", "X">;
 
 // 去除左侧空格
-type TrimStrLeft<str extends string> = str extends `${
-  | " "
-  | "\n"
-  | "\t"}${infer Rest}`
+type TrimStrLeft<str extends string> = str extends `;
+$;
+{
+        | " "
+        | "\n"
+        | "\t";
+}
+$;
+{
+    infer;
+    Rest;
+}
+`
   ? TrimStrLeft<Rest>
   : str;
 
 //   去除右侧空格
-type TrimStrRight<Str extends string> = Str extends `${infer Rest}${
-  | " "
-  | "\n"
-  | "\t"}`
+type TrimStrRight<Str extends string> = Str extends `;
+$;
+{
+    infer;
+    Rest;
+}
+$;
+{
+        | " "
+        | "\n"
+        | "\t";
+}
+`
   ? TrimStrRight<Rest>
   : Str;
 
@@ -204,7 +144,12 @@ class Dong {
     this.name = "zhang";
   }
   hello(this: Dong) {
-    console.log(`name : ${this.name}`);
+    console.log(`;
+name: $;
+{
+    this.name;
+}
+`);
   }
 }
 
@@ -279,16 +224,70 @@ type tupleReRest = tupleRe2<tuple1, tuple2>;
 // 字符串类型的重新构造
 // 首字母大写 Uppercase ts内置类型 装换字母为大写
 type CapitalizeStr<T extends string> =
-  T extends `${infer first}${infer first}${infer rest}`
-    ? `${Uppercase<first>}${rest}`
+  T extends `;
+$;
+{
+    infer;
+    first;
+}
+$;
+{
+    infer;
+    first;
+}
+$;
+{
+    infer;
+    rest;
+}
+`
+    ? `;
+$;
+{
+    Uppercase();
+}
+$;
+{
+    rest;
+}
+`
     : T;
 
 type CapitalizeStrRest = CapitalizeStr<"first">;
 
 // dong_dong_dong 到 dongDongDong
 type CamelCase<str extends string> =
-  str extends `${infer left}_${infer right}${infer rest}`
-    ? `${left}${Uppercase<right>}${CamelCase<rest>}`
+  str extends `;
+$;
+{
+    infer;
+    left;
+}
+_$;
+{
+    infer;
+    right;
+}
+$;
+{
+    infer;
+    rest;
+}
+`
+    ? `;
+$;
+{
+    left;
+}
+$;
+{
+    Uppercase();
+}
+$;
+{
+    CamelCase();
+}
+`
     : str;
 
 type CamelCaseRest = CamelCase<"dong_dong_dong">;
@@ -298,8 +297,32 @@ type CamelCaseRest = CamelCase<"dong_dong_dong">;
 type DropSubStr<
   Str extends string,
   SubStr extends string
-> = Str extends `${infer left}${SubStr}${infer right}`
-  ? DropSubStr<`${left}${right}`, SubStr>
+> = Str extends `;
+$;
+{
+    infer;
+    left;
+}
+$;
+{
+    SubStr;
+}
+$;
+{
+    infer;
+    right;
+}
+`
+  ? DropSubStr<`;
+$;
+{
+    left;
+}
+$;
+{
+    right;
+}
+`, SubStr>
   : Str;
 
 //   函数类型的重新构造
@@ -442,8 +465,36 @@ type BuildArrayRest = BuildArray<4, 1, []>;
 //   Str extends string,
 //   From extends string,
 //   To extends string
-// > = Str extends `${infer Prefix}${From}${infer Suffix}`
-//   ? `${Prefix}${To}${Suffix}`
+// > = Str extends `;
+$;
+{
+    infer;
+    Prefix;
+}
+$;
+{
+    From;
+}
+$;
+{
+    infer;
+    Suffix;
+}
+`
+//   ? `;
+$;
+{
+    Prefix;
+}
+$;
+{
+    To;
+}
+$;
+{
+    Suffix;
+}
+`
 //   : Str;
 
 // ReplaceAll 所有的字符串替换
@@ -452,15 +503,54 @@ type ReplaceAll<
   Str extends string,
   From extends string,
   To extends string
-> = Str extends `${infer Prefix}${From}${infer Suffix}`
-  ? `${Prefix}${To}${ReplaceAll<Suffix, From, To>}`
+> = Str extends `;
+$;
+{
+    infer;
+    Prefix;
+}
+$;
+{
+    From;
+}
+$;
+{
+    infer;
+    Suffix;
+}
+`
+  ? `;
+$;
+{
+    Prefix;
+}
+$;
+{
+    To;
+}
+$;
+{
+    ReplaceAll();
+}
+`
   : Str;
 type ReplaceAllRest = ReplaceAll<"a a a a a a", "a", "b">;
 
 // 把字符串字面量类型的每个字符都提取出来组成联合类型
 // StringToUnion
 type StringToUnion<str extends string> =
-  str extends `${infer left}${infer rest}` ? left | StringToUnion<rest> : never;
+  str extends `;
+$;
+{
+    infer;
+    left;
+}
+$;
+{
+    infer;
+    rest;
+}
+` ? left | StringToUnion<rest> : never;
 
 type StringToUnionRest = StringToUnion<"abc">;
 
@@ -469,8 +559,28 @@ type StringToUnionRest = StringToUnion<"abc">;
 type ReverseStr<
   Str extends string,
   Result extends string = ""
-> = Str extends `${infer left}${infer rest}`
-  ? ReverseStr<rest, `${left}${Result}`>
+> = Str extends `;
+$;
+{
+    infer;
+    left;
+}
+$;
+{
+    infer;
+    rest;
+}
+`
+  ? ReverseStr<rest, `;
+$;
+{
+    left;
+}
+$;
+{
+    Result;
+}
+`>
   : Result;
 
 type ReverseStrRest = ReverseStr<"abc">;
@@ -562,7 +672,17 @@ type Divide<
 type StrLen<
   Str extends string,
   Result extends unknown[] = []
-> = Str extends `${string}${infer Rest}`
+> = Str extends `;
+$;
+{
+    string;
+}
+$;
+{
+    infer;
+    Rest;
+}
+`
   ? StrLen<Rest, [unknown, ...Result]>
   : Result["length"];
 
@@ -630,12 +750,46 @@ type UppercaseA<item extends string> = item extends "a"
 
 type UppercaseARest = UppercaseA<Union>;
 
-type UnionRest = `${Union}~~~`;
+type UnionRest = `;
+$;
+{
+    Union;
+}
+~~~`;
 
 // CamelcaseStr;
 type Camelcase<Str extends string> =
-  Str extends `${infer Left}_${infer Right}${infer Rest}`
-    ? `${Left}${Uppercase<Right>}${Camelcase<Rest>}`
+  Str extends `;
+$;
+{
+    infer;
+    Left;
+}
+_$;
+{
+    infer;
+    Right;
+}
+$;
+{
+    infer;
+    Rest;
+}
+`
+    ? `;
+$;
+{
+    Left;
+}
+$;
+{
+    Uppercase();
+}
+$;
+{
+    Camelcase();
+}
+`
     : Str;
 
 //CamelcaseArr
@@ -672,7 +826,20 @@ type BEM<
   Block extends string,
   Element extends string[],
   Modifiers extends string[]
-> = `${Block}_${Element[number]}-${Modifiers[number]}`;
+> = `;
+$;
+{
+    Block;
+}
+_$;
+{
+    Element[number];
+}
+-$;
+{
+    Modifiers[number];
+}
+`;
 
 type bemResult = BEM<"guang", ["aaa", "bbb"], ["warning", "success"]>;
 
@@ -681,8 +848,26 @@ type bemResult = BEM<"guang", ["aaa", "bbb"], ["warning", "success"]>;
 type Combination<A extends string, B extends string> =
   | A
   | B
-  | `${A}${B}`
-  | `${B}${A}`;
+  | `;
+$;
+{
+    A;
+}
+$;
+{
+    B;
+}
+`
+  | `;
+$;
+{
+    B;
+}
+$;
+{
+    A;
+}
+`;
 
 type AllCombinations<A extends string, B extends string = A> = A extends A
   ? Combination<A, AllCombinations<Exclude<B, A>>>
@@ -825,7 +1010,13 @@ type objIndexType = {
 //? 索引签名不能构造成字符串字面量类型，因为它没有名字，而其他索引可以。
 
 type RemoveIndexSignature<Obj extends Record<string, any>> = {
-  [key in keyof Obj as key extends `${infer Str}` ? Str : never]: Obj[key];
+  [key in keyof Obj as key extends `;
+$;
+{
+    infer;
+    Str;
+}
+` ? Str : never]: Obj[key];
 };
 
 type RemoveIndexSignatureRest = RemoveIndexSignature<objIndexType>;
@@ -874,4 +1065,5 @@ type ClassPublicPropsRest = ClassPublicProps<publicProps>;
 
 //?  keyof 只能拿到 class 的 public 的索引，可以用来过滤出 public 的属性。
 
-type qqqqq=1 extends `1` ?true :false
+type qqqqq=1 extends `;
+1 ` ?true :false;
