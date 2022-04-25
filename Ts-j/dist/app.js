@@ -1065,5 +1065,4 @@ type ClassPublicPropsRest = ClassPublicProps<publicProps>;
 
 //?  keyof 只能拿到 class 的 public 的索引，可以用来过滤出 public 的属性。
 
-type qqqqq=1 extends `;
-1 ` ?true :false;
+;
