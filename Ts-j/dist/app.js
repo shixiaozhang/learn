@@ -1065,4 +1065,54 @@ type ClassPublicPropsRest = ClassPublicProps<publicProps>;
 
 //?  keyof 只能拿到 class 的 public 的索引，可以用来过滤出 public 的属性。
 
+type ParseQueryString<T extends string> = T extends `;
+$;
+{
+    infer;
+    A;
+}
+ & $;
+{
+    infer;
+    B;
+}
+`
+  ? ParseParam<A>
+  : ParseParam<T>;
+
+type ParseParam<Str extends string> = Str extends `;
+$;
+{
+    infer;
+    A;
+}
+$;
+{
+    infer;
+    B;
+}
+`
+  ? { [a in A]: B }
+  : never;
+
+type ParseParamRest = ParseParam<"a=1">;
+
+type MergeValues<One, Other> = One extends Other
+  ? One
+  : Other extends unknown[]
+  ? [One, ...Other]
+  : [One, Other];
+
+type MergeParams<
+  T extends Record<string, any>,
+  R extends Record<string, any>
+> = {
+  [key in keyof T | keyof R]: key extends keyof T
+    ? key extends keyof R
+      ? MergeValues<T[key], R[key]>
+      : T[key]
+    : key extends keyof R
+    ? R[key]
+    : never;
+};
 ;
