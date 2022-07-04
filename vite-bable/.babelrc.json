@@ -1,0 +1,38 @@
+{
+  "plugins": [
+    [
+      // 添加 transform-runtime 插件
+      "@babel/plugin-transform-runtime",
+      { "corejs": 3 }
+    ]
+  ],
+  "presets": [
+    [
+      /**
+利用@babel/preset-env进行了目标浏览器语法的降级和Polyfill注入，同时用到了core-js和regenerator-runtime两个核心的运行时库。但@babel/preset-env 的方案也存在一定局限性:
+    1、如果使用新特性，往往是通过基础库(如 core-js)往全局环境添加 Polyfill，如果是开发应用没有任何问题，如果是开发第三方工具库，则很可能会对全局空间造成污染。
+    2、很多工具函数的实现代码(如上面示例中的_defineProperty方法)，会在许多文件中重现出现，造成文件体积冗余。
+*/
+      //? 更优的 Polyfill 注入方案: transform-runtime
+      //? transform-runtime方案可以作为@babel/preset-env中useBuiltIns配置的替代品，
+      //? 也就是说，一旦使用transform-runtime方案，你应该把useBuiltIns属性设为 false
+      "@babel/preset-env",
+
+      {
+        // 指定浏览器兼容版本
+        "targets": {
+          "ie": "11"
+        },
+        // 基础库 core-js 的版本 一般制定为最新 大版本
+        "corejs": 3,
+        // polyfill 注入策略 :
+        // entry 引入全部; 需要在入口文件添加 ` import 'core-js'`
+        // usage 按需引入;
+        // "useBuiltIns": "usage",
+        "useBuiltIns": false, //关闭 @babel/preset-env 默认的 Polyfill 注入
+        // 不将 ES 模块语法转为其他模块语法
+        "modules": false
+      }
+    ]
+  ]
+}
