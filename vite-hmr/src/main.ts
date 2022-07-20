@@ -1,6 +1,5 @@
 import { render } from './render'
 import { initState } from './state'
-
 render()
 initState()
 if (import.meta.hot) {

@@ -13,7 +13,7 @@ splitChunks是用来设置代码如何打包和分割的，现就webpack官网�
    */
   optimization: {
     splitChunks: {
-      chunks: "all",          //async：对异步引入的代码进行分割（默认） initial：对同步引入的代码进行分割 all：同步异步的代码都进行分割
+      chunks: "all",          //async：对异步引入的代码进行分割（默认）initial：对同步引入的代码进行分割 all：同步异步的代码都进行分割
       minSize: 30000,         //字节 引入的文件大于30kb才进行分割
       //maxSize: 50000,         //50kb，尝试将大于50kb的文件拆分成n个50kb的文件
       minChunks: 1,           //模块至少使用次数

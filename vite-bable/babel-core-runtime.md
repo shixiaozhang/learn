@@ -19,4 +19,6 @@
 
 - **core-js**
   - core-js 有三种产物，分别是 core-js、core-js-pure 和 core-js-bundle。第一种是全局 Polyfill 的做法，@babel/preset-env 就是用的这种产物；第二种不会把 Polyfill 注入到全局环境，可以按需引入；第三种是打包好的版本，包含所有的 Polyfill，不太常用。@babel/runtime-corejs3 使用的是第二种产物。
-- **regenerator-runtime**
+- **regenerator-runtime** 生成器函数、async、await函数经babel编译后，regenerator-runtime模块用于提供功能实现
+
+* **@vitejs/plugin-legacy** 通过 Vite 构建我们完全可以兼容各种低版本浏览器
