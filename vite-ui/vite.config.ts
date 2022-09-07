@@ -2,16 +2,18 @@ import { defineConfig } from 'vite'
 
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-
+import Unocss from 'unocss/vite'
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [vue(), vueJsx(), Unocss()],
   build: {
+    cssCodeSplit: true,
     rollupOptions: {
       external: ['vue', 'vue-router'],
       output: {
         globals: {
           vue: 'vue',
         },
+        // assetFileNames: `assets/[name].css`,
       },
     },
     minify: false,

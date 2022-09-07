@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="../../dist/assets/entry.cef16ada.css " />
   </head>
   <body>
     <div id="app"></div>
@@ -19,8 +20,21 @@
   } from '../../dist/vite-ui.mjs'
 
   createApp({
-    template: `<VButton/>
-<JSXButton/>
-<SFCButton/>`,
-  }).use(SmartyUI).mount('#app')
+    template: `<div>
+    <JSXButton color="blue">蓝色按钮</JSXButton>
+    <JSXButton color="green">绿色按钮</JSXButton>
+    <JSXButton color="gray">灰色按钮</JSXButton>
+    <JSXButton color="yellow">黄色按钮</JSXButton>
+    <JSXButton color="red">红色按钮</JSXButton>
+  </div>
+  <div>
+    <JSXButton color="blue" round plain icon="search"></JSXButton>
+    <JSXButton color="green" round plain icon="edit"></JSXButton>
+    <JSXButton color="gray" round plain icon="check"></JSXButton>
+    <JSXButton color="yellow" round plain icon="message"></JSXButton>
+    <JSXButton color="red" round plain icon="delete"></JSXButton>
+  </div>`,
+  })
+    .use(SmartyUI)
+    .mount('#app')
 </script>
