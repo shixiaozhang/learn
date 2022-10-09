@@ -1,0 +1,3 @@
+[submodule "vite-vui"]
+	path = vite-vui
+	url = git@github.com:shixiaozhang/vite-vui.git
