@@ -17,7 +17,7 @@ export default function testHookPlugin() {
       }
       return {
         alias: {
-          vue: require.resolve("vue"),
+          vue: require.resolve("vue"), //例子（会报错）
         },
       };
     },

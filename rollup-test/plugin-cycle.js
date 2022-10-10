@@ -28,7 +28,7 @@ export default function lifeCycle(opt) {
       // (importee, importer, resolveOptions)
       console.log("resolveId");
       console.log(importee, importer, resolveOptions);
-
+      return null; //跳过执行
       //   TODO 对importee 作处理得到新的updateId
       let updateId = importee;
       // 每个插件执行时都会绑定一个上下文对象作为 this
