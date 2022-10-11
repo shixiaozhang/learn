@@ -31,7 +31,6 @@ interface ImportMeta {
 
 // 详情 on/send 使用见 文档 ：客户端与服务端间通信 https://cn.vitejs.dev/guide/api-plugin.html#filtering-include-exclude-pattern
 
-
 let timer: number | undefined;
 if (import.meta.hot) {
   if (!import.meta.hot.data.count) {
@@ -45,13 +44,15 @@ if (import.meta.hot) {
 }
 export function initState() {
   const getAndIncCount = () => {
+    console.log(import.meta.hot?.data);
+
     const data = import.meta.hot?.data || {
       count: 0,
     };
+    console.log(data);
     data.count = data.count + 1;
     return data.count;
   };
-  let a = 1123123121233123121312;
   timer = setInterval(() => {
     let countEle = document.getElementById("count");
     countEle!.innerText = getAndIncCount() + "";

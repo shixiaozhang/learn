@@ -1,6 +1,7 @@
 //? Async（异步） 和 Sync（同步） 类型 (同步钩子里面不能有异步逻辑，而异步钩子可以有)
 //? Parallel（并行）、Sequentia（串行） 和 First 类型
 //? First  Hook 将依次运行，直到返回一个非 null 或非 undefined 的值为止，后续 Hook 将不再执行
+import { extname } from "path";
 const mimeTypes = {
   ".jpg": "image/jpeg",
   // 后面图片类型省略
@@ -13,6 +14,7 @@ export default function lifeCycle(opt) {
       // Async Sequential
       console.log("options");
       //   console.log(opts);
+      return null;
     },
     buildStart(...buildStart) {
       // Async Parallel
@@ -27,7 +29,10 @@ export default function lifeCycle(opt) {
       // 传入三个参数，当前模块路径、引用当前模块的模块路径、其余参数
       // (importee, importer, resolveOptions)
       console.log("resolveId");
-      console.log(importee, importer, resolveOptions);
+      if (importee.includes("importer.js")) {
+        console.log(importee, importer, resolveOptions);
+      }
+      // console.log(importee, importer, resolveOptions);
       return null; //跳过执行
       //   TODO 对importee 作处理得到新的updateId
       let updateId = importee;
