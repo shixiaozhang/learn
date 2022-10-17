@@ -866,8 +866,8 @@ new Fanfashuxin().get('aa')
 // 装饰器执行顺序
 
 /*
-@类装饰器1  
-@类装饰器2  
+@类装饰器1
+@类装饰器2
 class 类{
     @属性装饰器
     name:string |undefined
@@ -878,14 +878,14 @@ class 类{
     get(){
 
     }
-                            
+
     set(@方法参数装饰器1 参数1:string, @方法参数装饰器2 参数2:string,){
 
     }
 }
 
 顺序：属性 -> 方法 -> 方法参数 -> 类
-    1、属性装饰器  
+    1、属性装饰器
     2、方法装饰器
     3、方法参数装饰器2
     4、方法参数装饰器1
@@ -943,7 +943,7 @@ jim.log()
 
 /**
  * 关键词： in typeof instanceof is
- * 
+ *
 
  */
 
@@ -1039,8 +1039,8 @@ function printEmployee(emp: Unknown) {
         但悬停在 aliased上时，显示的却是对象字面量类型。
         另一个重要区别是类型别名不能被 extends和 implements
         （自己也不能 extends和 implements其它类型）
- * 
- * 
+ *
+ *
  */
 type Alinas = { num: number }
 interface Interface {
@@ -1074,7 +1074,7 @@ function padLeft(value: string, padding: string | number) {
 // 3、 instanceof 关键词
 /**
  * instanceof的右侧要求是一个构造函数，TypeScript将细化为：
- * 
+ *
         此构造函数的 prototype属性的类型，如果它的类型不为 any的话
         构造签名所返回的类型的联合
 
@@ -1150,7 +1150,7 @@ function fixed(name: string | null): string {
  * 你可以合并单例类型，联合类型，类型保护和类型别名来创建一个叫做
  *  可辨识联合的高级模式，它也称做 标签联合或 代数数据类型。
  *  可辨识联合在函数式编程很有用处。
- *  一些语言会自动地为你辨识联合；而TypeScript则基于已有的JavaScript模式。 
+ *  一些语言会自动地为你辨识联合；而TypeScript则基于已有的JavaScript模式。
  * 它具有3个要素：
             具有普通的单例类型属性— 可辨识的特征。
             一个类型别名包含了那些类型的联合— 联合。

@@ -1,12 +1,15 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
+// 客户端入口文件
+import { StrictMode } from "react";
+import "./index.css";
+import App from "./App";
+import { hydrateRoot } from "react-dom/client";
 
-ReactDOM.hydrate(
-  <React.StrictMode>
-    <App></App>
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+// @ts-ignore
+const data = window.__SSR_DATA__;
 
+hydrateRoot(
+  document.getElementById("root")!,
+  <StrictMode>
+    <App data={data}></App>
+  </StrictMode>
+);

@@ -1,8 +1,14 @@
-import App from './App'
-import './index.css'
+// 导出 SSR 组件入口
+import App from "./App";
+import "./index.css";
 
-function ServerEntry(props: any) {
-  return <App></App>
+export async function fetchData() {
+  return {
+    user: "xxx",
+  };
 }
 
-export { ServerEntry }
+function ServerEntry(props: any) {
+  return <App data={props.data}></App>;
+}
+export { ServerEntry };
